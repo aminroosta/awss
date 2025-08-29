@@ -1,5 +1,7 @@
 import { awsListBuckets, awsListStacks as awsStacksList } from "../aws";
 import { createResource, For } from "solid-js";
+import { List } from "../ui/list";
+import { dim } from "@opentui/core";
 
 export const Stacks = () => {
   const [stacks] = createResource(awsStacksList, {
@@ -14,18 +16,13 @@ export const Stacks = () => {
   });
 
   return (
-    <box>
-
-      <For each={stacks().StackSummaries}>
-        {(stack) => (
-          <box flexDirection="row" justifyContent="space-between">
-            <text>{stack.StackName}</text>
-            <text flexGrow={0.5}>{stack.CreationTime}</text>
-            <text flexGrow={0.5}>{stack.StackStatus}</text>
-          </box>
-        )}
-      </For>
-    </box>
-
+    <List
+      items={stacks().StackSummaries}
+      columns={[
+        { title: 'STACK', render: 'StackName' },
+        { title: 'CREATED', render: (item: any) => <text>{dim(item.CreationTime.split('T')[0])}</text> },
+        { title: 'STATUS', render: 'StackStatus' },
+      ]}
+    />
   );
 };

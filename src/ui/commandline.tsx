@@ -7,12 +7,8 @@ import { colors } from "../util/colors";
 export const CommandLine = ({ onEscape }: { onEscape: Function }) => {
   const [value, setValue] = createSignal('');
   const [rest, setRest] = createSignal('');
-  const renderer = useRenderer();
   let ref;
 
-  onMount(() => {
-    renderer.setCursorStyle('line');
-  });
   const aliases = Object.values(routes).map(s => s.alias).flat();
 
   const onEnter = () => {

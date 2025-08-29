@@ -1,11 +1,10 @@
 import { getKeyHandler, TextAttributes } from "@opentui/core";
 import { render, useRenderer } from "@opentui/solid";
-import { createSignal, ErrorBoundary, Match, Show, Switch } from "solid-js";
+import { createSignal, ErrorBoundary, Match, onMount, Show, Switch } from "solid-js";
 import { colors } from "./util/colors";
 import { Header } from "./ui/header";
 import { CommandLine } from "./ui/commandline";
 import { route } from "./store";
-import { Dynamic } from "solid-js/web";
 import { Buckets } from "./route/buckets";
 import { Stacks } from "./route/stacks";
 
@@ -28,6 +27,10 @@ function App() {
   let [cmdVisible, setCmdVisible] = createSignal(true);
   let renderer = useRenderer();
   const keyHandler = getKeyHandler();
+
+  onMount(() => {
+    renderer.setCursorStyle('line');
+  });
 
   keyHandler.on('keypress', (key: any) => {
     if (key.name === ":") {
