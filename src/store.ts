@@ -1,18 +1,16 @@
 import { createSignal } from "solid-js";
-import { Buckets } from "./route/buckets";
-import { Stacks } from "./route/stacks";
 
 export const routes = {
   Buckets: {
-    component: Buckets,
+    id: 'buckets',
     title: ' Buckets ',
     alias: ['s3', 'buckets']
   },
   Stacks: {
-    component: Stacks,
+    id: 'stacks',
     title: ' Stacks ',
     alias: ['stacks', 'cloudformation']
   }
 };
 
-export const [route, setRoute] = createSignal(routes.Stacks)
+export const [route, setRoute] = createSignal(routes.Stacks);

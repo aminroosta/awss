@@ -1,10 +1,28 @@
 import { getKeyHandler, TextAttributes } from "@opentui/core";
 import { render, useRenderer } from "@opentui/solid";
-import { createSignal, ErrorBoundary, Show } from "solid-js";
+import { createSignal, ErrorBoundary, Match, Show, Switch } from "solid-js";
 import { colors } from "./util/colors";
 import { Header } from "./ui/header";
 import { CommandLine } from "./ui/commandline";
 import { route } from "./store";
+import { Dynamic } from "solid-js/web";
+import { Buckets } from "./route/buckets";
+import { Stacks } from "./route/stacks";
+
+function ActiveRoute() {
+  return (
+    <box flexGrow={1} title={route().title} titleAlignment="center" border borderColor={colors().border}>
+      <Switch>
+        <Match when={route().id === 'buckets'}>
+          <Buckets />
+        </Match>
+        <Match when={route().id === 'stacks'}>
+          <Stacks />
+        </Match>
+      </Switch>
+    </box>
+  )
+}
 
 function App() {
   let [cmdVisible, setCmdVisible] = createSignal(true);
@@ -19,11 +37,8 @@ function App() {
 
   const onCommandLineEscape = () => {
     setCmdVisible(false)
-    renderer.setCursorPosition(0, 0, false);
+    // renderer.setCursorPosition(0, 0, false);
   };
-
-  const title = () => route().title;
-  const Service = () => route().component;
 
   return (
     <box flexGrow={1} backgroundColor={colors().background}>
@@ -31,12 +46,11 @@ function App() {
       <Show when={cmdVisible()}>
         <CommandLine onEscape={onCommandLineEscape} />
       </Show>
-      <box flexGrow={1} title={title()} titleAlignment="center" border borderColor={colors().border}>
-        {Service()}
-      </box>
+      <ActiveRoute />
     </box>
   );
 }
+
 function Root() {
   return (
     <ErrorBoundary

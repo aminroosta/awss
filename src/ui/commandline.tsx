@@ -18,7 +18,7 @@ export const CommandLine = ({ onEscape }: { onEscape: Function }) => {
   const onEnter = () => {
     const route = Object.values(routes).find(s => s.alias.includes(value() + rest()));
     onEscape();
-    renderer.setCursorPosition(0, 0, false);
+    // renderer.setCursorPosition(0, 0, false);
     if (route) {
       setRoute(route);
     }
@@ -48,9 +48,15 @@ export const CommandLine = ({ onEscape }: { onEscape: Function }) => {
     }
   }
   return (
-    <box flexDirection="row" style={{ border: true, height: 3, borderColor: colors().accent }}>
+    <box
+      flexDirection="row"
+      borderColor={colors().accent}
+      border
+      height={3}
+    >
       <text fg={colors().accent}>▶ </text>
       <input
+        cursorColor={colors().accent}
         ref={el => { ref = el }}
         width={value().length + 2}
         onInput={onInput}
@@ -60,7 +66,7 @@ export const CommandLine = ({ onEscape }: { onEscape: Function }) => {
         focused
         focusedBackgroundColor={colors().background}
       />
-      <text style={{ marginLeft: -2 }} fg={colors().dim}>{rest()}</text>
+      <text marginLeft={-2} fg={colors().dim}>{rest()}</text>
     </box>
   );
 };
