@@ -8,6 +8,7 @@ import { cmdVisible, popRoute, route, setCmdVisible, undoPopRoute } from "./stor
 import { Buckets } from "./route/buckets";
 import { Stacks } from "./route/stacks";
 import { log } from "./util/log";
+import { S3Objects } from "./route/s3objects";
 
 function ActiveRoute() {
   return (
@@ -17,6 +18,9 @@ function ActiveRoute() {
       </Match>
       <Match when={route().id === 'buckets'}>
         <Buckets />
+      </Match>
+      <Match when={route().id === 'objects'}>
+        <S3Objects args={route().args as any} />
       </Match>
     </Switch>
   )
@@ -37,7 +41,6 @@ function App() {
     if (key.name === "p" && key.ctrl) {
       popRoute();
     }
-    log(key)
     if (key.name === "n" && key.ctrl) {
       undoPopRoute();
     }

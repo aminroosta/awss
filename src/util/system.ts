@@ -37,7 +37,7 @@ export async function getSystemTheme() {
   return "dark";
 }
 
-const [usage, usageActions] = createResource(getSystemUsage, { initialValue: { cpu: '...', mem: '...' } });
+const [usage, usageActions] = createResource(getSystemUsage, { initialValue: { cpu: '⏳', mem: '⏳' } });
 
 setInterval(() => {
   usageActions.refetch();

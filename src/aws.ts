@@ -1,6 +1,8 @@
 import { $ } from "bun";
+import { log } from "./util/log";
+import { memo } from "./util/memo";
 
-export const awsRegion = async () => {
+export const awsRegion = memo(async () => {
   let region = '';
   try {
     region = await $`aws configure get region`.text()
@@ -9,9 +11,9 @@ export const awsRegion = async () => {
     throw e;
   }
   return region.trim();
-};
+});
 
-export const awsCallerIdentity = async () => {
+export const awsCallerIdentity = memo(async () => {
   try {
     return await $`aws sts get-caller-identity --output json`.json() as {
       UserId: string;
@@ -22,9 +24,9 @@ export const awsCallerIdentity = async () => {
     e.command = 'aws sts get-caller-identity'
     throw e;
   }
-};
+});
 
-export const awsCliVersion = async () => {
+export const awsCliVersion = memo(async () => {
   let version = '';
   try {
     version = await $`aws --version`.text()
@@ -33,9 +35,9 @@ export const awsCliVersion = async () => {
     throw e;
   }
   return /aws-cli\/([^\s]+)/.exec(version)![1]!;
-};
+});
 
-export const awsListBuckets = async () => {
+export const awsListBuckets = memo(async () => {
   try {
     let result = await $`aws s3api list-buckets --output json`.json() as {
       Buckets: { Name: string; CreationDate: string; }[];
@@ -51,9 +53,9 @@ export const awsListBuckets = async () => {
     e.command = 'aws s3api list-buckets --output json'
     throw e;
   }
-};
+});
 
-export const awsListStacks = async () => {
+export const awsListStacks = memo(async () => {
   try {
     let result = await $`aws cloudformation list-stacks --output json`.json() as {
       StackSummaries: {
@@ -74,11 +76,12 @@ export const awsListStacks = async () => {
     e.command = 'aws cloudformation list-stacks --output json'
     throw e;
   }
-};
+});
 
-export const awsListObjectsV2 = async (bucket: string, delimiter = '/', prefix = '') => {
+export const awsListObjectsV2 = memo(async (bucket: string, prefix: string, delimiter = '/') => {
+  log({ bucket, prefix, delimiter });
   try {
-    return await $`aws s3api list-objects-v2 --bucket ${bucket} --delimiter ${delimiter} --prefix ${prefix} --output json`.json() as {
+    return await $`aws s3api list-objects-v2 --bucket='${bucket}' --delimiter='${delimiter}' --prefix='${prefix}' --output=json`.json() as {
       Contents: {
         Key: string;
         LastModified: string;
@@ -90,10 +93,10 @@ export const awsListObjectsV2 = async (bucket: string, delimiter = '/', prefix =
       }[];
       CommonPrefixes?: { Prefix: string; }[];
       Prefix?: string;
-      RequestCharged: string | null;
+      // RequestCharged: string | null;
     };
   } catch (e: any) {
-    e.command = `aws s3api list-objects-v2 --bucket ${bucket} --delimiter ${delimiter} --prefix ${prefix} --output json`
+    e.command = `aws s3api list-objects-v2 --bucket='${bucket}' --delimiter='${delimiter}' --prefix='${prefix}' --output=json`
     throw e;
   }
-};
+}, 30_000);

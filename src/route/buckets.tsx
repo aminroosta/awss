@@ -2,11 +2,18 @@ import { createResource, For } from "solid-js";
 import { awsListBuckets } from "../aws";
 import { List } from "../ui/list";
 import { Title } from "../ui/title";
+import { pushRoute, routes } from "../store";
+import { log } from "../util/log";
 
 export const Buckets = () => {
   const [buckets] = createResource(awsListBuckets, { initialValue: { Buckets: [{ Name: '...', CreationDate: '' }], Owner: { DisplayName: '..', ID: '...' } } });
 
   const onEnter = (bucket: { Name: string }) => {
+    log(bucket);
+    pushRoute({
+      ...routes.Objects,
+      args: { bucket: bucket.Name.trim(), prefix: '' }
+    });
   };
   return (
     <box flexGrow={1}>

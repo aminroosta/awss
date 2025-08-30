@@ -48,7 +48,7 @@ export const List = (p: {
       setLast_g(now);
     } else if (key.name === 'g' && key.shift) {
       setIndex(p.items.length - 1);
-    } else if (key.name === 'enter') {
+    } else if (key.name === 'return') {
       if (i >= 0) {
         p.onEnter(p.items[i]);
       }

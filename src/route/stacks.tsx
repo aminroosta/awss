@@ -8,10 +8,10 @@ export const Stacks = () => {
   const [stacks] = createResource(awsListStacks, {
     initialValue: {
       StackSummaries: [{
-        StackId: '...',
-        StackName: '...',
-        CreationTime: '...',
-        StackStatus: '...',
+        StackId: '',
+        StackName: '⏳',
+        CreationTime: '',
+        StackStatus: '',
       }]
     }
   });

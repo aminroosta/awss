@@ -10,7 +10,7 @@ const TextInfo = ({ children }: { children: any }) => {
 }
 
 const Region = () => {
-  const [region] = createResource(awsRegion, { initialValue: '...' });
+  const [region] = createResource(awsRegion, { initialValue: '⏳' });
   return (
     <box flexDirection="row">
       <TextInfo>Region:  </TextInfo>
@@ -20,7 +20,7 @@ const Region = () => {
 }
 
 const CallerIdentity = () => {
-  const [callerIdentity] = createResource(awsCallerIdentity, { initialValue: { Account: '...', UserId: '...', Arn: '...' } });
+  const [callerIdentity] = createResource(awsCallerIdentity, { initialValue: { Account: '⏳', UserId: '⏳', Arn: '⏳' } });
   return (
     <>
       <box flexDirection="row">
@@ -56,7 +56,7 @@ const SystemUsage = () => {
 }
 
 const AwsVersion = () => {
-  const [version] = createResource(awsCliVersion, { initialValue: '...' });
+  const [version] = createResource(awsCliVersion, { initialValue: '⏳' });
 
   return (
     <box flexDirection="row">
