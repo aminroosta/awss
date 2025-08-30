@@ -1,5 +1,5 @@
 import { bold, dim, getKeyHandler, TextAttributes } from "@opentui/core";
-import { createSignal, For, onCleanup, onMount, Show, type Accessor } from "solid-js";
+import { createEffect, createSignal, For, onCleanup, onMount, Show, type Accessor } from "solid-js";
 import { colors } from "../util/colors";
 import { cmdVisible, constants } from "../store";
 import { useTerminalDimensions } from "@opentui/solid";
@@ -10,45 +10,56 @@ export const List = (p: {
   columns: { title: string, render: any }[],
 }) => {
   const [idx, setIdx] = createSignal(-1);
-  const keyHandler = getKeyHandler();
+  const [visIdx, setVisIdx] = createSignal(0);
+
+  const setIndex = (i: number) => {
+    setIdx(i);
+    if (i < visIdx()) {
+      setVisIdx(i);
+    } else if (i >= visIdx() + height()) {
+      setVisIdx(i - height() + 1);
+    }
+  }
+
+
   const terminalDim = useTerminalDimensions()
   const height = () => {
     let { height } = terminalDim();
-    const borderTop = 1, titleHeight = 1;
+    const borderY = 2, titleHeight = 1;
     return height - constants.HEADER_HEIGHT
-      - borderTop - titleHeight
+      - borderY - titleHeight
       - (cmdVisible() ? constants.CMDLINE_HEIGHT : 0)
   };
-  const [last_g, setLast_g] = createSignal(0);
 
+  const [last_g, setLast_g] = createSignal(0);
   const onKeypress = (key: any) => {
     if (cmdVisible()) return;
+    const i = idx();
     if (['down', 'j'].includes(key.name)) {
-      setIdx((i) => Math.min(i + 1, p.items.length - 1));
+      setIndex(Math.min(i + 1, p.items.length - 1));
     } else if (['up', 'k'].includes(key.name)) {
-      setIdx((i) => Math.max(i - 1, 0));
+      setIndex(Math.max(i - 1, 0));
     } else if (key.name === 'g' && !key.shift) {
       const now = +new Date();
       if (now - last_g() < 500) {
-        setIdx(0);
+        setIndex(0);
       }
       setLast_g(now);
     } else if (key.name === 'g' && key.shift) {
-      setIdx(p.items.length - 1);
+      setIndex(p.items.length - 1);
     }
   };
 
-  onMount(() => {
-    keyHandler.on('keypress', onKeypress);
-  });
-
-  onCleanup(() => {
-    keyHandler.off('keypress', onKeypress);
-  });
+  const keyHandler = getKeyHandler();
+  onMount(() => { keyHandler.on('keypress', onKeypress); });
+  onCleanup(() => { keyHandler.off('keypress', onKeypress); });
 
   const bgColor = (i: Accessor<number>) => i() == idx() ? colors().primary : colors().background;
   const fgColor = (i: Accessor<number>) => i() == idx() ? colors().invert : colors().foreground;
   const getAttrs = (i: Accessor<number>) => i() == idx() ? TextAttributes.BOLD : TextAttributes.NONE;
+  const isVisible = (index: Accessor<number>) => {
+    return index() >= visIdx() && index() < visIdx() + height();
+  };
 
   return (
     <box
@@ -61,10 +72,10 @@ export const List = (p: {
         {(column, colIndex) => (
           <>
             <box>
-              <text>{column.title} {height()}</text>
+              <text>{column.title}</text>
               <For each={p.items}>
                 {(item, index) => (
-                  <box visible={index() + height() > idx()} backgroundColor={bgColor(index)}>
+                  <box visible={isVisible(index)} backgroundColor={bgColor(index)}>
                     {
                       <text fg={fgColor(index)} attributes={getAttrs(index)}>{
                         typeof column.render === 'string' ?
@@ -80,7 +91,7 @@ export const List = (p: {
               <text> </text>
               <For each={p.items}>
                 {(item, index) => (
-                  <box visible={index() + height() > idx()} flexGrow={1} backgroundColor={bgColor(index)}></box>
+                  <box visible={isVisible(index)} flexGrow={1} backgroundColor={bgColor(index)}></box>
                 )}
               </For>
             </box>
