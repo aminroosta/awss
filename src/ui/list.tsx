@@ -63,7 +63,6 @@ export const List = (p: {
 
   return (
     <box
-      title='heello' titleAlignment="center"
       border borderColor={colors().border}
       flexDirection="row" flexGrow={1}
       paddingLeft={1} paddingRight={1}
@@ -91,7 +90,7 @@ export const List = (p: {
               <text> </text>
               <For each={p.items}>
                 {(item, index) => (
-                  <box visible={isVisible(index)} flexGrow={1} backgroundColor={bgColor(index)}></box>
+                  <box visible={isVisible(index)} flexBasis={1} backgroundColor={bgColor(index)}></box>
                 )}
               </For>
             </box>

@@ -11,11 +11,11 @@ import { Stacks } from "./route/stacks";
 function ActiveRoute() {
   return (
     <Switch>
-      <Match when={route().id === 'buckets'}>
-        <Buckets />
-      </Match>
       <Match when={route().id === 'stacks'}>
         <Stacks />
+      </Match>
+      <Match when={route().id === 'buckets'}>
+        <Buckets />
       </Match>
     </Switch>
   )
