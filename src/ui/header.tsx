@@ -3,6 +3,7 @@ import { getSystemUsage, usage } from "../util/system";
 import { TextAttributes } from "@opentui/core";
 import { colors } from "../util/colors";
 import { createResource } from "solid-js";
+import { constants } from "../store";
 
 const TextInfo = ({ children }: { children: any }) => {
   return <text fg={colors().info} attributes={TextAttributes.BOLD}>{children}</text>
@@ -67,7 +68,7 @@ const AwsVersion = () => {
 
 export const Header = () => {
   return (
-    <box height={7}>
+    <box height={constants.HEADER_HEIGHT}>
       <Region />
       <CallerIdentity />
       <AwsVersion />

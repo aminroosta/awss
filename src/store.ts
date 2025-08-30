@@ -16,3 +16,8 @@ export const routes = {
 export const [route, setRoute] = createSignal(routes.Stacks);
 
 export const [cmdVisible, setCmdVisible] = createSignal(false);
+
+export const constants = {
+  HEADER_HEIGHT: 7,
+  CMDLINE_HEIGHT: 3,
+}

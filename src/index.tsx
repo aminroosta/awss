@@ -10,16 +10,14 @@ import { Stacks } from "./route/stacks";
 
 function ActiveRoute() {
   return (
-    <box flexGrow={1} title={route().title} titleAlignment="center" border borderColor={colors().border}>
-      <Switch>
-        <Match when={route().id === 'buckets'}>
-          <Buckets />
-        </Match>
-        <Match when={route().id === 'stacks'}>
-          <Stacks />
-        </Match>
-      </Switch>
-    </box>
+    <Switch>
+      <Match when={route().id === 'buckets'}>
+        <Buckets />
+      </Match>
+      <Match when={route().id === 'stacks'}>
+        <Stacks />
+      </Match>
+    </Switch>
   )
 }
 
@@ -40,9 +38,11 @@ function App() {
   return (
     <box flexGrow={1} backgroundColor={colors().background}>
       <Header />
-      <Show when={cmdVisible()}>
-        <CommandLine />
-      </Show>
+      <box>
+        <Show when={cmdVisible()}>
+          <CommandLine />
+        </Show>
+      </box>
       <ActiveRoute />
     </box>
   );

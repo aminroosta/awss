@@ -1,6 +1,6 @@
 import { useRenderer } from "@opentui/solid";
 import { createSignal, onMount, type Ref } from "solid-js";
-import { routes, setCmdVisible, setRoute } from "../store";
+import { constants, routes, setCmdVisible, setRoute } from "../store";
 import { colors } from "../util/colors";
 
 
@@ -47,7 +47,7 @@ export const CommandLine = () => {
       flexDirection="row"
       borderColor={colors().accent}
       border
-      height={3}
+      height={constants.CMDLINE_HEIGHT}
     >
       <text fg={colors().accent}>▶ </text>
       <input
