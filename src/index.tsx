@@ -4,7 +4,7 @@ import { createSignal, ErrorBoundary, Match, onMount, Show, Switch } from "solid
 import { colors } from "./util/colors";
 import { Header } from "./ui/header";
 import { CommandLine } from "./ui/commandline";
-import { route } from "./store";
+import { cmdVisible, route, setCmdVisible } from "./store";
 import { Buckets } from "./route/buckets";
 import { Stacks } from "./route/stacks";
 
@@ -24,7 +24,6 @@ function ActiveRoute() {
 }
 
 function App() {
-  let [cmdVisible, setCmdVisible] = createSignal(true);
   let renderer = useRenderer();
   const keyHandler = getKeyHandler();
 
@@ -38,16 +37,11 @@ function App() {
     }
   });
 
-  const onCommandLineEscape = () => {
-    setCmdVisible(false)
-    // renderer.setCursorPosition(0, 0, false);
-  };
-
   return (
     <box flexGrow={1} backgroundColor={colors().background}>
       <Header />
       <Show when={cmdVisible()}>
-        <CommandLine onEscape={onCommandLineEscape} />
+        <CommandLine />
       </Show>
       <ActiveRoute />
     </box>

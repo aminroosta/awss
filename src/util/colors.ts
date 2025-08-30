@@ -5,8 +5,10 @@ import { createResource } from "solid-js";
 
 const dark = {
   background: hexToRgb('#000000'),
-  border: hexToRgb('#87cefa'),
-  primary: hexToRgb('#87cefa'),
+  foreground: hexToRgb('#ffffff'),
+  border: hexToRgb('#6e96ef'),
+  primary: hexToRgb('#6e96ef'),
+  invert: hexToRgb('#1c264a'),
   info: hexToRgb('#ffa500'),
   highlight: hexToRgb('#1e90ff'),
   accent: hexToRgb('#00ffff'),
@@ -16,8 +18,10 @@ const dark = {
 
 const light = {
   background: hexToRgb('#ffffff'),
+  foreground: hexToRgb('#000000'),
   border: hexToRgb('#1e90ff'),
   primary: hexToRgb('#1e90ff'),
+  invert: hexToRgb('#edf9ff'),
   info: hexToRgb('#dd571c'),
   highlight: hexToRgb('#1e90ff'),
   accent: hexToRgb('#6f42c1'),

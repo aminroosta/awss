@@ -1,19 +1,16 @@
 import { createResource, For } from "solid-js";
 import { awsListBuckets } from "../aws";
+import { List } from "../ui/list";
 
 export const Buckets = () => {
   const [buckets] = createResource(awsListBuckets, { initialValue: { Buckets: [{ Name: '...', CreationDate: '' }], Owner: { DisplayName: '..', ID: '...' } } });
 
   return (
     <box>
-      <For each={buckets().Buckets}>
-        {(bucket) => (
-          <box flexDirection="row" justifyContent="space-between">
-            <text>{bucket.Name}</text>
-            <text flexGrow={0.5}>{bucket.CreationDate}</text>
-          </box>
-        )}
-      </For>
+      <List items={buckets().Buckets} columns={[
+        { title: 'BUCKET', render: 'Name' },
+        { title: 'CREATED', render: 'CreationDate' },
+      ]} />
     </box>
   );
 };

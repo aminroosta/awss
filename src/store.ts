@@ -14,3 +14,5 @@ export const routes = {
 };
 
 export const [route, setRoute] = createSignal(routes.Stacks);
+
+export const [cmdVisible, setCmdVisible] = createSignal(false);

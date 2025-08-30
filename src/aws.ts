@@ -55,7 +55,7 @@ export const awsListBuckets = async () => {
 
 export const awsListStacks = async () => {
   try {
-    return await $`aws cloudformation list-stacks --output json`.json() as {
+    let result = await $`aws cloudformation list-stacks --output json`.json() as {
       StackSummaries: {
         StackId: string;
         StackName: string;
@@ -63,6 +63,13 @@ export const awsListStacks = async () => {
         StackStatus: string;
       }[];
     };
+    return {
+      StackSummaries: [
+        ...result.StackSummaries,
+        ...result.StackSummaries,
+        ...result.StackSummaries
+      ]
+    }
   } catch (e: any) {
     e.command = 'aws cloudformation list-stacks --output json'
     throw e;

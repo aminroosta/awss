@@ -1,10 +1,10 @@
 import { useRenderer } from "@opentui/solid";
 import { createSignal, onMount, type Ref } from "solid-js";
-import { routes, setRoute } from "../store";
+import { routes, setCmdVisible, setRoute } from "../store";
 import { colors } from "../util/colors";
 
 
-export const CommandLine = ({ onEscape }: { onEscape: Function }) => {
+export const CommandLine = () => {
   const [value, setValue] = createSignal('');
   const [rest, setRest] = createSignal('');
   let ref;
@@ -13,8 +13,7 @@ export const CommandLine = ({ onEscape }: { onEscape: Function }) => {
 
   const onEnter = () => {
     const route = Object.values(routes).find(s => s.alias.includes(value() + rest()));
-    onEscape();
-    // renderer.setCursorPosition(0, 0, false);
+    setCmdVisible(false);
     if (route) {
       setRoute(route);
     }
@@ -22,7 +21,7 @@ export const CommandLine = ({ onEscape }: { onEscape: Function }) => {
   };
   const onKeyDown = (key: any) => {
     if (key.name === "escape") {
-      onEscape();
+      setCmdVisible(false);
     }
     if (key.name === "tab") {
       const val = value() + rest();

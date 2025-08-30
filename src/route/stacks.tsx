@@ -20,7 +20,7 @@ export const Stacks = () => {
       items={stacks().StackSummaries}
       columns={[
         { title: 'STACK', render: 'StackName' },
-        { title: 'CREATED', render: (item: any) => <text>{dim(item.CreationTime.split('T')[0])}</text> },
+        { title: 'CREATED', render: (item: any) => item.CreationTime.split('T')[0] },
         { title: 'STATUS', render: 'StackStatus' },
       ]}
     />
