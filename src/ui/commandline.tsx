@@ -1,6 +1,5 @@
-import { useRenderer } from "@opentui/solid";
-import { createSignal, onMount, type Ref } from "solid-js";
-import { constants, routes, setCmdVisible, setRoute } from "../store";
+import { createSignal } from "solid-js";
+import { constants, pushRoute, routes, setCmdVisible} from "../store";
 import { colors } from "../util/colors";
 
 
@@ -15,7 +14,7 @@ export const CommandLine = () => {
     const route = Object.values(routes).find(s => s.alias.includes(value() + rest()));
     setCmdVisible(false);
     if (route) {
-      setRoute(route);
+      pushRoute(route);
     }
 
   };

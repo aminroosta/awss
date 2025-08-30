@@ -4,9 +4,10 @@ import { createSignal, ErrorBoundary, Match, onMount, Show, Switch } from "solid
 import { colors } from "./util/colors";
 import { Header } from "./ui/header";
 import { CommandLine } from "./ui/commandline";
-import { cmdVisible, route, setCmdVisible } from "./store";
+import { cmdVisible, popRoute, route, setCmdVisible, undoPopRoute } from "./store";
 import { Buckets } from "./route/buckets";
 import { Stacks } from "./route/stacks";
+import { log } from "./util/log";
 
 function ActiveRoute() {
   return (
@@ -32,6 +33,13 @@ function App() {
   keyHandler.on('keypress', (key: any) => {
     if (key.name === ":") {
       setCmdVisible(true);
+    }
+    if (key.name === "p" && key.ctrl) {
+      popRoute();
+    }
+    log(key)
+    if (key.name === "n" && key.ctrl) {
+      undoPopRoute();
     }
   });
 

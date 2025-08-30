@@ -75,3 +75,25 @@ export const awsListStacks = async () => {
     throw e;
   }
 };
+
+export const awsListObjectsV2 = async (bucket: string, delimiter = '/', prefix = '') => {
+  try {
+    return await $`aws s3api list-objects-v2 --bucket ${bucket} --delimiter ${delimiter} --prefix ${prefix} --output json`.json() as {
+      Contents: {
+        Key: string;
+        LastModified: string;
+        Size: number;
+        StorageClass: string;
+        ETag: string;
+        ChecksumType: string;
+        ChecksumAlgorithm: string[];
+      }[];
+      CommonPrefixes?: { Prefix: string; }[];
+      Prefix?: string;
+      RequestCharged: string | null;
+    };
+  } catch (e: any) {
+    e.command = `aws s3api list-objects-v2 --bucket ${bucket} --delimiter ${delimiter} --prefix ${prefix} --output json`
+    throw e;
+  }
+};

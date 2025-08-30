@@ -6,6 +6,8 @@ import { Title } from "../ui/title";
 export const Buckets = () => {
   const [buckets] = createResource(awsListBuckets, { initialValue: { Buckets: [{ Name: '...', CreationDate: '' }], Owner: { DisplayName: '..', ID: '...' } } });
 
+  const onEnter = (bucket: { Name: string }) => {
+  };
   return (
     <box flexGrow={1}>
       <Title
@@ -13,10 +15,12 @@ export const Buckets = () => {
         filter='all'
         count={buckets.loading ? '⏳' : buckets().Buckets.length}
       />
-      <List items={buckets().Buckets} columns={[
-        { title: 'BUCKET', render: 'Name' },
-        { title: 'CREATED', render: 'CreationDate' },
-      ]} />
+      <List items={buckets().Buckets}
+        onEnter={onEnter}
+        columns={[
+          { title: 'BUCKET', render: 'Name' },
+          { title: 'CREATED', render: 'CreationDate' },
+        ]} />
     </box>
   );
 };
