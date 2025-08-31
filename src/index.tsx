@@ -11,6 +11,7 @@ import { log } from "./util/log";
 import { S3Objects } from "./route/s3objects";
 import { Resources } from "./route/resources";
 import { Modal } from "./ui/modal";
+import { Notif } from "./ui/notif";
 
 function ActiveRoute() {
   return (
@@ -69,6 +70,7 @@ function App() {
       </box>
       <ActiveRoute />
       <Modal />
+      <Notif />
     </box>
   );
 }
