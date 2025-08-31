@@ -3,7 +3,7 @@ import { awsListObjectsV2 } from "../aws";
 import { Title } from "../ui/title";
 import { List } from "../ui/list";
 import { log } from "../util/log";
-import { popRoute, pushRoute, routes } from "../store";
+import { modals, popRoute, pushRoute, routes, setModal } from "../store";
 
 export const S3Objects = (p: { args: { bucket: string, prefix: string } }) => {
   const [objects] = createResource(
@@ -39,6 +39,15 @@ export const S3Objects = (p: { args: { bucket: string, prefix: string } }) => {
         ...routes.Objects,
         args: { bucket: p.args.bucket, prefix: p.args.prefix + item.Key },
       });
+    } else {
+      setModal({
+        ...modals.File,
+        args: {
+          bucket: p.args.bucket,
+          key: p.args.prefix + item.Key,
+          title: '/' + p.args.prefix + item.Key
+        }
+      })
     }
   };
 

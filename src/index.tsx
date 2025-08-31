@@ -9,6 +9,7 @@ import { Buckets } from "./route/buckets";
 import { Stacks } from "./route/stacks";
 import { log } from "./util/log";
 import { S3Objects } from "./route/s3objects";
+import { Modal } from "./ui/modal";
 
 function ActiveRoute() {
   return (
@@ -47,7 +48,7 @@ function App() {
   });
 
   return (
-    <box flexGrow={1} backgroundColor={colors().background}>
+    <box height='100%' flexGrow={1} backgroundColor={colors().background}>
       <Header />
       <box>
         <Show when={cmdVisible()}>
@@ -55,6 +56,7 @@ function App() {
         </Show>
       </box>
       <ActiveRoute />
+      <Modal />
     </box>
   );
 }

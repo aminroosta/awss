@@ -1,8 +1,8 @@
 import { bold, dim, getKeyHandler, TextAttributes } from "@opentui/core";
 import { createEffect, createSignal, For, onCleanup, onMount, Show, type Accessor } from "solid-js";
 import { colors } from "../util/colors";
-import { cmdVisible, constants } from "../store";
-import { useTerminalDimensions } from "@opentui/solid";
+import { cmdVisible, constants, modal } from "../store";
+import { useKeyHandler, useTerminalDimensions } from "@opentui/solid";
 
 
 export const List = (p: {
@@ -33,8 +33,9 @@ export const List = (p: {
   };
 
   const [last_g, setLast_g] = createSignal(0);
-  const onKeypress = (key: any) => {
+  useKeyHandler(key => {
     if (cmdVisible()) return;
+
     const i = idx();
     if (['down', 'j'].includes(key.name)) {
       setIndex(Math.min(i + 1, p.items.length - 1));
@@ -53,11 +54,7 @@ export const List = (p: {
         p.onEnter(p.items[i]);
       }
     }
-  };
-
-  const keyHandler = getKeyHandler();
-  onMount(() => { keyHandler.on('keypress', onKeypress); });
-  onCleanup(() => { keyHandler.off('keypress', onKeypress); });
+  });
 
   const bgColor = (i: Accessor<number>) => i() == idx() ? colors().primary : colors().background;
   const fgColor = (i: Accessor<number>) => i() == idx() ? colors().invert : colors().foreground;

@@ -79,7 +79,6 @@ export const awsListStacks = memo(async () => {
 });
 
 export const awsListObjectsV2 = memo(async (bucket: string, prefix: string, delimiter = '/') => {
-  log({ bucket, prefix, delimiter });
   try {
     return await $`aws s3api list-objects-v2 --bucket='${bucket}' --delimiter='${delimiter}' --prefix='${prefix}' --output=json`.json() as {
       Contents: {
@@ -100,3 +99,12 @@ export const awsListObjectsV2 = memo(async (bucket: string, prefix: string, deli
     throw e;
   }
 }, 30_000);
+
+export const awsS3GetObject = memo(async (bucket: string, key: string) => {
+  try {
+    return await $`aws s3 cp 's3://${bucket}/${key}' -`.text();
+  } catch (e: any) {
+    e.command = `aws s3 cp --bucket='${bucket}' --key='${key}' -`
+    throw e;
+  }
+}, 10_000);

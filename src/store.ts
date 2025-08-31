@@ -28,7 +28,7 @@ export const constants = {
   CMDLINE_HEIGHT: 3,
 }
 
-//------- route management -------//
+/******** route management ********/
 const initialRoute = routes.Buckets;
 let routeStack = [initialRoute];
 let routeStackLen = 1;
@@ -39,7 +39,7 @@ export function pushRoute(r: {
   args: { [key: string]: any };
   alias: string[];
 }) {
-  log({r});
+  log({ r });
   if (JSON.stringify(route()) === JSON.stringify(r)) {
     return;
   }
@@ -60,3 +60,15 @@ export function undoPopRoute() {
   }
 }
 
+/********* modal management ********/
+export const modals = {
+  File: {
+    id: 'file',
+    args: {
+      bucket: '',
+      key: '',
+      title: ''
+    }
+  }
+};
+export const [modal, setModal] = createSignal<{ id: string, args: { title: string } & object }>(null as any);
