@@ -52,7 +52,11 @@ function App() {
   });
 
   return (
-    <box height='100%' flexGrow={1} backgroundColor={colors().background}>
+    <box
+      height='100%'
+      flexGrow={1}
+      backgroundColor={colors().background}
+    >
       <Header />
       <box>
         <Show when={cmdVisible()}>

@@ -108,3 +108,46 @@ export const awsS3GetObject = memo(async (bucket: string, key: string) => {
     throw e;
   }
 }, 10_000);
+
+export const awsCfListStackResources = (stackName: string) => memo(async () => {
+  try {
+    return await $`aws cloudformation list-stack-resources --stack-name='${stackName}' --output json`.json() as {
+      StackResourceSummaries: {
+        LogicalResourceId: string;
+        PhysicalResourceId: string;
+        ResourceType: string;
+        LastUpdatedTimestamp: string;
+        ResourceStatus: string;
+      }[];
+    };
+  } catch (e: any) {
+    e.command = `aws cloudformation list-stack-resources --stack-name='${stackName}' --output json`
+    throw e;
+  }
+}, 10_000)();
+
+export const awsCfDescribeStack = (stackName: string) => memo(async () => {
+  try {
+    const result = await $`aws cloudformation describe-stacks --stack-name='${stackName}' --output json`.json() as {
+      Stacks: {
+        StackId: string;
+        StackName: string;
+        Description?: string;
+        Parameters: { ParameterKey: string; ParameterValue: string; }[];
+        CreationTime: string;
+        RollbackConfiguration: {
+          RollbackTriggers: []
+        },
+        StackStatus: string;
+        DisableRollback: boolean;
+        NotificationARNs: string[];
+        Tags: { Key: string; Value: string; }[];
+        EnableTerminationProtection: boolean;
+      }[];
+    };
+    return result.Stacks[0]!;
+  } catch (e: any) {
+    e.command = `aws cloudformation describe-stacks --stack-name='${stackName}' --output json`
+    throw e;
+  }
+}, 10_000)();
