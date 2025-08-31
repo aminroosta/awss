@@ -65,6 +65,18 @@ export const List = (p: {
     return index() >= visIdx() && index() < visIdx() + height();
   };
 
+  const render = (index: Accessor<number>, item: any, column: { title: string, render: any }) => {
+    const props = { fg: fgColor(index), attributes: getAttrs(index) };
+    const value = typeof column.render === 'string' ?
+      item[column.render] :
+      column.render(item, props);
+
+    if (typeof value === 'string') {
+      return (<text {...props}>{value} </text>);
+    }
+    return value;
+  }
+
   return (
     <box
       border borderColor={colors().border}
@@ -79,13 +91,7 @@ export const List = (p: {
               <For each={p.items}>
                 {(item, index) => (
                   <box visible={isVisible(index)} backgroundColor={bgColor(index)}>
-                    {
-                      <text fg={fgColor(index)} attributes={getAttrs(index)}>{
-                        typeof column.render === 'string' ?
-                          item[column.render] :
-                          column.render(item)
-                      }</text>
-                    }
+                    {render(index, item, column)}
                   </box>
                 )}
               </For>

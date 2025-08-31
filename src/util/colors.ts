@@ -13,7 +13,9 @@ const dark = {
   warn: hexToRgb('#ffa500'),
   error: hexToRgb('#ff4d4f'),
   highlight: hexToRgb('#1e90ff'),
-  accent: hexToRgb('#00ffff'),
+  accent: hexToRgb('#6f42c1'),
+  success: hexToRgb('#00c853'),
+  progress: hexToRgb('#1e90ff'),
   active: hexToRgb('#ff00ff'),
   dim: hexToRgb('#808080'),
 };
@@ -29,6 +31,8 @@ const light = {
   error: hexToRgb('#d9363e'),
   highlight: hexToRgb('#1e90ff'),
   accent: hexToRgb('#6f42c1'),
+  success: hexToRgb('#2e7d32'),
+  progress: hexToRgb('#1e90ff'),
   active: hexToRgb('#ff00ff'),
   dim: hexToRgb('#808080'),
 };

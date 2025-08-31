@@ -3,6 +3,7 @@ import { createResource, createSignal, For } from "solid-js";
 import { List } from "../ui/list";
 import { Title } from "../ui/title";
 import { pushRoute, revision, routes, setNotification } from "../store";
+import { colors } from "../util/colors";
 
 export const Stacks = () => {
   const [filter, setFilter] = createSignal('all');
@@ -17,24 +18,15 @@ export const Stacks = () => {
     }
   });
 
-  const resourceCapableStatuses = new Set<string>([
-    'CREATE_IN_PROGRESS',
-    'CREATE_COMPLETE',
-    'UPDATE_IN_PROGRESS',
-    'UPDATE_COMPLETE',
-    'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS',
-    'UPDATE_ROLLBACK_IN_PROGRESS',
-    'UPDATE_ROLLBACK_COMPLETE',
-    'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS',
-    'ROLLBACK_IN_PROGRESS',
-    'ROLLBACK_COMPLETE',
-    'ROLLBACK_FAILED',
-    'IMPORT_IN_PROGRESS',
-    'IMPORT_COMPLETE',
-    'IMPORT_ROLLBACK_IN_PROGRESS',
-    'IMPORT_ROLLBACK_COMPLETE',
-    'REVIEW_IN_PROGRESS',
-  ]);
+
+  const statusColor = (item: { StackStatus: string }) => {
+    const s = item.StackStatus;
+    if (s.endsWith('_IN_PROGRESS')) return colors().info;
+    if (s.endsWith('_FAILED') || s.includes('ROLLBACK') || s === 'DELETE_COMPLETE') return colors().error;
+    if (s.endsWith('_COMPLETE')) return colors().success;
+    if (s.includes('REVIEW')) return colors().warn;
+    return undefined;
+  };
 
   const onEnter = (stack: { StackId: string; StackName: string; StackStatus?: string }) => {
     const status = (stack.StackStatus || '').trim();
@@ -65,9 +57,32 @@ export const Stacks = () => {
         columns={[
           { title: 'STACK', render: 'StackName' },
           { title: 'CREATED', render: (item: any) => item.CreationTime.split('T')[0] },
-          { title: 'STATUS', render: 'StackStatus' },
+          {
+            title: 'STATUS',
+            render: (item: any, props: any) =>
+              <text {...props} fg={statusColor(item)}>{item.StackStatus}</text>
+          },
         ]}
       />
     </box>
   );
 };
+
+const resourceCapableStatuses = new Set<string>([
+  'CREATE_IN_PROGRESS',
+  'CREATE_COMPLETE',
+  'UPDATE_IN_PROGRESS',
+  'UPDATE_COMPLETE',
+  'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS',
+  'UPDATE_ROLLBACK_IN_PROGRESS',
+  'UPDATE_ROLLBACK_COMPLETE',
+  'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS',
+  'ROLLBACK_IN_PROGRESS',
+  'ROLLBACK_COMPLETE',
+  'ROLLBACK_FAILED',
+  'IMPORT_IN_PROGRESS',
+  'IMPORT_COMPLETE',
+  'IMPORT_ROLLBACK_IN_PROGRESS',
+  'IMPORT_ROLLBACK_COMPLETE',
+  'REVIEW_IN_PROGRESS',
+]);

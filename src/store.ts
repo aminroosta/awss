@@ -52,7 +52,7 @@ export const constants = {
 }
 
 /******** route management ********/
-const initialRoute = routes.Buckets;
+const initialRoute = routes.Stacks;
 let routeStack = [initialRoute];
 let [routeStackLen, setRouteStackLen] = createSignal(1);
 export const [route, setRoute] = createSignal(initialRoute);
