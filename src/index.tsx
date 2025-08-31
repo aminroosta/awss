@@ -9,6 +9,7 @@ import { Buckets } from "./route/buckets";
 import { Stacks } from "./route/stacks";
 import { log } from "./util/log";
 import { S3Objects } from "./route/s3objects";
+import { Resources } from "./route/resources";
 import { Modal } from "./ui/modal";
 
 function ActiveRoute() {
@@ -22,6 +23,9 @@ function ActiveRoute() {
       </Match>
       <Match when={route().id === 'objects'}>
         <S3Objects args={route().args as any} />
+      </Match>
+      <Match when={route().id === 'resources'}>
+        <Resources args={route().args as any} />
       </Match>
     </Switch>
   )

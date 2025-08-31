@@ -7,7 +7,11 @@ import { pushRoute, revision, routes } from "../store";
 import { log } from "../util/log";
 
 export const Buckets = () => {
-  const [buckets] = createResource(() => revision(), awsListBuckets, { initialValue: { Buckets: [{ Name: '⏳', CreationDate: '' }], Owner: { DisplayName: '', ID: '' } } });
+  const [buckets] = createResource(
+    () => revision(),
+    () => awsListBuckets(),
+    { initialValue: { Buckets: [{ Name: '⏳', CreationDate: '' }], Owner: { DisplayName: '', ID: '' } } }
+  );
 
   const onEnter = (bucket: { Name: string }) => {
     log(bucket);

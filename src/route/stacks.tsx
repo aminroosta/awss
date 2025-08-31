@@ -2,11 +2,11 @@ import { awsListStacks } from "../aws";
 import { createResource, createSignal, For } from "solid-js";
 import { List } from "../ui/list";
 import { Title } from "../ui/title";
-import { revision } from "../store";
+import { pushRoute, revision, routes } from "../store";
 
 export const Stacks = () => {
   const [filter, setFilter] = createSignal('all');
-  const [stacks] = createResource(() => revision(), awsListStacks, {
+  const [stacks] = createResource(() => revision(), () => awsListStacks(), {
     initialValue: {
       StackSummaries: [{
         StackId: '',
@@ -17,7 +17,11 @@ export const Stacks = () => {
     }
   });
 
-  const onEnter = (stack: { StackId: string }) => {
+  const onEnter = (stack: { StackId: string; StackName: string }) => {
+    pushRoute({
+      ...routes.Resources,
+      args: { stackName: stack.StackName.trim() }
+    });
   };
 
   return (

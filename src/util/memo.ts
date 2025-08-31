@@ -16,7 +16,7 @@ export function memo<T extends any[], R>(
   const cache = new Map<string, CacheEntry>();
 
   // Default key function uses JSON.stringify
-  const getKey = keyFn ?? ((...args: T) => JSON.stringify({ ...args, _rev: revision() }));
+  const getKey = keyFn ?? ((...args: T) => JSON.stringify({ args, rev: revision() }));
 
   return async (...args: T): Promise<R> => {
     const key = getKey(...args);

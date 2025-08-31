@@ -17,7 +17,17 @@ export const routes = {
     alias: ['stacks'],
     actions: [
       { key: 'r', name: 'Refresh' },
-      // { key: 'enter', name: 'Open Stack' },
+      { key: 'enter', name: 'Open Stack Resources' },
+    ]
+  },
+  Resources: {
+    id: 'resources',
+    alias: [] as string[],
+    args: {
+      stackName: '',
+    },
+    actions: [
+      { key: 'r', name: 'Refresh' },
     ]
   },
   Objects: {
