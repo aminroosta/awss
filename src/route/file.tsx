@@ -18,6 +18,7 @@ export const File = (p: { args: { bucket: string, key: string } }) => {
         columns={[
           { title: p.args.key, render: 'line' }
         ]}
+        isModal
       />
     </box>
   );

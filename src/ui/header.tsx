@@ -70,10 +70,6 @@ const AwsVersion = () => {
 const Actions = () => {
   const chunks = () => chunkArray(actions(), constants.HEADER_HEIGHT);
 
-  // const key = (action: {key: string}) => {
-  //   return 
-  // };
-
   return (
     <For each={chunks()}>
       {chunk => (
@@ -81,8 +77,8 @@ const Actions = () => {
           <For each={chunk}>
             {action => (
               <box flexDirection="row">
-                <text fg={colors().primary}>{`<${action.key}>  `}</text>
-                <text fg={colors().dim}>{action.name}</text>
+                <text fg={colors().primary}>{`<${action.key}>`.padEnd(10, ' ')}</text>
+                <text fg={colors().dim}>{action.name.padEnd(12, ' ').slice(0, 12)}</text>
               </box>
             )}
           </For>

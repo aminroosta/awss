@@ -2,10 +2,11 @@ import { awsListStacks } from "../aws";
 import { createResource, createSignal, For } from "solid-js";
 import { List } from "../ui/list";
 import { Title } from "../ui/title";
+import { revision } from "../store";
 
 export const Stacks = () => {
   const [filter, setFilter] = createSignal('all');
-  const [stacks] = createResource(awsListStacks, {
+  const [stacks] = createResource(() => revision(), awsListStacks, {
     initialValue: {
       StackSummaries: [{
         StackId: '',

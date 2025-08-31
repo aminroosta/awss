@@ -1,3 +1,5 @@
+import { revision } from "../store";
+
 /**
  * Memoizes an async function, caching results for a given timeout.
  * @param cacheTimeout - Cache duration in milliseconds.
@@ -14,7 +16,7 @@ export function memo<T extends any[], R>(
   const cache = new Map<string, CacheEntry>();
 
   // Default key function uses JSON.stringify
-  const getKey = keyFn ?? ((...args: T) => JSON.stringify(args));
+  const getKey = keyFn ?? ((...args: T) => JSON.stringify({ ...args, _rev: revision() }));
 
   return async (...args: T): Promise<R> => {
     const key = getKey(...args);

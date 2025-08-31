@@ -1,12 +1,13 @@
-import { createResource, For } from "solid-js";
+import { createResource, createSignal, For } from "solid-js";
+import { useKeyHandler } from "@opentui/solid";
 import { awsListBuckets } from "../aws";
 import { List } from "../ui/list";
 import { Title } from "../ui/title";
-import { pushRoute, routes } from "../store";
+import { pushRoute, revision, routes } from "../store";
 import { log } from "../util/log";
 
 export const Buckets = () => {
-  const [buckets] = createResource(awsListBuckets, { initialValue: { Buckets: [{ Name: '⏳', CreationDate: '' }], Owner: { DisplayName: '', ID: '' } } });
+  const [buckets] = createResource(() => revision(), awsListBuckets, { initialValue: { Buckets: [{ Name: '⏳', CreationDate: '' }], Owner: { DisplayName: '', ID: '' } } });
 
   const onEnter = (bucket: { Name: string }) => {
     log(bucket);

@@ -3,11 +3,11 @@ import { awsListObjectsV2 } from "../aws";
 import { Title } from "../ui/title";
 import { List } from "../ui/list";
 import { log } from "../util/log";
-import { modals, popRoute, pushRoute, routes, setModal } from "../store";
+import { modals, popRoute, pushRoute, routes, setModal, revision } from "../store";
 
 export const S3Objects = (p: { args: { bucket: string, prefix: string } }) => {
   const [objects] = createResource(
-    () => ({ bucket: p.args.bucket, prefix: p.args.prefix }),
+    () => ({ bucket: p.args.bucket, prefix: p.args.prefix, revision: revision() }),
     ({ bucket, prefix }) => awsListObjectsV2(bucket, prefix),
     {
       initialValue: { Contents: [], CommonPrefixes: [], Prefix: '' }

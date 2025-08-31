@@ -5,12 +5,20 @@ export const routes = {
   Buckets: {
     id: 'buckets',
     args: {},
-    alias: ['s3', 'buckets']
+    alias: ['s3', 'buckets'],
+    actions: [
+      { key: 'r', name: 'Refresh' },
+      { key: 'enter', name: 'Open Bucket' },
+    ]
   },
   Stacks: {
     id: 'stacks',
     args: {},
-    alias: ['stacks', 'cloudformation']
+    alias: ['stacks', 'cloudformation'],
+    actions: [
+      { key: 'r', name: 'Refresh' },
+      // { key: 'enter', name: 'Open Stack' },
+    ]
   },
   Objects: {
     id: 'objects',
@@ -18,10 +26,15 @@ export const routes = {
     args: {
       bucket: '',
       prefix: '',
-    }
+    },
+    actions: [
+      { key: 'r', name: 'Refresh' },
+      { key: 'enter', name: 'Open Object / Dir' },
+    ]
   }
 };
 export const [cmdVisible, setCmdVisible] = createSignal(false);
+export const [revision, setRevision] = createSignal(1);
 
 export const constants = {
   HEADER_HEIGHT: 7,
@@ -31,7 +44,7 @@ export const constants = {
 /******** route management ********/
 const initialRoute = routes.Buckets;
 let routeStack = [initialRoute];
-let routeStackLen = 1;
+let [routeStackLen, setRouteStackLen] = createSignal(1);
 export const [route, setRoute] = createSignal(initialRoute);
 
 export function pushRoute(r: {
@@ -43,20 +56,20 @@ export function pushRoute(r: {
   if (JSON.stringify(route()) === JSON.stringify(r)) {
     return;
   }
-  routeStack = [...routeStack.slice(0, routeStackLen), r]
-  routeStackLen = routeStack.length;
+  routeStack = [...routeStack.slice(0, routeStackLen()), r]
+  setRouteStackLen(routeStack.length);
   setRoute(r);
 }
 export function popRoute() {
-  if (routeStackLen >= 2) {
-    routeStackLen -= 1;
-    setRoute(routeStack[routeStackLen - 1]!);
+  if (routeStackLen() >= 2) {
+    setRouteStackLen(routeStackLen() - 1);
+    setRoute(routeStack[routeStackLen() - 1]!);
   }
 }
 export function undoPopRoute() {
-  if (routeStackLen < routeStack.length) {
-    routeStackLen += 1;
-    setRoute(routeStack[routeStackLen - 1]!);
+  if (routeStackLen() < routeStack.length) {
+    setRouteStackLen(routeStackLen() + 1);
+    setRoute(routeStack[routeStackLen() - 1]!);
   }
 }
 
@@ -78,12 +91,19 @@ export const actions = () => {
   let all = [];
   if (cmdVisible()) {
     all.push({ key: 'esc', name: 'Dismiss CMD', });
+    all.push({ key: 'enter', name: 'Run Command' });
   } else {
-    all.push({ key: ':', name: 'Command Line', });
+    all.push({ key: '˸', name: 'Command Line', });
+    all.push({ key: 'j|down', name: 'Move Down' });
+    all.push({ key: 'k|up', name: 'Move Up' });
   }
-  for(let i = 0; i < 20; ++i) {
-    all.push({ key: `F${i}`, name: 'Custom Action', });
+  if (routeStackLen() >= 2) {
+    all.push({ key: 'ctrl+p', name: 'Go Back' });
   }
+  if (routeStackLen() < routeStack.length) {
+    all.push({ key: 'ctrl+n', name: 'Go Forward' });
+  }
+  all.push(...(route().actions || []));
 
   return all;
 };

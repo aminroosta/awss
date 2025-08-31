@@ -9,6 +9,7 @@ export const List = (p: {
   items: any[],
   onEnter: (item: any) => void,
   columns: { title: string, render: any }[],
+  isModal?: boolean
 }) => {
   const [idx, setIdx] = createSignal(-1);
   const [visIdx, setVisIdx] = createSignal(0);
@@ -35,6 +36,7 @@ export const List = (p: {
   const [last_g, setLast_g] = createSignal(0);
   useKeyHandler(key => {
     if (cmdVisible()) return;
+    if (!p.isModal && modal()) return;
 
     const i = idx();
     if (['down', 'j'].includes(key.name)) {

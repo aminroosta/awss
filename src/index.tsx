@@ -4,7 +4,7 @@ import { createSignal, ErrorBoundary, Match, onMount, Show, Switch } from "solid
 import { colors } from "./util/colors";
 import { Header } from "./ui/header";
 import { CommandLine } from "./ui/commandline";
-import { cmdVisible, popRoute, route, setCmdVisible, undoPopRoute } from "./store";
+import { cmdVisible, popRoute, route, setCmdVisible, undoPopRoute, setRevision, revision } from "./store";
 import { Buckets } from "./route/buckets";
 import { Stacks } from "./route/stacks";
 import { log } from "./util/log";
@@ -44,6 +44,10 @@ function App() {
     }
     if (key.name === "n" && key.ctrl) {
       undoPopRoute();
+    }
+    if (key.name === "r") {
+      setRevision(rev => rev + 1);
+      log({ rev: revision() });
     }
   });
 
