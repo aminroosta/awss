@@ -1,5 +1,5 @@
 import { createSignal } from "solid-js";
-import { constants, pushRoute, routes, setCmdVisible} from "../store";
+import { constants, pushRoute, routes, setCmdVisible } from "../store";
 import { colors } from "../util/colors";
 
 
@@ -41,6 +41,10 @@ export const CommandLine = () => {
       setRest('');
     }
   }
+  const placeholder = (
+    ''.padEnd(8, ' ') +
+    Object.values(routes).map(r => r.alias[0] || '').join('|')
+  ).slice(0, 37) + '...';
   return (
     <box
       flexDirection="row"
@@ -50,9 +54,11 @@ export const CommandLine = () => {
     >
       <text fg={colors().accent}>▶ </text>
       <input
+        placeholder={placeholder}
+        placeholderColor={colors().accent}
         cursorColor={colors().accent}
         ref={el => { ref = el }}
-        width={value().length + 2}
+        width={value().length ? value().length + 2 : 40}
         onInput={onInput}
         value={value()}
         onSubmit={onEnter}

@@ -5,7 +5,7 @@ export const routes = {
   Buckets: {
     id: 'buckets',
     args: {},
-    alias: ['s3', 'buckets'],
+    alias: ['buckets'],
     actions: [
       { key: 'r', name: 'Refresh' },
       { key: 'enter', name: 'Open Bucket' },
@@ -14,7 +14,7 @@ export const routes = {
   Stacks: {
     id: 'stacks',
     args: {},
-    alias: ['stacks', 'cloudformation'],
+    alias: ['stacks'],
     actions: [
       { key: 'r', name: 'Refresh' },
       // { key: 'enter', name: 'Open Stack' },
