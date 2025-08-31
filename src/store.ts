@@ -72,3 +72,18 @@ export const modals = {
   }
 };
 export const [modal, setModal] = createSignal<{ id: string, args: { title: string } & object }>(null as any);
+
+/********* actions ********/
+export const actions = () => {
+  let all = [];
+  if (cmdVisible()) {
+    all.push({ key: 'esc', name: 'Dismiss CMD', });
+  } else {
+    all.push({ key: ':', name: 'Command Line', });
+  }
+  for(let i = 0; i < 20; ++i) {
+    all.push({ key: `F${i}`, name: 'Custom Action', });
+  }
+
+  return all;
+};

@@ -2,8 +2,9 @@ import { awsRegion, awsCallerIdentity, awsCliVersion } from "../aws";
 import { getSystemUsage, usage } from "../util/system";
 import { TextAttributes } from "@opentui/core";
 import { colors } from "../util/colors";
-import { createResource } from "solid-js";
-import { constants } from "../store";
+import { createResource, For } from "solid-js";
+import { actions, constants } from "../store";
+import { chunkArray } from "../util/chunk";
 
 const TextInfo = ({ children }: { children: any }) => {
   return <text fg={colors().info} attributes={TextAttributes.BOLD}>{children}</text>
@@ -66,13 +67,40 @@ const AwsVersion = () => {
   );
 }
 
+const Actions = () => {
+  const chunks = () => chunkArray(actions(), constants.HEADER_HEIGHT);
+
+  // const key = (action: {key: string}) => {
+  //   return 
+  // };
+
+  return (
+    <For each={chunks()}>
+      {chunk => (
+        <box flexDirection="column">
+          <For each={chunk}>
+            {action => (
+              <box flexDirection="row">
+                <text fg={colors().primary}>{`<${action.key}>  `}</text>
+                <text fg={colors().dim}>{action.name}</text>
+              </box>
+            )}
+          </For>
+        </box>
+      )}
+    </For>
+  );
+};
 export const Header = () => {
   return (
-    <box height={constants.HEADER_HEIGHT}>
-      <Region />
-      <CallerIdentity />
-      <AwsVersion />
-      <SystemUsage />
+    <box flexDirection="row" gap={8} height={constants.HEADER_HEIGHT}>
+      <box>
+        <Region />
+        <CallerIdentity />
+        <AwsVersion />
+        <SystemUsage />
+      </box>
+      <Actions />
     </box>
   );
 };
