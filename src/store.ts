@@ -17,7 +17,7 @@ export const routes = {
     alias: ['stacks'],
     actions: [
       { key: 'r', name: 'Refresh' },
-      { key: 'enter', name: 'Open Stack Resources' },
+      { key: 'enter', name: 'Open' },
     ]
   },
   Resources: {
@@ -48,6 +48,7 @@ export const routes = {
     alias: ['vpcs'],
     actions: [
       { key: 'r', name: 'Refresh' },
+      { key: 'enter', name: 'Open Browser' },
     ]
   }
 };

@@ -3,6 +3,7 @@ import { awsEc2DescribeVpcs } from "../aws";
 import { List } from "../ui/list";
 import { Title } from "../ui/title";
 import { revision } from "../store";
+import { openInBrowser } from "../util/system";
 
 export const Vpcs = () => {
   const [vpcs] = createResource(
@@ -12,7 +13,7 @@ export const Vpcs = () => {
   );
 
   const onEnter = (vpc: any) => {
-    // VPC navigation logic can be added here if needed
+    openInBrowser(vpc);
   };
 
   return (
