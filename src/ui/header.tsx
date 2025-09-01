@@ -6,15 +6,15 @@ import { createResource, For } from "solid-js";
 import { actions, constants } from "../store";
 import { chunkArray } from "../util/chunk";
 
-const TextInfo = ({ children }: { children: any }) => {
-  return <text fg={colors().info} attributes={TextAttributes.BOLD}>{children}</text>
+const TextCaption = ({ children }: { children: any }) => {
+  return <text fg={colors().caption} attributes={TextAttributes.BOLD}>{children}</text>
 }
 
 const Region = () => {
   const [region] = createResource(awsRegion, { initialValue: '⏳' });
   return (
     <box flexDirection="row">
-      <TextInfo>Region:  </TextInfo>
+      <TextCaption>Region:  </TextCaption>
       <text>{region()}</text>
     </box>
   )
@@ -25,15 +25,15 @@ const CallerIdentity = () => {
   return (
     <>
       <box flexDirection="row">
-        <TextInfo>Account: </TextInfo>
+        <TextCaption>Account: </TextCaption>
         <text>{callerIdentity().Account}</text>
       </box>
       <box flexDirection="row">
-        <TextInfo>UserId:  </TextInfo>
+        <TextCaption>UserId:  </TextCaption>
         <text>{callerIdentity().UserId.split(':')[0]}</text>
       </box>
       <box flexDirection="row">
-        <TextInfo>User:    </TextInfo>
+        <TextCaption>User:    </TextCaption>
         <text>{callerIdentity().Arn.split('/').pop()}</text>
       </box>
     </>
@@ -45,11 +45,11 @@ const SystemUsage = () => {
   return (
     <>
       <box flexDirection="row">
-        <TextInfo>CPU:     </TextInfo>
+        <TextCaption>CPU:     </TextCaption>
         <text>{usage().cpu}</text>
       </box>
       <box flexDirection="row">
-        <TextInfo>MEM:     </TextInfo>
+        <TextCaption>MEM:     </TextCaption>
         <text>{usage().mem}</text>
       </box>
     </>
@@ -61,7 +61,7 @@ const AwsVersion = () => {
 
   return (
     <box flexDirection="row">
-      <TextInfo>AWS CLI: </TextInfo>
+      <TextCaption>AWS CLI: </TextCaption>
       <text>{version()}</text>
     </box>
   );
