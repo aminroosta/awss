@@ -146,7 +146,7 @@ export const [notification, setNotification] = createSignal<Notification>(null);
 export const actions = () => {
   let all = [];
   if (cmdVisible()) {
-    all.push({ key: 'esc', name: 'Dismiss CMD', });
+    all.push({ key: 'esc', name: 'Dismiss', });
     all.push({ key: 'enter', name: 'Run Command' });
   } else {
     all.push({ key: '˸', name: 'Command Line', });
@@ -154,7 +154,7 @@ export const actions = () => {
     all.push({ key: 'k|up', name: 'Move Up' });
   }
   if (routeStackLen() >= 2) {
-    all.push({ key: 'ctrl+p', name: 'Go Back' });
+    all.push({ key: 'esc', name: 'Go Back' });
   }
   if (routeStackLen() < routeStack.length) {
     all.push({ key: 'ctrl+n', name: 'Go Forward' });

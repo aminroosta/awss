@@ -23,7 +23,7 @@ function App() {
     if (key.name === ":") {
       setCmdVisible(true);
     }
-    if (key.name === "p" && key.ctrl) {
+    if (key.name === "escape") {
       popRoute();
     }
     if (key.name === "n" && key.ctrl) {
