@@ -23,7 +23,7 @@ need_cmd shasum
 uname_os() {
   case "$(uname -s)" in
     Linux) echo linux ;;
-    Darwin) echo macos ;;
+    Darwin) echo darwin ;;
     *) err "Unsupported OS: $(uname -s)"; exit 1 ;;
   esac
 }
@@ -39,12 +39,17 @@ uname_arch() {
 best_suffix() {
   os=$(uname_os)
   arch=$(uname_arch)
-  if [ "$os" = "linux" ]; then
-    # Prefer GNU glibc builds; optionally allow MUSL via MUSL=1
-    if [ "${MUSL:-}" = "1" ]; then echo "linux-musl-$arch"; else echo "linux-$arch"; fi
-  else
-    echo "macos-$arch"
-  fi
+  case "$os-$arch" in
+    linux-x64)
+      echo "linux-x64" # maps to bun-linux-x64
+      ;;
+    darwin-arm64)
+      echo "macos-arm64" # maps to bun-darwin-arm64
+      ;;
+    *)
+      err "Unsupported platform: $os-$arch (supported: linux-x64, darwin-arm64)"; exit 1
+      ;;
+  esac
 }
 
 latest_tag() {
@@ -79,5 +84,6 @@ install() {
   install -m 0755 "$TMPDIR/extract/$APP_NAME" "$BIN_DIR/$APP_NAME"
   log "Installed to $BIN_DIR/$APP_NAME"
 }
+
 
 install

@@ -23,13 +23,6 @@ jobs:
           - target: bun-linux-arm64
             os: ubuntu-latest
             suffix: linux-arm64
-          # Linux MUSL (Alpine)
-          - target: bun-linux-x64-musl
-            os: ubuntu-latest
-            suffix: linux-musl-x64
-          - target: bun-linux-arm64-musl
-            os: ubuntu-latest
-            suffix: linux-musl-arm64
           # macOS (Darwin)
           - target: bun-darwin-x64
             os: macos-latest

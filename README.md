@@ -8,11 +8,6 @@
 curl -fsSL https://raw.githubusercontent.com/aminroosta/awss/HEAD/install.sh | bash
 ```
 
-Options:
-- Set VERSION=v1.2.3 to pin a version
-- Set PREFIX or BIN_DIR to control install path (default /usr/local/bin)
-- Set MUSL=1 on Alpine to get musl builds
-
 ## Development
 
 To install dependencies:
