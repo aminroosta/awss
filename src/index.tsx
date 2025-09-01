@@ -16,6 +16,15 @@ import { Images } from "./route/images";
 import { Modal } from "./ui/modal";
 import { Notif } from "./ui/notif";
 
+const args = process.argv.slice(2);
+if (args.length === 1) {
+  const arg = args[0];
+  if (arg === '--version' || arg === '-v') {
+    console.log(process.env.APP_VERSION || "dev");
+    process.exit(0);
+  }
+}
+
 function ActiveRoute() {
   return (
     <Switch>
