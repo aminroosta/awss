@@ -2,47 +2,14 @@ import { getKeyHandler, TextAttributes } from "@opentui/core";
 import { render, useRenderer } from "@opentui/solid";
 import { createSignal, ErrorBoundary, Match, onMount, Show, Switch } from "solid-js";
 import { colors } from "./util/colors";
+import { cmdVisible, popRoute, route, setCmdVisible, undoPopRoute, setRevision, revision } from "./store";
 import { Header } from "./ui/header";
 import { CommandLine } from "./ui/commandline";
-import { cmdVisible, popRoute, route, setCmdVisible, undoPopRoute, setRevision, revision } from "./store";
-import { Buckets } from "./route/buckets";
-import { Stacks } from "./route/stacks";
 import { log } from "./util/log";
-import { S3Objects } from "./route/s3objects";
-import { Resources } from "./route/resources";
-import { Vpcs } from "./route/vpcs";
-import { Repositories } from "./route/repositories";
-import { Images } from "./route/images";
 import { Modal } from "./ui/modal";
 import { Notif } from "./ui/notif";
+import { Router } from "./router";
 
-function ActiveRoute() {
-  return (
-    <Switch>
-      <Match when={route().id === 'stacks'}>
-        <Stacks />
-      </Match>
-      <Match when={route().id === 'buckets'}>
-        <Buckets />
-      </Match>
-      <Match when={route().id === 'objects'}>
-        <S3Objects args={route().args as any} />
-      </Match>
-      <Match when={route().id === 'resources'}>
-        <Resources args={route().args as any} />
-      </Match>
-      <Match when={route().id === 'vpcs'}>
-        <Vpcs />
-      </Match>
-      <Match when={route().id === 'repositories'}>
-        <Repositories />
-      </Match>
-      <Match when={route().id === 'images'}>
-        <Images args={route().args as any} />
-      </Match>
-    </Switch>
-  )
-}
 
 function App() {
   let renderer = useRenderer();
@@ -80,7 +47,7 @@ function App() {
           <CommandLine />
         </Show>
       </box>
-      <ActiveRoute />
+      <Router />
       <Modal />
       <Notif />
     </box>

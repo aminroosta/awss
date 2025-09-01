@@ -69,6 +69,14 @@ export const routes = {
     actions: [
       { key: 'r', name: 'Refresh' },
     ]
+  },
+  Instances: {
+    id: 'instances',
+    args: {},
+    alias: ['instances'],
+    actions: [
+      { key: 'r', name: 'Refresh' },
+    ]
   }
 };
 export const [cmdVisible, setCmdVisible] = createSignal(false);
