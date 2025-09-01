@@ -170,3 +170,28 @@ export const awsEc2DescribeVpcs = memo(async () => {
     throw e;
   }
 }, 10_000);
+
+export const awsEcrDescribeRepositories = memo(async () => {
+  try {
+    const result = await $`aws ecr describe-repositories --output json`.json() as {
+      repositories: {
+        repositoryArn: string;
+        registryId: string;
+        repositoryName: string;
+        repositoryUri: string;
+        createdAt: string;
+        imageTagMutability: string;
+        imageScanningConfiguration?: {
+          scanOnPush: boolean;
+        };
+        encryptionConfiguration?: {
+          encryptionType: string;
+        };
+      }[];
+    };
+    return result.repositories;
+  } catch (e: any) {
+    e.command = 'aws ecr describe-repositories --output json'
+    throw e;
+  }
+}, 10_000);

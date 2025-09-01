@@ -11,6 +11,7 @@ import { log } from "./util/log";
 import { S3Objects } from "./route/s3objects";
 import { Resources } from "./route/resources";
 import { Vpcs } from "./route/vpcs";
+import { Repositories } from "./route/repositories";
 import { Modal } from "./ui/modal";
 import { Notif } from "./ui/notif";
 
@@ -31,6 +32,9 @@ function ActiveRoute() {
       </Match>
       <Match when={route().id === 'vpcs'}>
         <Vpcs />
+      </Match>
+      <Match when={route().id === 'repositories'}>
+        <Repositories />
       </Match>
     </Switch>
   )
