@@ -41,6 +41,14 @@ export const routes = {
       { key: 'r', name: 'Refresh' },
       { key: 'enter', name: 'Open Object / Dir' },
     ]
+  },
+  Vpcs: {
+    id: 'vpcs',
+    args: {},
+    alias: ['vpcs'],
+    actions: [
+      { key: 'r', name: 'Refresh' },
+    ]
   }
 };
 export const [cmdVisible, setCmdVisible] = createSignal(false);

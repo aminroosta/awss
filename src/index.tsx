@@ -10,6 +10,7 @@ import { Stacks } from "./route/stacks";
 import { log } from "./util/log";
 import { S3Objects } from "./route/s3objects";
 import { Resources } from "./route/resources";
+import { Vpcs } from "./route/vpcs";
 import { Modal } from "./ui/modal";
 import { Notif } from "./ui/notif";
 
@@ -27,6 +28,9 @@ function ActiveRoute() {
       </Match>
       <Match when={route().id === 'resources'}>
         <Resources args={route().args as any} />
+      </Match>
+      <Match when={route().id === 'vpcs'}>
+        <Vpcs />
       </Match>
     </Switch>
   )

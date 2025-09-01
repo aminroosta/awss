@@ -43,7 +43,7 @@ export const CommandLine = () => {
   }
   const placeholder = (
     ''.padEnd(8, ' ') +
-    Object.values(routes).map(r => r.alias[0] || '').join('|')
+    Object.values(routes).filter(r => r.alias.length).map(r => r.alias[0] || '').join('|')
   ).slice(0, 37) + '...';
   return (
     <box

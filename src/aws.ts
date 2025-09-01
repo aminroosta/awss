@@ -144,3 +144,29 @@ export const awsCfDescribeStack = (stackName: string) => memo(async () => {
     throw e;
   }
 }, 10_000)();
+
+export const awsEc2DescribeVpcs = memo(async () => {
+  try {
+    let result = await $`aws ec2 describe-vpcs --output json`.json() as {
+      Vpcs: {
+        OwnerId: string;
+        VpcId: string;
+        State: string;
+        CidrBlock: string;
+        DhcpOptionsId: string;
+        InstanceTenancy: string;
+        CidrBlockAssociationSet?: {
+          AssociationId: string;
+          CidrBlock: string;
+          CidrBlockState: { State: string };
+        }[];
+        IsDefault: boolean;
+        Tags?: { Key: string; Value: string }[];
+      }[];
+    };
+    return result.Vpcs;
+  } catch (e: any) {
+    e.command = 'aws ec2 describe-vpcs --output json'
+    throw e;
+  }
+}, 10_000);
