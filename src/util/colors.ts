@@ -40,25 +40,23 @@ const invertKeys = <T>(color: T) => {
 const dark = {
   bg: hexToRgb('#000000'),
   fg: hexToRgb('#ffffff'),
-  main: invertKeys(blue),
-  warn: hexToRgb('#ffa500'),
   caption: hexToRgb('#ffa500'),
+  warn: hexToRgb('#ffa500'),
   error: hexToRgb('#ff4d4f'),
-  accent: invertKeys(accent),
-  active: hexToRgb('#ff00ff'),
   dim: hexToRgb('#808080'),
+  main: invertKeys(blue),
+  accent: invertKeys(accent),
 };
 
 const light = {
   bg: hexToRgb('#ffffff'),
   fg: hexToRgb('#000000'),
-  main: blue,
   caption: hexToRgb('#dd571c'),
   warn: hexToRgb('#dd571c'),
   error: hexToRgb('#d9363e'),
-  accent: accent,
-  active: hexToRgb('#ff00ff'),
   dim: hexToRgb('#808080'),
+  main: blue,
+  accent: accent,
 };
 
 const [colors, colorsActions] = createResource(async () => {
