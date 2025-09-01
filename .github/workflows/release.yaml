@@ -66,18 +66,6 @@ jobs:
           mkdir -p upload
           tar -C dist -czf "upload/${APP_NAME}-${VERSION}-${SUFFIX}.tar.gz" "${APP_NAME}"
 
-      - name: Generate checksum for artifact
-        shell: bash
-        env:
-          APP_NAME: awss
-        run: |
-          set -euo pipefail
-          cd upload
-          # Generate checksum for the single tarball produced on this matrix job
-          TAR_FILE=$(ls -1 *.tar.gz)
-          shasum -a 256 "$TAR_FILE" > "${TAR_FILE}.sha256"
-          # Also keep a per-job SHA256SUMS.txt to maintain compatibility
-          cp "${TAR_FILE}.sha256" SHA256SUMS.txt
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -96,18 +84,13 @@ jobs:
         with:
           path: dist-packages
 
-      - name: Collate checksums
+
+      - name: List downloaded files
         shell: bash
         run: |
           set -euo pipefail
-          cd dist-packages
-          # Combine all checksum files from all artifacts
-          # Prefer *.sha256 if present; fallback to SHA256SUMS.txt inside each artifact dir
-          if ls */*.sha256 >/dev/null 2>&1; then
-            cat */*.sha256 > SHA256SUMS.txt
-          else
-            cat */SHA256SUMS.txt > SHA256SUMS.txt
-          fi
+          echo "Downloaded artifacts layout:" 
+          find dist-packages -maxdepth 2 -type f -print | sed 's/^/ - /'
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -117,5 +100,4 @@ jobs:
           draft: false
           prerelease: ${{ contains(github.ref_name, '-') }}
           files: |
-            dist-packages/**/*
-            dist-packages/SHA256SUMS.txt
+            dist-packages/*/*.tar.gz
