@@ -7,9 +7,9 @@ import { openInBrowser } from "../util/system";
 
 export const Vpcs = () => {
   const [vpcs] = createResource(
-    () => revision(),
+    () => ({ revision: revision() }),
     () => awsEc2DescribeVpcs(),
-    { initialValue: [{ VpcId: '⏳', State: '', CidrBlock: '', IsDefault: false, Tags: [] }] }
+    { initialValue: [{ VpcId: '⏳', State: '', CidrBlock: '', IsDefault: false, Tags: [] } as any] }
   );
 
   const onEnter = (vpc: any) => {

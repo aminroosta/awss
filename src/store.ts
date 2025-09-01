@@ -59,6 +59,16 @@ export const routes = {
       { key: 'r', name: 'Refresh' },
       { key: 'enter', name: 'Open' },
     ]
+  },
+  Images: {
+    id: 'images',
+    alias: [] as string[],
+    args: {
+      repositoryName: '',
+    },
+    actions: [
+      { key: 'r', name: 'Refresh' },
+    ]
   }
 };
 export const [cmdVisible, setCmdVisible] = createSignal(false);

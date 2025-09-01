@@ -7,16 +7,19 @@ import { colors } from "../util/colors";
 
 export const Stacks = () => {
   const [filter, setFilter] = createSignal('all');
-  const [stacks] = createResource(() => revision(), () => awsListStacks(), {
-    initialValue: {
-      StackSummaries: [{
-        StackId: '',
-        StackName: '⏳',
-        CreationTime: '',
-        StackStatus: '',
-      }]
-    }
-  });
+  const [stacks] = createResource(
+    () => ({ revision: revision() }),
+    () => awsListStacks(),
+    {
+      initialValue: {
+        StackSummaries: [{
+          StackId: '',
+          StackName: '⏳',
+          CreationTime: '',
+          StackStatus: '',
+        }]
+      }
+    });
 
 
   const statusColor = (item: { StackStatus: string }) => {

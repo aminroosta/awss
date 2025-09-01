@@ -1,10 +1,11 @@
 import { createResource } from "solid-js";
 import { awsS3GetObject } from "../aws";
 import { List } from "../ui/list";
+import { revision } from "../store";
 
 export const File = (p: { args: { bucket: string, key: string } }) => {
   const [file] = createResource(
-    () => ({ bucket: p.args.bucket, key: p.args.key }),
+    () => ({ bucket: p.args.bucket, key: p.args.key, revision: revision() }),
     ({ bucket, key }) => awsS3GetObject(bucket, key),
     { initialValue: '⏳' }
   );

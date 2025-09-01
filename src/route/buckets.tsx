@@ -8,7 +8,7 @@ import { log } from "../util/log";
 
 export const Buckets = () => {
   const [buckets] = createResource(
-    () => revision(),
+    () => ({ revision: revision() }),
     () => awsListBuckets(),
     { initialValue: { Buckets: [{ Name: '⏳', CreationDate: '' }], Owner: { DisplayName: '', ID: '' } } }
   );

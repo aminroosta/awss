@@ -100,9 +100,9 @@ export const awsS3GetObject = memo(async (bucket: string, key: string) => {
     e.command = `aws s3 cp --bucket='${bucket}' --key='${key}' -`
     throw e;
   }
-}, 10_000);
+}, 30_000);
 
-export const awsCfListStackResources = (stackName: string) => memo(async () => {
+export const awsCfListStackResources = memo(async (stackName: string) => {
   try {
     return await $`aws cloudformation list-stack-resources --stack-name='${stackName}' --output json`.json() as {
       StackResourceSummaries: {
@@ -117,9 +117,9 @@ export const awsCfListStackResources = (stackName: string) => memo(async () => {
     e.command = `aws cloudformation list-stack-resources --stack-name='${stackName}' --output json`
     throw e;
   }
-}, 10_000)();
+}, 30_000);
 
-export const awsCfDescribeStack = (stackName: string) => memo(async () => {
+export const awsCfDescribeStack = memo(async (stackName: string) => {
   try {
     const result = await $`aws cloudformation describe-stacks --stack-name='${stackName}' --output json`.json() as {
       Stacks: {
@@ -143,7 +143,7 @@ export const awsCfDescribeStack = (stackName: string) => memo(async () => {
     e.command = `aws cloudformation describe-stacks --stack-name='${stackName}' --output json`
     throw e;
   }
-}, 10_000)();
+}, 30_000);
 
 export const awsEc2DescribeVpcs = memo(async () => {
   try {
@@ -169,7 +169,7 @@ export const awsEc2DescribeVpcs = memo(async () => {
     e.command = 'aws ec2 describe-vpcs --output json'
     throw e;
   }
-}, 10_000);
+}, 30_000);
 
 export const awsEcrDescribeRepositories = memo(async () => {
   try {
@@ -194,4 +194,19 @@ export const awsEcrDescribeRepositories = memo(async () => {
     e.command = 'aws ecr describe-repositories --output json'
     throw e;
   }
-}, 10_000);
+}, 30_000);
+
+export const awsEcrListImages = memo(async (repositoryName: string) => {
+  try {
+    const result = await $`aws ecr list-images --repository-name='${repositoryName}' --output json`.json() as {
+      imageIds: {
+        imageDigest?: string;
+        imageTag?: string;
+      }[];
+    };
+    return result.imageIds;
+  } catch (e: any) {
+    e.command = `aws ecr list-images --repository-name='${repositoryName}' --output json`
+    throw e;
+  }
+}, 30_000);

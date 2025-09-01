@@ -2,18 +2,20 @@ import { createResource } from "solid-js";
 import { awsEcrDescribeRepositories } from "../aws";
 import { List } from "../ui/list";
 import { Title } from "../ui/title";
-import { revision } from "../store";
+import { revision, pushRoute, routes } from "../store";
 
 export const Repositories = () => {
   const [repositories] = createResource(
-    () => revision(),
+    () => ({ revision: revision() }),
     () => awsEcrDescribeRepositories(),
     { initialValue: [{ repositoryName: '⏳', repositoryUri: '', createdAt: '', imageTagMutability: '' } as any] }
   );
 
   const onEnter = (repo: any) => {
-    // For now, just log the repository (could be extended to navigate to images)
-    console.log(repo);
+    pushRoute({
+      ...routes.Images,
+      args: { repositoryName: repo.repositoryName }
+    });
   };
 
   return (
