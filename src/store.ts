@@ -1,5 +1,6 @@
 import { log } from "./util/log";
 import { createSignal } from "solid-js";
+import { saveSession, loadSession } from "./util/session";
 
 export const routes = {
   Buckets: {
@@ -89,7 +90,7 @@ export const constants = {
 }
 
 /******** route management ********/
-const initialRoute = routes.Stacks;
+const initialRoute = loadSession().lastRoute || routes.Buckets;
 let routeStack = [initialRoute];
 let [routeStackLen, setRouteStackLen] = createSignal(1);
 export const [route, setRoute] = createSignal(initialRoute);
@@ -106,6 +107,10 @@ export function pushRoute(r: {
   routeStack = [...routeStack.slice(0, routeStackLen()), r]
   setRouteStackLen(routeStack.length);
   setRoute(r);
+  
+  if (r.alias.length > 0) {
+    saveSession({ lastRoute: r });
+  }
 }
 export function popRoute() {
   if (routeStackLen() >= 2) {
