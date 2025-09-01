@@ -40,16 +40,21 @@ setInterval(() => {
 export { usage };
 
 export async function openInBrowser(
-  item: {VpcId: string}
+  item: { VpcId?: string; InstanceId?: string }
 ) {
   const region = await awsRegion();
-  
-  let url: string;
-  
-  if ('VpcId' in item) {
+
+  let url: string | undefined;
+
+  if (item.InstanceId) {
+    url = `https://${region}.console.aws.amazon.com/ec2/home?region=${region}#InstanceDetails:instanceId=${item.InstanceId}`;
+  } else if (item.VpcId) {
     url = `https://${region}.console.aws.amazon.com/vpc/home?region=${region}#VpcDetails:VpcId=${item.VpcId}`;
-  } else {
-    // TODO: support other resource types
+  }
+
+  if (!url) {
+    setNotification({ level: 'warn', message: 'Unsupported resource to open', timeout: 2000 });
+    return;
   }
 
   try {
@@ -61,7 +66,7 @@ export async function openInBrowser(
       await $`start ${url}`;
     }
     setNotification({ level: 'info', message: 'Opened in browser', timeout: 1500 });
-  } catch (error) {
+  } catch {
     setNotification({ level: 'error', message: 'Failed to open browser', timeout: 2500 });
   }
 }

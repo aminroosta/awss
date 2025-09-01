@@ -76,6 +76,7 @@ export const routes = {
     alias: ['instances'],
     actions: [
       { key: 'r', name: 'Refresh' },
+      { key: 'enter', name: 'Open Browser' },
     ]
   }
 };

@@ -3,6 +3,7 @@ import { awsEc2DescribeInstances } from "../aws";
 import { List } from "../ui/list";
 import { Title } from "../ui/title";
 import { revision } from "../store";
+import { openInBrowser } from "../util/system";
 
 const getTag = (item: any, key: string) => item?.Tags?.find((t: any) => t.Key === key)?.Value || '';
 
@@ -28,7 +29,9 @@ export const Instances = () => {
     }
   );
 
-  const onEnter = (instance: any) => { };
+  const onEnter = (instance: any) => {
+    openInBrowser(instance);
+  };
 
   const columns = [
     { title: 'NAME', render: (item: any) => getTag(item, 'Name') },
