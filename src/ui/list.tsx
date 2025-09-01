@@ -58,8 +58,8 @@ export const List = (p: {
     }
   });
 
-  const bgColor = (i: Accessor<number>) => i() == idx() ? colors().primary : colors().bg;
-  const fgColor = (i: Accessor<number>) => i() == idx() ? colors().invert : colors().fg;
+  const bgColor = (i: Accessor<number>) => i() == idx() ? colors().main.v200 : colors().bg;
+  const fgColor = (i: Accessor<number>) => i() == idx() ? colors().main.v950 : colors().fg;
   const getAttrs = (i: Accessor<number>) => i() == idx() ? TextAttributes.BOLD : TextAttributes.NONE;
   const isVisible = (index: Accessor<number>) => {
     return index() >= visIdx() && index() < visIdx() + height();
@@ -79,7 +79,7 @@ export const List = (p: {
 
   return (
     <box
-      border borderColor={colors().border}
+      border borderColor={colors().main.v500}
       flexDirection="row" flexGrow={1}
       paddingLeft={1} paddingRight={1}
     >

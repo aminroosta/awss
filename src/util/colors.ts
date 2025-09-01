@@ -15,6 +15,19 @@ const accent = {
   v950: hexToRgb('#2f1c59'),
 };
 
+const blue = {
+  v100: hexToRgb('#d7f1ff'),
+  v200: hexToRgb('#b9e8ff'),
+  v300: hexToRgb('#88dbff'),
+  v400: hexToRgb('#50c5ff'),
+  v500: hexToRgb('#28a7ff'),
+  v600: hexToRgb('#1e90ff'),
+  v700: hexToRgb('#0a71eb'),
+  v800: hexToRgb('#0f5abe'),
+  v900: hexToRgb('#134e95'),
+  v950: hexToRgb('#11305a'),
+};
+
 const invertKeys = <T>(color: T) => {
   const keys = Object.keys(color!) as (keyof typeof color)[];
   const inverted: Partial<typeof color> = {};
@@ -27,10 +40,7 @@ const invertKeys = <T>(color: T) => {
 const dark = {
   bg: hexToRgb('#000000'),
   fg: hexToRgb('#ffffff'),
-  border: hexToRgb('#6e96ef'),
-  primary: hexToRgb('#6e96ef'),
-  invert: hexToRgb('#1c264a'),
-  info: hexToRgb('#1e90ff'),
+  main: invertKeys(blue),
   warn: hexToRgb('#ffa500'),
   caption: hexToRgb('#ffa500'),
   error: hexToRgb('#ff4d4f'),
@@ -42,10 +52,7 @@ const dark = {
 const light = {
   bg: hexToRgb('#ffffff'),
   fg: hexToRgb('#000000'),
-  border: hexToRgb('#1e90ff'),
-  primary: hexToRgb('#1e90ff'),
-  invert: hexToRgb('#edf9ff'),
-  info: hexToRgb('#1e90ff'),
+  main: blue,
   caption: hexToRgb('#dd571c'),
   warn: hexToRgb('#dd571c'),
   error: hexToRgb('#d9363e'),

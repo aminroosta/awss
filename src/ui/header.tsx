@@ -1,6 +1,6 @@
 import { awsRegion, awsCallerIdentity, awsCliVersion } from "../aws";
 import { getSystemUsage, usage } from "../util/system";
-import { TextAttributes } from "@opentui/core";
+import { bold, TextAttributes } from "@opentui/core";
 import { colors } from "../util/colors";
 import { createResource, For } from "solid-js";
 import { actions, constants } from "../store";
@@ -83,7 +83,7 @@ const Actions = () => {
           <For each={chunk}>
             {action => (
               <box flexDirection="row">
-                <text fg={colors().primary}>{`<${action.key}>`.padEnd(10, ' ')}</text>
+                <text fg={colors().main.v700}>{bold(`<${action.key}>`.padEnd(10, ' '))}</text>
                 <text fg={colors().dim}>{action.name.padEnd(12, ' ').slice(0, 12)}</text>
               </box>
             )}

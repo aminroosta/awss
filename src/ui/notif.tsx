@@ -20,7 +20,7 @@ export const Notif = () => {
       case 'warn':
         return colors().warn;
       default:
-        return colors().info;
+        return colors().fg;
     }
   };
 

@@ -25,7 +25,7 @@ export const Stacks = () => {
 
   const statusAttrs = (item: { StackStatus: string }) => {
     const s = item.StackStatus;
-    if (s.endsWith('_IN_PROGRESS')) return { fg: colors().info }
+    if (s.endsWith('_IN_PROGRESS')) return { fg: colors().main.v400 }
     else if (s.endsWith('_FAILED') || s.includes('ROLLBACK')) return { fg: colors().warn };
     else if (s === 'DELETE_COMPLETE') return { attributes: TextAttributes.STRIKETHROUGH, fg: colors().dim };
     else return {};
