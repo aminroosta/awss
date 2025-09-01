@@ -16,17 +16,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Linux GNU
           - target: bun-linux-x64
             os: ubuntu-latest
             suffix: linux-x64
           - target: bun-linux-arm64
-            os: ubuntu-latest
+            os: ubuntu-24.04-arm
             suffix: linux-arm64
-          # macOS (Darwin)
-          - target: bun-darwin-x64
-            os: macos-latest
-            suffix: macos-x64
           - target: bun-darwin-arm64
             os: macos-latest
             suffix: macos-arm64
