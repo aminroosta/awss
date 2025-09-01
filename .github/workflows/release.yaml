@@ -56,17 +56,11 @@ jobs:
         shell: bash
         env:
           APP_NAME: awss
-          ENTRY: src/index.tsx
         run: |
           set -euo pipefail
-          echo "Building ${APP_NAME} -> target=${{ matrix.target }} entry=${ENTRY}"
+          echo "Building ${APP_NAME} -> target=${{ matrix.target }}"
 
-          # Build self-contained executable
-          bun build "$ENTRY" \
-          --compile \
-          --target=${{ matrix.target }} \
-          --minify \
-          --outfile dist/${APP_NAME}
+          bun run build.ts target=${{ matrix.target }} outdir=./dist outfile="${APP_NAME}"
 
           OUT="dist/${APP_NAME}"
           chmod +x "$OUT"
