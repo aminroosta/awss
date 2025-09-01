@@ -44,29 +44,33 @@ export const CommandLine = () => {
   const placeholder = (
     ''.padEnd(8, ' ') +
     Object.values(routes).filter(r => r.alias.length).map(r => r.alias[0] || '').join('|')
-  ).slice(0, 37) + '...';
+  ).slice(0, 49) + '…';
+
+  const color = () => colors().accent.v700;
   return (
     <box
       flexDirection="row"
-      borderColor={colors().accent}
+      borderColor={color()}
       border
       height={constants.CMDLINE_HEIGHT}
     >
-      <text fg={colors().accent}>▶ </text>
+      <text fg={color()}>▶ </text>
       <input
         placeholder={placeholder}
-        placeholderColor={colors().accent}
-        cursorColor={colors().accent}
+        placeholderColor={colors().accent.v400}
+        cursorColor={color()}
+        textColor={colors().fg}
+        focusedTextColor={colors().accent.v800}
         ref={el => { ref = el }}
-        width={value().length ? value().length + 2 : 40}
+        width={value().length ? value().length + 2 : 50}
         onInput={onInput}
         value={value()}
         onSubmit={onEnter}
         onKeyDown={onKeyDown}
         focused
-        focusedBackgroundColor={colors().background}
+        focusedBackgroundColor={colors().bg}
       />
-      <text marginLeft={-2} fg={colors().dim}>{rest()}</text>
+      <text marginLeft={-2} fg={colors().accent.v400}>{rest()}</text>
     </box>
   );
 };

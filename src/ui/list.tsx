@@ -58,8 +58,8 @@ export const List = (p: {
     }
   });
 
-  const bgColor = (i: Accessor<number>) => i() == idx() ? colors().primary : colors().background;
-  const fgColor = (i: Accessor<number>) => i() == idx() ? colors().invert : colors().foreground;
+  const bgColor = (i: Accessor<number>) => i() == idx() ? colors().primary : colors().bg;
+  const fgColor = (i: Accessor<number>) => i() == idx() ? colors().invert : colors().fg;
   const getAttrs = (i: Accessor<number>) => i() == idx() ? TextAttributes.BOLD : TextAttributes.NONE;
   const isVisible = (index: Accessor<number>) => {
     return index() >= visIdx() && index() < visIdx() + height();
@@ -87,7 +87,7 @@ export const List = (p: {
         {(column, colIndex) => (
           <>
             <box>
-              <text>{column.title}</text>
+              <text fg={colors().fg}>{column.title}</text>
               <For each={p.items}>
                 {(item, index) => (
                   <box visible={isVisible(index)} backgroundColor={bgColor(index)}>
@@ -97,7 +97,7 @@ export const List = (p: {
               </For>
             </box>
             <box visible={colIndex() < p.columns.length - 1} flexGrow={1} width={2}>
-              <text> </text>
+              <text fg={colors().fg}> </text>
               <For each={p.items}>
                 {(item, index) => (
                   <box visible={isVisible(index)} flexBasis={1} backgroundColor={bgColor(index)}></box>

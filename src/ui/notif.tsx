@@ -13,7 +13,7 @@ export const Notif = () => {
 
   const color = () => {
     const n = notification();
-    if (!n) return colors().background;
+    if (!n) return colors().bg;
     switch (n.level) {
       case 'error':
         return colors().error;
@@ -33,7 +33,7 @@ export const Notif = () => {
         position="absolute"
         right={2}
         top={1}
-        backgroundColor={colors().background}
+        backgroundColor={colors().bg}
         paddingLeft={1}
         paddingRight={1}
         border

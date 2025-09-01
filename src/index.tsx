@@ -31,7 +31,6 @@ function App() {
     }
     if (key.name === "r") {
       setRevision(rev => rev + 1);
-      log({ rev: revision() });
     }
   });
 
@@ -39,7 +38,7 @@ function App() {
     <box
       height='100%'
       flexGrow={1}
-      backgroundColor={colors().background}
+      backgroundColor={colors().bg}
     >
       <Header />
       <box>
@@ -59,13 +58,13 @@ function Root() {
     <ErrorBoundary
       fallback={(error: any) => (
         <box flexDirection="column">
-          <text>⚠️ Something went wrong!</text>
-          <text attributes={TextAttributes.BOLD}>
+          <text fg={colors().fg}>⚠️ Something went wrong!</text>
+          <text fg={colors().fg} attributes={TextAttributes.BOLD}>
             {error.command ? '$ ' + error.command + '\n' : ''}
             {error.stderr ? '> ' + `${error.stderr}`.trim() + '\n' : ''}
           </text>
-          <text attributes={TextAttributes.DIM}>{error.message}</text>
-          <text attributes={TextAttributes.DIM}>{error.stack}</text>
+          <text fg={colors().fg} attributes={TextAttributes.DIM}>{error.message}</text>
+          <text fg={colors().fg} attributes={TextAttributes.DIM}>{error.stack}</text>
         </box>
       )}
     >

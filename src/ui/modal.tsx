@@ -16,7 +16,7 @@ export const Modal = () => {
     <Show when={modal()}>
       <box
         zIndex={1}
-        backgroundColor={colors().background}
+        backgroundColor={colors().bg}
         left={10} right={10} top={4} bottom={4}
         position="absolute"
       >

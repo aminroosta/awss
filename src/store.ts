@@ -100,7 +100,6 @@ export function pushRoute(r: {
   args: { [key: string]: any };
   alias: string[];
 }) {
-  log({ r });
   if (JSON.stringify(route()) === JSON.stringify(r)) {
     return;
   }

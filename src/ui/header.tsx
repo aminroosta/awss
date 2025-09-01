@@ -15,7 +15,7 @@ const Region = () => {
   return (
     <box flexDirection="row">
       <TextCaption>Region:  </TextCaption>
-      <text>{region()}</text>
+      <text fg={colors().fg}>{region()}</text>
     </box>
   )
 }
@@ -26,11 +26,11 @@ const CallerIdentity = () => {
     <>
       <box flexDirection="row">
         <TextCaption>Account: </TextCaption>
-        <text>{callerIdentity().Account}</text>
+        <text fg={colors().fg}>{callerIdentity().Account}</text>
       </box>
       <box flexDirection="row">
         <TextCaption>User:    </TextCaption>
-        <text>{callerIdentity().Arn.split('/').pop()}</text>
+        <text fg={colors().fg}>{callerIdentity().Arn.split('/').pop()}</text>
       </box>
     </>
   );
@@ -42,11 +42,11 @@ const SystemUsage = () => {
     <>
       <box flexDirection="row">
         <TextCaption>CPU:     </TextCaption>
-        <text>{usage().cpu}</text>
+        <text fg={colors().fg}>{usage().cpu}</text>
       </box>
       <box flexDirection="row">
         <TextCaption>MEM:     </TextCaption>
-        <text>{usage().mem}</text>
+        <text fg={colors().fg}>{usage().mem}</text>
       </box>
     </>
   );
@@ -58,7 +58,7 @@ const AwsVersion = () => {
   return (
     <box flexDirection="row">
       <TextCaption>AWS CLI: </TextCaption>
-      <text>{version()}</text>
+      <text fg={colors().fg}>{version()}</text>
     </box>
   );
 }
@@ -68,7 +68,7 @@ const AwssVersion = () => {
   return (
     <box flexDirection="row">
       <TextCaption>AWSS: </TextCaption>
-      <text>{process.env.APP_VERSION || "dev"}</text>
+      <text fg={colors().fg}>{process.env.APP_VERSION || "dev"}</text>
     </box>
   );
 }
