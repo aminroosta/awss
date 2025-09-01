@@ -66,12 +66,18 @@ jobs:
           mkdir -p upload
           tar -C dist -czf "upload/${APP_NAME}-${VERSION}-${SUFFIX}.tar.gz" "${APP_NAME}"
 
-      - name: Generate checksums
+      - name: Generate checksum for artifact
         shell: bash
+        env:
+          APP_NAME: awss
         run: |
           set -euo pipefail
           cd upload
-          shasum -a 256 *.tar.gz > SHA256SUMS.txt
+          # Generate checksum for the single tarball produced on this matrix job
+          TAR_FILE=$(ls -1 *.tar.gz)
+          shasum -a 256 "$TAR_FILE" > "${TAR_FILE}.sha256"
+          # Also keep a per-job SHA256SUMS.txt to maintain compatibility
+          cp "${TAR_FILE}.sha256" SHA256SUMS.txt
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -95,7 +101,13 @@ jobs:
         run: |
           set -euo pipefail
           cd dist-packages
-          cat */SHA256SUMS.txt > SHA256SUMS.txt
+          # Combine all checksum files from all artifacts
+          # Prefer *.sha256 if present; fallback to SHA256SUMS.txt inside each artifact dir
+          if ls */*.sha256 >/dev/null 2>&1; then
+            cat */*.sha256 > SHA256SUMS.txt
+          else
+            cat */SHA256SUMS.txt > SHA256SUMS.txt
+          fi
 
       - name: Create Release
         uses: softprops/action-gh-release@v2

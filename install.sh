@@ -6,9 +6,14 @@ OWNER_REPO="${OWNER_REPO:-aminroosta/awss}"
 PREFIX="${PREFIX:-/usr/local}"
 BIN_DIR="${BIN_DIR:-$PREFIX/bin}"
 VERSION="${VERSION:-latest}"
-TMPDIR="${TMPDIR:-$(mktemp -d)}"
+TMPDIR="/tmp/awss.$RANDOM.$$"
+mkdir -p "$TMPDIR"
 
-cleanup() { rm -rf "$TMPDIR"; }
+cleanup() {
+  rm -rf "$TMPDIR"
+}
+
+trap cleanup EXIT
 trap cleanup EXIT
 
 log() { printf "[%s] %s\n" "$APP_NAME" "$*" >&2; }
