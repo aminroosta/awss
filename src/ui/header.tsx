@@ -29,10 +29,6 @@ const CallerIdentity = () => {
         <text>{callerIdentity().Account}</text>
       </box>
       <box flexDirection="row">
-        <TextCaption>UserId:  </TextCaption>
-        <text>{callerIdentity().UserId.split(':')[0]}</text>
-      </box>
-      <box flexDirection="row">
         <TextCaption>User:    </TextCaption>
         <text>{callerIdentity().Arn.split('/').pop()}</text>
       </box>
@@ -66,6 +62,16 @@ const AwsVersion = () => {
     </box>
   );
 }
+const AwssVersion = () => {
+  const [version] = createResource(awsCliVersion, { initialValue: '⏳' });
+
+  return (
+    <box flexDirection="row">
+      <TextCaption>AWSS: </TextCaption>
+      <text>{process.env.APP_VERSION || "dev"}</text>
+    </box>
+  );
+}
 
 const Actions = () => {
   const chunks = () => chunkArray(actions(), constants.HEADER_HEIGHT);
@@ -94,6 +100,7 @@ export const Header = () => {
         <Region />
         <CallerIdentity />
         <AwsVersion />
+        <AwssVersion />
         <SystemUsage />
       </box>
       <Actions />
