@@ -4,6 +4,7 @@ import { List } from "../ui/list";
 import { Title } from "../ui/title";
 import { pushRoute, revision, routes, setNotification } from "../store";
 import { colors } from "../util/colors";
+import { TextAttributes } from "@opentui/core";
 
 export const Stacks = () => {
   const [filter, setFilter] = createSignal('all');
@@ -22,13 +23,12 @@ export const Stacks = () => {
     });
 
 
-  const statusColor = (item: { StackStatus: string }) => {
+  const statusAttrs = (item: { StackStatus: string }) => {
     const s = item.StackStatus;
-    if (s.endsWith('_IN_PROGRESS')) return colors().info;
-    if (s.endsWith('_FAILED') || s.includes('ROLLBACK') || s === 'DELETE_COMPLETE') return colors().error;
-    if (s.endsWith('_COMPLETE')) return colors().success;
-    if (s.includes('REVIEW')) return colors().warn;
-    return undefined;
+    if (s.endsWith('_IN_PROGRESS')) return { fg: colors().info }
+    else if (s.endsWith('_FAILED') || s.includes('ROLLBACK')) return { fg: colors().warn };
+    else if (s === 'DELETE_COMPLETE') return { attributes: TextAttributes.STRIKETHROUGH, fg: colors().dim };
+    else return {};
   };
 
   const onEnter = (stack: { StackId: string; StackName: string; StackStatus?: string }) => {
@@ -63,7 +63,7 @@ export const Stacks = () => {
           {
             title: 'STATUS',
             render: (item: any, props: any) =>
-              <text {...props} fg={statusColor(item)}>{item.StackStatus}</text>
+              <text {...props} {...statusAttrs(item)}>{item.StackStatus}</text>
           },
         ]}
       />
