@@ -1,5 +1,5 @@
 import { bold, dim, getKeyHandler, TextAttributes } from "@opentui/core";
-import { createEffect, createSignal, For, onCleanup, onMount, Show, type Accessor } from "solid-js";
+import { batch, createEffect, createSignal, For, onCleanup, onMount, Show, type Accessor } from "solid-js";
 import { colors } from "../util/colors";
 import { cmdVisible, constants, modal } from "../store";
 import { useKeyHandler, useTerminalDimensions } from "@opentui/solid";
@@ -38,24 +38,26 @@ export const List = (p: {
     if (cmdVisible()) return;
     if (!p.isModal && modal()) return;
 
-    const i = idx();
-    if (['down', 'j'].includes(key.name)) {
-      setIndex(Math.min(i + 1, p.items.length - 1));
-    } else if (['up', 'k'].includes(key.name)) {
-      setIndex(Math.max(i - 1, 0));
-    } else if (key.name === 'g' && !key.shift) {
-      const now = +new Date();
-      if (now - last_g() < 500) {
-        setIndex(0);
+    batch(() => {
+      const i = idx();
+      if (['down', 'j'].includes(key.name)) {
+        setIndex(Math.min(i + 1, p.items.length - 1));
+      } else if (['up', 'k'].includes(key.name)) {
+        setIndex(Math.max(i - 1, 0));
+      } else if (key.name === 'g' && !key.shift) {
+        const now = +new Date();
+        if (now - last_g() < 500) {
+          setIndex(0);
+        }
+        setLast_g(now);
+      } else if (key.name === 'g' && key.shift) {
+        setIndex(p.items.length - 1);
+      } else if (key.name === 'return') {
+        if (i >= 0) {
+          p.onEnter(p.items[i]);
+        }
       }
-      setLast_g(now);
-    } else if (key.name === 'g' && key.shift) {
-      setIndex(p.items.length - 1);
-    } else if (key.name === 'return') {
-      if (i >= 0) {
-        p.onEnter(p.items[i]);
-      }
-    }
+    });
   });
 
   const bgColor = (i: Accessor<number>) => i() == idx() ? colors().main.v200 : colors().bg;
