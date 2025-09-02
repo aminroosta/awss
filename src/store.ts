@@ -100,6 +100,8 @@ export const routes = {
   }
 };
 export const [cmdVisible, setCmdVisible] = createSignal(false);
+export const [filterVisible, setFilterVisible] = createSignal(false);
+export const [filterText, setFilterText] = createSignal<string>('');
 export const [revision, setRevision] = createSignal(1);
 
 export const constants = {
@@ -123,8 +125,9 @@ export function pushRoute(r: {
   }
   routeStack = [...routeStack.slice(0, routeStackLen()), r]
   setRouteStackLen(routeStack.length);
+  setFilterText('')
   setRoute(r);
-  
+
   if (r.alias.length > 0) {
     saveSession({ lastRoute: r });
   }
@@ -132,12 +135,14 @@ export function pushRoute(r: {
 export function popRoute() {
   if (routeStackLen() >= 2) {
     setRouteStackLen(routeStackLen() - 1);
+    setFilterText('')
     setRoute(routeStack[routeStackLen() - 1]!);
   }
 }
 export function undoPopRoute() {
   if (routeStackLen() < routeStack.length) {
     setRouteStackLen(routeStackLen() + 1);
+    setFilterText('')
     setRoute(routeStack[routeStackLen() - 1]!);
   }
 }
@@ -161,12 +166,16 @@ export const [notification, setNotification] = createSignal<Notification>(null);
 
 /********* actions ********/
 export const actions = () => {
-  let all = [];
+  let all: any[] = [];
   if (cmdVisible()) {
     all.push({ key: 'esc', name: 'Dismiss', });
     all.push({ key: 'enter', name: 'Run Command' });
+  } else if (filterVisible()) {
+    all.push({ key: 'esc', name: 'Dismiss', });
+    all.push({ key: 'enter', name: 'Apply' });
   } else {
     all.push({ key: '˸', name: 'Command Line', });
+    all.push({ key: '/', name: 'Filter', });
     all.push({ key: 'j|down', name: 'Move Down' });
     all.push({ key: 'k|up', name: 'Move Up' });
   }

@@ -2,9 +2,10 @@ import { getKeyHandler, TextAttributes } from "@opentui/core";
 import { render, useRenderer } from "@opentui/solid";
 import { createSignal, ErrorBoundary, Match, onMount, Show, Switch } from "solid-js";
 import { colors } from "./util/colors";
-import { cmdVisible, popRoute, route, setCmdVisible, undoPopRoute, setRevision, revision } from "./store";
+import { cmdVisible, filterVisible, setFilterVisible, setFilterText, popRoute, route, setCmdVisible, undoPopRoute, setRevision, revision, filterText, modal, setModal } from "./store";
 import { Header } from "./ui/header";
 import { CommandLine } from "./ui/commandline";
+import { Filter } from "./ui/filter";
 import { log } from "./util/log";
 import { Modal } from "./ui/modal";
 import { Notif } from "./ui/notif";
@@ -22,9 +23,21 @@ function App() {
   keyHandler.on('keypress', (key: any) => {
     if (key.name === ":") {
       setCmdVisible(true);
+      setFilterVisible(false);
+    }
+    if (key.name === "/") {
+      setFilterText('');
+      setFilterVisible(true);
+      setCmdVisible(false);
     }
     if (key.name === "escape") {
-      popRoute();
+      if (filterText()) {
+        setFilterText('');
+      }
+      else if (modal()) {  }
+      else {
+        popRoute();
+      }
     }
     if (key.name === "n" && key.ctrl) {
       undoPopRoute();
@@ -46,10 +59,15 @@ function App() {
           <CommandLine />
         </Show>
       </box>
+      <box>
+        <Show when={filterVisible()}>
+          <Filter />
+        </Show>
+      </box >
       <Router />
       <Modal />
       <Notif />
-    </box>
+    </box >
   );
 }
 
@@ -58,13 +76,13 @@ function Root() {
     <ErrorBoundary
       fallback={(error: any) => (
         <box flexDirection="column">
-          <text fg={colors().fg}>⚠️ Something went wrong!</text>
-          <text fg={colors().fg} attributes={TextAttributes.BOLD}>
+          <text fg={colors().error}>⚠️ Something went wrong!</text>
+          <text fg={colors().error} attributes={TextAttributes.BOLD}>
             {error.command ? '$ ' + error.command + '\n' : ''}
             {error.stderr ? '> ' + `${error.stderr}`.trim() + '\n' : ''}
           </text>
-          <text fg={colors().fg} attributes={TextAttributes.DIM}>{error.message}</text>
-          <text fg={colors().fg} attributes={TextAttributes.DIM}>{error.stack}</text>
+          <text fg={colors().error} attributes={TextAttributes.ITALIC}>{error.message}</text>
+          <text fg={colors().error} attributes={TextAttributes.ITALIC}>{error.stack}</text>
         </box>
       )}
     >

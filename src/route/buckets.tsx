@@ -14,7 +14,6 @@ export const Buckets = () => {
   );
 
   const onEnter = (bucket: { Name: string }) => {
-    log(bucket);
     pushRoute({
       ...routes.Objects,
       args: { bucket: bucket.Name.trim(), prefix: '' }
