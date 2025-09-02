@@ -88,6 +88,15 @@ export const routes = {
       { key: 'r', name: 'Refresh' },
       { key: 'enter', name: 'Open Browser' },
     ]
+  },
+  Users: {
+    id: 'users',
+    args: {},
+    alias: ['users'],
+    actions: [
+      { key: 'r', name: 'Refresh' },
+      { key: 'enter', name: 'Open Browser' },
+    ]
   }
 };
 export const [cmdVisible, setCmdVisible] = createSignal(false);

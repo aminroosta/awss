@@ -344,3 +344,22 @@ export const awsEc2DescribeSecurityGroups = memo(async () => {
     throw e;
   }
 }, 30_000);
+
+export const awsIamListUsers = memo(async () => {
+  try {
+    const result = await $`aws iam list-users --output json`.json() as {
+      Users: {
+        Path: string;
+        UserName: string;
+        UserId: string;
+        Arn: string;
+        CreateDate: string;
+        Tags?: { Key: string; Value: string }[];
+      }[];
+    };
+    return result.Users;
+  } catch (e: any) {
+    e.command = 'aws iam list-users --output json'
+    throw e;
+  }
+}, 30_000);

@@ -8,6 +8,7 @@ import { Repositories } from "./route/repositories";
 import { Images } from "./route/images";
 import { Instances } from "./route/instances";
 import { SecurityGroups } from "./route/securitygroups";
+import { Users } from "./route/users";
 import { route } from "./store";
 
 export function Router() {
@@ -39,6 +40,9 @@ export function Router() {
       </Match>
       <Match when={route().id === 'securitygroups'}>
         <SecurityGroups />
+      </Match>
+      <Match when={route().id === 'users'}>
+        <Users />
       </Match>
     </Switch>
   )
