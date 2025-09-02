@@ -7,6 +7,7 @@ import { Vpcs } from "./route/vpcs";
 import { Repositories } from "./route/repositories";
 import { Images } from "./route/images";
 import { Instances } from "./route/instances";
+import { SecurityGroups } from "./route/securitygroups";
 import { route } from "./store";
 
 export function Router() {
@@ -35,6 +36,9 @@ export function Router() {
       </Match>
       <Match when={route().id === 'instances'}>
         <Instances />
+      </Match>
+      <Match when={route().id === 'securitygroups'}>
+        <SecurityGroups />
       </Match>
     </Switch>
   )

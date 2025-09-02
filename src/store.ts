@@ -6,7 +6,7 @@ export const routes = {
   Buckets: {
     id: 'buckets',
     args: {},
-    alias: ['buckets'],
+    alias: ['s3', 'buckets'],
     actions: [
       { key: 'r', name: 'Refresh' },
       { key: 'enter', name: 'Open Bucket' },
@@ -74,7 +74,16 @@ export const routes = {
   Instances: {
     id: 'instances',
     args: {},
-    alias: ['instances'],
+    alias: ['ec2', 'instances'],
+    actions: [
+      { key: 'r', name: 'Refresh' },
+      { key: 'enter', name: 'Open Browser' },
+    ]
+  },
+  SecurityGroups: {
+    id: 'securitygroups',
+    args: {},
+    alias: ['sgs', 'securitygroups'],
     actions: [
       { key: 'r', name: 'Refresh' },
       { key: 'enter', name: 'Open Browser' },

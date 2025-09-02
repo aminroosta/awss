@@ -40,7 +40,7 @@ setInterval(() => {
 export { usage };
 
 export async function openInBrowser(
-  item: { VpcId?: string; InstanceId?: string }
+  item: { VpcId?: string; InstanceId?: string; GroupId?: string }
 ) {
   const region = await awsRegion();
 
@@ -48,6 +48,8 @@ export async function openInBrowser(
 
   if (item.InstanceId) {
     url = `https://${region}.console.aws.amazon.com/ec2/home?region=${region}#InstanceDetails:instanceId=${item.InstanceId}`;
+  } else if (item.GroupId) {
+    url = `https://${region}.console.aws.amazon.com/ec2/home?region=${region}#SecurityGroup:groupId=${item.GroupId}`;
   } else if (item.VpcId) {
     url = `https://${region}.console.aws.amazon.com/vpc/home?region=${region}#VpcDetails:VpcId=${item.VpcId}`;
   }
