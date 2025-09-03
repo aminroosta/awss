@@ -73,4 +73,6 @@ function Root() {
   );
 }
 
-render(Root, { targetFps: 30 });
+render(Root, {
+  targetFps: 60
+});

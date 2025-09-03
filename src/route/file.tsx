@@ -1,7 +1,7 @@
 import { createResource } from "solid-js";
 import { awsS3GetObject } from "../aws";
-import { List } from "../ui/list";
 import { revision } from "../store";
+import { ListV2 } from "../ui/listv2";
 
 export const File = (p: { args: { bucket: string, key: string } }) => {
   const [file] = createResource(
@@ -10,15 +10,12 @@ export const File = (p: { args: { bucket: string, key: string } }) => {
     { initialValue: '⏳' }
   );
 
-  const lines = () => file().split('\n').map((line, index) => ({ line, index }));
+  const lines = () => file().split('\n');
   return (
     <box flexGrow={1} paddingLeft={1} paddingRight={1}>
-      <List
+      <ListV2
         items={lines()}
         onEnter={() => { }}
-        columns={[
-          { title: p.args.key, render: 'line' }
-        ]}
         isModal
       />
     </box>

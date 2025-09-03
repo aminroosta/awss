@@ -125,9 +125,9 @@ export function pushRoute(r: {
   setRouteStackLen(routeStack.length);
   setRoute(r);
   
-  if (r.alias.length > 0) {
+  // if (r.alias.length > 0) {
     saveSession({ lastRoute: r });
-  }
+  // }
 }
 export function popRoute() {
   if (routeStackLen() >= 2) {
