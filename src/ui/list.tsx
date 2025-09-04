@@ -1,5 +1,5 @@
 import { bold, dim, getKeyHandler, TextAttributes } from "@opentui/core";
-import { batch, createEffect, createSignal, For, onCleanup, onMount, Show, type Accessor } from "solid-js";
+import { batch, createEffect, createSignal, For, Index, onCleanup, onMount, Show, type Accessor } from "solid-js";
 import { colors } from "../util/colors";
 import { cmdVisible, constants, modal } from "../store";
 import { useKeyHandler, useTerminalDimensions } from "@opentui/solid";
@@ -14,16 +14,6 @@ export const List = (p: {
   const [idx, setIdx] = createSignal(-1);
   const [visIdx, setVisIdx] = createSignal(0);
 
-  const setIndex = (i: number) => {
-    setIdx(i);
-    if (i < visIdx()) {
-      setVisIdx(i);
-    } else if (i >= visIdx() + height()) {
-      setVisIdx(i - height() + 1);
-    }
-  }
-
-
   const terminalDim = useTerminalDimensions()
   const height = () => {
     let { height } = terminalDim();
@@ -32,6 +22,15 @@ export const List = (p: {
       - borderY - titleHeight
       - (cmdVisible() ? constants.CMDLINE_HEIGHT : 0)
   };
+
+  const setIndex = (i: number) => {
+    setIdx(i);
+    if (i < visIdx()) {
+      setVisIdx(i);
+    } else if (i >= visIdx() + height()) {
+      setVisIdx(i - height() + 1);
+    }
+  }
 
   const [last_g, setLast_g] = createSignal(0);
   useKeyHandler(key => {
@@ -60,24 +59,24 @@ export const List = (p: {
     });
   });
 
-  const bgColor = (i: Accessor<number>) => i() == idx() ? colors().main.v200 : colors().bg;
-  const fgColor = (i: Accessor<number>) => i() == idx() ? colors().main.v950 : colors().fg;
-  const getAttrs = (i: Accessor<number>) => i() == idx() ? TextAttributes.BOLD : TextAttributes.NONE;
-  const isVisible = (index: Accessor<number>) => {
-    return index() >= visIdx() && index() < visIdx() + height();
+  const visibleItems = () => {
+    const start = Math.max(visIdx(), 0)
+    return p.items.slice(start, start + height()).map((item, i) => ({
+      item,
+      props: {
+        bg: (i + start) === idx() ? colors().main.v200 : colors().bg,
+        fg: (i + start) === idx() ? colors().main.v950 : colors().fg,
+        attrs: (i + start) === idx() ? TextAttributes.BOLD : TextAttributes.NONE,
+      }
+    }));
   };
 
-  const render = (index: Accessor<number>, item: any, column: { title: string, render: any }) => {
-    const props = { fg: fgColor(index), attributes: getAttrs(index) };
-    const value = typeof column.render === 'string' ?
-      item[column.render] :
-      column.render(item, props);
-
-    if (typeof value === 'string') {
-      return (<text {...props}>{value} </text>);
-    }
-    return value;
-  }
+  const columns = () => p.columns.map(c => ({
+    title: c.title,
+    render: typeof c.render === 'string' ?
+      (item: any, props: any) => <text {...props}>{item[c.render]} </text> :
+      c.render
+  }));
 
   return (
     <box
@@ -85,30 +84,32 @@ export const List = (p: {
       flexDirection="row" flexGrow={1}
       paddingLeft={1} paddingRight={1}
     >
-      <For each={p.columns}>
+      <Index each={columns()}>
         {(column, colIndex) => (
           <>
             <box>
-              <text fg={colors().fg}>{column.title}</text>
-              <For each={p.items}>
-                {(item, index) => (
-                  <box visible={isVisible(index)} backgroundColor={bgColor(index)}>
-                    {render(index, item, column)}
+              <text fg={colors().fg}>{column().title}</text>
+              <Index each={visibleItems()}>
+                {(vitem) => (
+                  <box backgroundColor={vitem().props.bg}>
+                    {
+                      column().render(vitem().item, vitem().props)
+                    }
                   </box>
                 )}
-              </For>
+              </Index>
             </box>
-            <box visible={colIndex() < p.columns.length - 1} flexGrow={1} width={2}>
+            <box flexGrow={colIndex < p.columns.length - 1 ? 1 : 0} width={2}>
               <text fg={colors().fg}> </text>
-              <For each={p.items}>
-                {(item, index) => (
-                  <box visible={isVisible(index)} flexBasis={1} backgroundColor={bgColor(index)}></box>
+              <Index each={visibleItems()}>
+                {(vitem) => (
+                  <box flexBasis={1} backgroundColor={vitem().props.bg}></box>
                 )}
-              </For>
+              </Index>
             </box>
           </>
         )}
-      </For>
+      </Index>
     </box>
   );
 }

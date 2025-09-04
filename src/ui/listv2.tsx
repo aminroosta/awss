@@ -1,5 +1,5 @@
 import { bold, dim, getKeyHandler, TextAttributes } from "@opentui/core";
-import { batch, createEffect, createSignal, For, onCleanup, onMount, Show, type Accessor } from "solid-js";
+import { batch, createEffect, createSignal, For, Index, onCleanup, onMount, Show, type Accessor } from "solid-js";
 import { colors } from "../util/colors";
 import { cmdVisible, constants, modal } from "../store";
 import { useKeyHandler, useTerminalDimensions } from "@opentui/solid";
@@ -98,11 +98,11 @@ export const ListV2 = (p: {
       flexDirection="column" flexGrow={1}
       paddingLeft={1} paddingRight={1}
     >
-      <For each={linesWithProps()}>
-        {(line, colIndex) => (
-          <text fg={line.fg} bg={line.bg} attributes={line.attributes}>{line.line}</text>
+      <Index each={linesWithProps()}>
+        {(line) => (
+          <text fg={line().fg} bg={line().bg} attributes={line().attributes}>{line().line}</text>
         )}
-      </For>
+      </Index>
     </box>
   );
 }

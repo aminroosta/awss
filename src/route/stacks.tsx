@@ -12,14 +12,12 @@ export const Stacks = () => {
     () => ({ revision: revision() }),
     () => awsListStacks(),
     {
-      initialValue: {
-        StackSummaries: [{
-          StackId: '',
-          StackName: '⏳',
-          CreationTime: '',
-          StackStatus: '',
-        }]
-      }
+      initialValue: [{
+        StackId: '',
+        StackName: '⏳',
+        CreationTime: '',
+        StackStatus: '',
+      }]
     });
 
 
@@ -52,10 +50,10 @@ export const Stacks = () => {
       <Title
         title="stacks"
         filter={filter()}
-        count={stacks.loading ? '⏳' : stacks().StackSummaries.length}
+        count={stacks.loading ? '⏳' : stacks().length}
       />
       <List
-        items={stacks().StackSummaries}
+        items={stacks()}
         onEnter={onEnter}
         columns={[
           { title: 'STACK', render: 'StackName' },
