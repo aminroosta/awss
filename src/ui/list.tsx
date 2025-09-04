@@ -3,6 +3,7 @@ import { batch, createEffect, createSignal, For, Index, onCleanup, onMount, Show
 import { colors } from "../util/colors";
 import { cmdVisible, constants, modal } from "../store";
 import { useKeyHandler, useTerminalDimensions } from "@opentui/solid";
+import { log } from "../util/log";
 
 
 export const List = (p: {
