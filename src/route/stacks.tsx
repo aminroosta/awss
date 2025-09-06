@@ -51,8 +51,9 @@ export const Stacks = () => {
     } else if (key.name === 'p' && !key.ctrl) {
       checkResourceCapable(stack, () => {
         pushRoute({
-          ...routes.StackParameters,
-          args: { stackName: stack.StackName }
+          id: 'stackparameters',
+          args: { stackName: stack.StackName },
+          alias: [],
         });
       });
     }

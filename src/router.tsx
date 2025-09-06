@@ -1,4 +1,4 @@
-import { Match, Switch } from "solid-js";
+import { createSignal, Match, Switch } from "solid-js";
 import { Stacks } from "./route/stacks";
 import { Buckets } from "./route/buckets";
 import { Objects } from "./route/objects";
@@ -10,9 +10,12 @@ import { Instances } from "./route/instances";
 import { SecurityGroups } from "./route/securitygroups";
 import { Users } from "./route/users";
 import { StackEvents } from "./route/stackevents";
-import { StackParameters } from "./route/stackparameters";
+import "./route/stackparameters";
 import { File } from "./route/file.tsx";
 import { route } from "./store";
+import { RenderRoute, routes } from "./route/factory/registerRoute.tsx";
+
+const routeIds = Object.keys(routes);
 
 export function Router() {
   return (
@@ -50,11 +53,11 @@ export function Router() {
       <Match when={route().id === 'stackevents'}>
         <StackEvents args={route().args as any} />
       </Match>
-      <Match when={route().id === 'stackparameters'}>
-        <StackParameters args={route().args as any} />
-      </Match>
       <Match when={route().id === 'file'}>
         <File args={route().args as any} />
+      </Match>
+      <Match when={routeIds.includes(route().id)}>
+        <RenderRoute route={route()} />
       </Match>
     </Switch>
   )
