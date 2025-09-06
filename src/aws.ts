@@ -385,3 +385,27 @@ export const awsIamListUsers = memo(async () => {
     throw e;
   }
 }, 30_000);
+
+export const awsCfDescribeStackEvents = memo(async (stackName: string) => {
+  try {
+    const result = await $`aws cloudformation describe-stack-events --stack-name='${stackName}' --output json`.json() as {
+      StackEvents: {
+        StackId: string;
+        EventId: string;
+        StackName: string;
+        LogicalResourceId: string;
+        PhysicalResourceId?: string;
+        ResourceType: string;
+        Timestamp: string;
+        ResourceStatus: string;
+        ResourceStatusReason?: string;
+        ResourceProperties?: string;
+        ClientRequestToken?: string;
+      }[];
+    };
+    return result.StackEvents || [];
+  } catch (e: any) {
+    e.command = `aws cloudformation describe-stack-events --stack-name='${stackName}' --output json`
+    throw e;
+  }
+}, 5_000);

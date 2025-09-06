@@ -3,6 +3,7 @@ import { awsCfListStackResources } from "../aws";
 import { Title } from "../ui/title";
 import { List } from "../ui/list";
 import { revision } from "../store";
+import type { ParsedKey } from "@opentui/core";
 
 export const Resources = (p: { args: { stackName: string } }) => {
   const [resources] = createResource(
@@ -25,6 +26,7 @@ export const Resources = (p: { args: { stackName: string } }) => {
     ...r,
     'LastUpdatedTimestamp': (r.LastUpdatedTimestamp || '').split('T')[0],
   }));
+  const onKey = (key: ParsedKey, r: any) => { }
 
   return (
     <box flexGrow={1}>
@@ -36,6 +38,7 @@ export const Resources = (p: { args: { stackName: string } }) => {
       <List
         items={resourcesFormatted()}
         onEnter={() => { }}
+        onKey={onKey}
         columns={[
           { title: 'Name', render: 'LogicalResourceId' },
           { title: 'TYPE', render: 'ResourceType' },

@@ -4,38 +4,53 @@ import { List } from "../ui/list";
 import { Title } from "../ui/title";
 import { pushRoute, revision, routes, setNotification } from "../store";
 import { colors } from "../util/colors";
-import { bold, dim, strikethrough, TextAttributes } from "@opentui/core";
+import { bold, dim, strikethrough, TextAttributes, type ParsedKey } from "@opentui/core";
 
 export const Stacks = () => {
+  const initialValue = [{ StackName: '⏳', StackId: '', CreationTime: '', StackStatus: '' }];
   const [filter, setFilter] = createSignal('all');
   const [stacks] = createResource(
     () => ({ revision: revision() }),
     () => awsListStacks(),
-    {
-      initialValue: [{
-        StackId: '',
-        StackName: '⏳',
-        CreationTime: '',
-        StackStatus: '',
-      }]
-    });
+    { initialValue }
+  );
   type Item = Awaited<ReturnType<typeof awsListStacks>>[number];
 
-  const onEnter = (stack: { StackId: string; StackName: string; StackStatus?: string }) => {
+  const checkResourceCapable = (
+    stack: { StackId: string; StackName: string; StackStatus?: string },
+    callback: () => void
+  ) => {
     const status = (stack.StackStatus || '').trim();
-    if (!resourceCapableStatuses.has(status)) {
+    if (resourceCapableStatuses.has(status)) {
+      callback();
+    } else {
       setNotification({
-        message: `Stack ${stack.StackName} has no resources.\nStatus: ${status || 'unknown'}`,
+        message: `Stack ${stack.StackName} is ${status || 'unknown'}`,
         level: 'error',
         timeout: 2500,
       });
-      return;
     }
-    pushRoute({
-      ...routes.Resources,
-      args: { stackName: stack.StackName.trim() }
+  };
+
+  const onEnter = (stack: { StackId: string; StackName: string; StackStatus?: string }) => {
+    checkResourceCapable(stack, () => {
+      pushRoute({
+        ...routes.Resources,
+        args: { stackName: stack.StackName.trim() }
+      });
     });
   };
+  const onKey = (key: ParsedKey, stack: Item) => {
+    if (key.name === 'e') {
+      checkResourceCapable(stack, () => {
+        pushRoute({
+          ...routes.StackEvents,
+          args: { stackName: stack.StackName }
+        });
+      });
+    }
+  }
+
 
   const attrs = (s: Item) => {
     return s.StackStatus === "DELETE_COMPLETE" ? TextAttributes.STRIKETHROUGH | TextAttributes.DIM : 0;
@@ -49,8 +64,9 @@ export const Stacks = () => {
         count={stacks.loading ? '⏳' : stacks().length}
       />
       <List
-        items={stacks()}
+        items={stacks.loading ? initialValue : stacks()}
         onEnter={onEnter}
+        onKey={onKey}
         columns={[
           { title: 'STACK', render: 'StackName', attrs },
           { title: 'CREATED', render: 'CreationTime', attrs },
