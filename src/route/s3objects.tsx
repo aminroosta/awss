@@ -2,8 +2,7 @@ import { createResource } from "solid-js";
 import { awsListObjectsV2 } from "../aws";
 import { Title } from "../ui/title";
 import { List } from "../ui/list";
-import { log } from "../util/log";
-import { modals, popRoute, pushRoute, routes, setModal, revision } from "../store";
+import { modals, popRoute, pushRoute, routes, setModal, revision, setFilterText } from "../store";
 
 export const S3Objects = (p: { args: { bucket: string, prefix: string } }) => {
   const [objects] = createResource(
@@ -40,6 +39,7 @@ export const S3Objects = (p: { args: { bucket: string, prefix: string } }) => {
         args: { bucket: p.args.bucket, prefix: p.args.prefix + item.Key },
       });
     } else {
+      setFilterText('');
       setModal({
         ...modals.File,
         args: {

@@ -2,7 +2,7 @@ import { getKeyHandler, TextAttributes } from "@opentui/core";
 import { render, useRenderer } from "@opentui/solid";
 import { createSignal, ErrorBoundary, Match, onMount, Show, Switch } from "solid-js";
 import { colors } from "./util/colors";
-import { cmdVisible, popRoute, route, setCmdVisible, undoPopRoute, setRevision, revision, filterVisible, setFilterVisible, setFilterText, filterText, modal } from "./store";
+import { cmdVisible, popRoute, route, setCmdVisible, undoPopRoute, setRevision, revision, filterVisible, setFilterVisible, setFilterText, filterText, modal, setModal } from "./store";
 import { Header } from "./ui/header";
 import { CommandLine } from "./ui/commandline";
 import { log } from "./util/log";
@@ -24,6 +24,7 @@ function App() {
     if (key.name === ":") {
       setCmdVisible(true);
       setFilterVisible(false);
+      setModal(null as any);
     }
     if (key.name === "/") {
       setFilterText('');
@@ -31,10 +32,16 @@ function App() {
       setCmdVisible(false);
     }
     if (key.name === "escape") {
-      if (filterText()) {
-        setFilterText('');
+      if (cmdVisible()) {
+        setCmdVisible(false);
       }
-      else if (modal()) { }
+      else if (filterText()) {
+        setFilterText('');
+        setFilterVisible(false);
+      }
+      else if (modal()) {
+        setModal(null as any);
+      }
       else {
         popRoute();
       }

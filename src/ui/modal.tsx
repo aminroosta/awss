@@ -1,22 +1,20 @@
 import { useKeyHandler } from "@opentui/solid";
-import { modal, modals, setModal } from "../store";
+import { cmdVisible, constants, filterVisible, modal, modals, setModal } from "../store";
 import { colors } from "../util/colors";
 import { Match, Show, Switch } from "solid-js";
 import { File } from '../route/file';
 
 export const Modal = () => {
-  useKeyHandler(key => {
-    if (['escape', ':', 'enter'].includes(key.name)) {
-      setModal(null as any);
-    }
-  });
+  const top = () => {
+    return constants.HEADER_HEIGHT + 1 + (filterVisible() ? constants.CMDLINE_HEIGHT : 0);
+  }
 
   return (
     <Show when={modal()}>
       <box
         zIndex={1}
         backgroundColor={colors().bg}
-        left={10} right={10} top={4} bottom={4}
+        left={1} right={1} top={top()} bottom={2}
         position="absolute"
       >
         <Switch>
