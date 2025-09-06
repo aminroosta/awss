@@ -9,7 +9,7 @@ import { Images } from "./route/images";
 import { Instances } from "./route/instances";
 import { SecurityGroups } from "./route/securitygroups";
 import { Users } from "./route/users";
-import { StackEvents } from "./route/stackevents";
+import "./route/stackevents";
 import "./route/stackparameters";
 import { File } from "./route/file.tsx";
 import { route } from "./store";
@@ -50,9 +50,7 @@ export function Router() {
       <Match when={route().id === 'users'}>
         <Users />
       </Match>
-      <Match when={route().id === 'stackevents'}>
-        <StackEvents args={route().args as any} />
-      </Match>
+
       <Match when={route().id === 'file'}>
         <File args={route().args as any} />
       </Match>

@@ -1,8 +1,4 @@
-import { createResource } from "solid-js";
 import { awsCfDescribeStack } from "../aws";
-import { Title } from "../ui/title";
-import { List } from "../ui/list";
-import { revision } from "../store";
 import { registerRoute } from "./factory/registerRoute";
 
 registerRoute({
