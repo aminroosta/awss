@@ -50,7 +50,7 @@ export const routes = {
     alias: ['vpcs'],
     actions: [
       { key: 'r', name: 'Refresh' },
-      { key: 'enter', name: 'Open Browser' },
+      { key: 'a', name: 'Aws Website' },
     ]
   },
   Repositories: {
@@ -78,7 +78,7 @@ export const routes = {
     alias: ['ec2', 'instances'],
     actions: [
       { key: 'r', name: 'Refresh' },
-      { key: 'enter', name: 'Open Browser' },
+      { key: 'a', name: 'Aws Website' },
     ]
   },
   SecurityGroups: {
@@ -87,7 +87,7 @@ export const routes = {
     alias: ['sgs', 'securitygroups'],
     actions: [
       { key: 'r', name: 'Refresh' },
-      { key: 'enter', name: 'Open Browser' },
+      { key: 'a', name: 'Aws Website' },
     ]
   },
   Users: {
@@ -96,7 +96,7 @@ export const routes = {
     alias: ['users'],
     actions: [
       { key: 'r', name: 'Refresh' },
-      { key: 'enter', name: 'Open Browser' },
+      { key: 'a', name: 'Aws Website' },
     ]
   },
   File: {

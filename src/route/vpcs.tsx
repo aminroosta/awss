@@ -4,6 +4,7 @@ import { List } from "../ui/list";
 import { Title } from "../ui/title";
 import { revision } from "../store";
 import { openInBrowser } from "../util/system";
+import type { ParsedKey } from "@opentui/core";
 
 export const Vpcs = () => {
   const [vpcs] = createResource(
@@ -12,9 +13,12 @@ export const Vpcs = () => {
     { initialValue: [{ VpcId: '⏳', State: '', CidrBlock: '', IsDefault: false, Tags: [] } as any] }
   );
 
-  const onEnter = (vpc: any) => {
-    openInBrowser(vpc);
-  };
+  const onEnter = (vpc: any) => { };
+  const onKey = (key: ParsedKey, vpc: any) => {
+    if (key.name === 'a' && vpc) {
+      openInBrowser(vpc);
+    }
+  }
 
   const vpcsFormatted = () => vpcs().map(v => ({
     ...v,
@@ -31,6 +35,7 @@ export const Vpcs = () => {
       />
       <List items={vpcsFormatted()}
         onEnter={onEnter}
+        onKey={onKey}
         columns={[
           { title: 'VPC ID', render: 'VpcId' },
           { title: 'STATE', render: 'State' },

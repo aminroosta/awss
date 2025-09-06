@@ -4,6 +4,7 @@ import { List } from "../ui/list";
 import { Title } from "../ui/title";
 import { revision } from "../store";
 import { openInBrowser } from "../util/system";
+import type { ParsedKey } from "@opentui/core";
 
 export const SecurityGroups = () => {
   const [securityGroups] = createResource(
@@ -12,9 +13,12 @@ export const SecurityGroups = () => {
     { initialValue: [{ GroupId: '⏳', GroupName: '', Description: '', VpcId: '', Tags: [] } as any] }
   );
 
-  const onEnter = (securityGroup: any) => {
-    openInBrowser(securityGroup);
-  };
+  const onEnter = (securityGroup: any) => { };
+  const onKey = (key: ParsedKey, sg: any) => {
+    if (key.name === 'a' && sg) {
+      openInBrowser(sg);
+    }
+  }
 
   return (
     <box flexGrow={1}>
@@ -25,6 +29,7 @@ export const SecurityGroups = () => {
       />
       <List items={securityGroups()}
         onEnter={onEnter}
+        onKey={onKey}
         columns={[
           { title: 'GROUP ID', render: 'GroupId' },
           { title: 'NAME', render: 'GroupName' },

@@ -1,4 +1,4 @@
-import { TextAttributes } from "@opentui/core";
+import { TextAttributes, type ParsedKey } from "@opentui/core";
 import { batch, createEffect, createSignal, For, Index } from "solid-js";
 import { colors } from "../util/colors";
 import { cmdVisible, constants, filterText, filterVisible, modal } from "../store";
@@ -9,6 +9,7 @@ import { log } from "../util/log";
 export const List = <T extends Record<string, string>>(p: {
   items: T[],
   onEnter: (item: T) => void,
+  onKey?: (key: ParsedKey, item: T) => void,
   columns: {
     title: string,
     render: keyof T,
@@ -84,6 +85,8 @@ export const List = <T extends Record<string, string>>(p: {
         if (i >= 0) {
           p.onEnter(items[i]!);
         }
+      } else {
+        p.onKey?.(key, items[i]!);
       }
     });
   });

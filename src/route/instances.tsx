@@ -4,6 +4,7 @@ import { List } from "../ui/list";
 import { Title } from "../ui/title";
 import { revision } from "../store";
 import { openInBrowser } from "../util/system";
+import type { ParsedKey } from "@opentui/core";
 
 const getTag = (item: any, key: string) => item?.Tags?.find((t: any) => t.Key === key)?.Value || '';
 
@@ -29,13 +30,16 @@ export const Instances = () => {
     }
   );
 
-  const onEnter = (instance: any) => {
-    openInBrowser(instance);
-  };
+  const onEnter = (instance: any) => { };
+  const onKey = (key: ParsedKey, instance: any) => {
+    if (key.name === 'a' && instance) {
+      openInBrowser(instance);
+    }
+  }
 
   const instancesFormatted = () =>
     instances().map(i => ({
-      Name: getTag(i, 'Name'),
+      Name: getTag(i, 'Name') as string,
       InstanceId: i.InstanceId,
       State: i.State?.Name || '',
       PublicIpAddress: i.PublicIpAddress || i.NetworkInterfaces?.[0]?.Association?.PublicIp || '',
@@ -69,6 +73,7 @@ export const Instances = () => {
       />
       <List items={instancesFormatted()}
         onEnter={onEnter}
+        onKey={onKey}
         columns={columns} />
     </box>
   );

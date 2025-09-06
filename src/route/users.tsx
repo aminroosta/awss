@@ -4,6 +4,7 @@ import { List } from "../ui/list";
 import { Title } from "../ui/title";
 import { revision } from "../store";
 import { openInBrowser } from "../util/system";
+import type { ParsedKey } from "@opentui/core";
 
 export const Users = () => {
   const [users] = createResource(
@@ -12,9 +13,12 @@ export const Users = () => {
     { initialValue: [{ UserName: '⏳', UserId: '', Arn: '', Path: '', CreateDate: '', Tags: [] } as any] }
   );
 
-  const onEnter = (user: any) => {
-    openInBrowser(user);
-  };
+  const onEnter = (user: any) => { };
+  const onKey = (key: ParsedKey, user: any) => {
+    if (key.name === 'a' && user) {
+      openInBrowser(user);
+    }
+  }
 
   const usersFormatted = () => users().map(u => ({
     ...u,
@@ -30,6 +34,7 @@ export const Users = () => {
       />
       <List items={usersFormatted()}
         onEnter={onEnter}
+        onKey={onKey}
         columns={[
           { title: 'USER NAME', render: 'UserName' },
           { title: 'USER ID', render: 'UserId' },
