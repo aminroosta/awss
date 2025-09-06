@@ -9,6 +9,7 @@ import { Images } from "./route/images";
 import { Instances } from "./route/instances";
 import { SecurityGroups } from "./route/securitygroups";
 import { Users } from "./route/users";
+import { File } from "./route/file.tsx";
 import { route } from "./store";
 
 export function Router() {
@@ -43,6 +44,9 @@ export function Router() {
       </Match>
       <Match when={route().id === 'users'}>
         <Users />
+      </Match>
+      <Match when={route().id === 'file'}>
+        <File args={route().args as any} />
       </Match>
     </Switch>
   )

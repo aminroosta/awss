@@ -3,6 +3,7 @@ import { batch, createEffect, createSignal, For, Index } from "solid-js";
 import { colors } from "../util/colors";
 import { cmdVisible, constants, filterText, filterVisible, modal } from "../store";
 import { useKeyHandler, useTerminalDimensions } from "@opentui/solid";
+import { log } from "../util/log";
 
 
 export const List = <T extends Record<string, string>>(p: {
@@ -13,22 +14,25 @@ export const List = <T extends Record<string, string>>(p: {
     render: keyof T,
     attrs?: (item: T) => number,
   }[],
-  isModal?: boolean
 }) => {
   const [idx, setIdx] = createSignal(-1);
   const [visIdx, setVisIdx] = createSignal(0);
-  const isTopLevel = () => p.isModal || !modal();
 
   const terminalDim = useTerminalDimensions()
+  const top = () => {
+    const borderY = 2, titleHeight = 1;
+    return constants.HEADER_HEIGHT
+      + borderY + titleHeight
+      + (cmdVisible() ? constants.CMDLINE_HEIGHT : 0)
+      + (filterVisible() ? constants.CMDLINE_HEIGHT : 0)
+  };
   const height = () => {
     let { height } = terminalDim();
-    const borderY = 2, titleHeight = 1;
-    return height - constants.HEADER_HEIGHT
-      - borderY - titleHeight
-      - (cmdVisible() ? constants.CMDLINE_HEIGHT : 0)
+    return height - top();
   };
 
-  const query = () => isTopLevel() ? filterText().toLowerCase() : '';
+
+  const query = () => filterText().toLowerCase();
   const queryWords = () => query().split(' ').filter(q => q.trim().length > 0);
   const itemsFiltered = () => {
     const words = queryWords();
@@ -60,7 +64,6 @@ export const List = <T extends Record<string, string>>(p: {
   const [last_g, setLast_g] = createSignal(0);
   useKeyHandler(key => {
     if (cmdVisible() || filterVisible()) return;
-    if (!isTopLevel()) return;
 
     batch(() => {
       const i = idx();
@@ -129,48 +132,72 @@ export const List = <T extends Record<string, string>>(p: {
   };
 
   const title = () => !filterVisible() && query() ? ` /${query()} ` : undefined;
+  const width = () => {
+    const { width } = terminalDim();
+    return width;
+  };
 
+  const rightBorder = () => {
+    return Array.from({ length: height() + 1 });
+  };
 
   return (
     <box
+      height={height() + 2 + 1}
+      width={width()}
       title={title()}
       titleAlignment="left"
       border borderColor={colors().main.v500}
-      flexDirection="row" flexGrow={1}
-      paddingLeft={1} paddingRight={1}
     >
-      <Index each={p.columns}>
-        {(column, colIndex) => (
-          <>
-            <box>
-              <text fg={colors().fg}>{column().title}</text>
-              <Index each={visibleItems()}>
-                {(vitem) => (
-                  <box flexDirection="row" backgroundColor={vitem().props.bg}>
-                    <Index each={vitem().values[colIndex]}>
-                      {(v) =>
-                        <text
-                          fg={v().matched ? colors().main.v600 : vitem().props.fg}
-                          bg={v().matched ? colors().main.v100 : vitem().props.bg}
-                          attributes={vitem().props.attrs | (column().attrs?.(vitem().item) || 0) | (v().matched ? TextAttributes.BOLD : 0)}
-                        >{v().snippet}</text>
-                      }
-                    </Index>
-                  </box>
-                )}
-              </Index>
-            </box>
-            <box flexGrow={colIndex < p.columns.length - 1 ? 1 : 0} width={2}>
-              <text fg={colors().fg}> </text>
-              <Index each={visibleItems()}>
-                {(vitem) => (
-                  <box flexBasis={1} backgroundColor={vitem().props.bg}></box>
-                )}
-              </Index>
-            </box>
-          </>
-        )}
-      </Index>
+      <box
+        flexDirection="row" flexGrow={1}
+        paddingLeft={1} paddingRight={1}
+      >
+        <Index each={p.columns}>
+          {(column, colIndex) => (
+            <>
+              <box flexGrow={p.columns.length === 1 ? 1 : 0}>
+                <text fg={colors().fg}>{column().title}</text>
+                <Index each={visibleItems()}>
+                  {(vitem) => (
+                    <box flexDirection="row" backgroundColor={vitem().props.bg}>
+                      <Index each={vitem().values[colIndex]}>
+                        {(v) =>
+                          <text
+                            fg={v().matched ? colors().main.v600 : vitem().props.fg}
+                            bg={v().matched ? colors().main.v100 : vitem().props.bg}
+                            attributes={vitem().props.attrs | (column().attrs?.(vitem().item) || 0) | (v().matched ? TextAttributes.BOLD : 0)}
+                          >{v().snippet}</text>
+                        }
+                      </Index>
+                    </box>
+                  )}
+                </Index>
+              </box>
+              <box flexGrow={colIndex < p.columns.length - 1 ? 1 : 0} width={2}>
+                <text fg={colors().fg}> </text>
+                <Index each={visibleItems()}>
+                  {(vitem) => (
+                    <box flexBasis={1} backgroundColor={vitem().props.bg}></box>
+                  )}
+                </Index>
+              </box>
+            </>
+          )}
+        </Index>
+      </box>
+
+      <box
+        position="absolute"
+        width={1}
+        backgroundColor={colors().bg}
+        right={-1} top={top() - 2 - 1}
+        height={height() + 1}
+      >
+        <Index each={rightBorder()}>
+          {() => <text fg={colors().main.v500}>│</text>}
+        </Index>
+      </box>
     </box>
   );
 }

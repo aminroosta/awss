@@ -7,6 +7,7 @@ export interface SessionData {
     id: string;
     args: { [key: string]: any };
     alias: string[];
+    filterPlaceholder?: string;
   };
 }
 

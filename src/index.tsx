@@ -42,9 +42,9 @@ function App() {
       else if (modal()) {
         setModal(null as any);
       }
-      else {
-        popRoute();
-      }
+    }
+    if (key.name === "p" && key.ctrl) {
+      popRoute();
     }
     if (key.name === "n" && key.ctrl) {
       undoPopRoute();

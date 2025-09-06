@@ -1,4 +1,4 @@
-import { constants, filterText, setFilterText, setFilterVisible } from "../store";
+import { constants, filterText, route, setFilterText, setFilterVisible } from "../store";
 import { colors } from "../util/colors";
 
 export const Filter = () => {
@@ -17,6 +17,7 @@ export const Filter = () => {
     setFilterText(text);
   };
   const color = () => colors().accent.v700;
+  const placeholder = () => route().filterPlaceholder || 'Type to filter';
   return (
     <box
       flexDirection="row"
@@ -26,13 +27,13 @@ export const Filter = () => {
     >
       <text fg={color()}>/ </text>
       <input
-        placeholder={"type to filter"}
+        placeholder={placeholder()}
         placeholderColor={colors().accent.v300}
         cursorColor={color()}
         textColor={colors().fg}
         focusedTextColor={colors().accent.v800}
         ref={el => { ref = el }}
-        width={filterText().length ? filterText().length + 2 : 50}
+        width={filterText().length ? filterText().length + 2 : 60}
         onInput={onInput}
         value={filterText()}
         onSubmit={onEnter}

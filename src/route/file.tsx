@@ -18,16 +18,13 @@ export const File = (p: { args: { bucket: string, key: string } }) => {
         title={p.args.key}
         count={file.loading ? '⏳' : lines().length + ' lines'}
       />
-      <box flexGrow={1} paddingLeft={1} paddingRight={1}>
-        <List
-          items={lines()}
-          columns={[
-            { title: '', render: 'line' },
-          ]}
-          onEnter={() => { }}
-          isModal
-        />
-      </box>
+      <List
+        items={lines()}
+        columns={[
+          { title: '', render: 'line' },
+        ]}
+        onEnter={() => { }}
+      />
     </box>
   );
 }

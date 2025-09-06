@@ -9,7 +9,7 @@ export const routes = {
     alias: ['s3', 'buckets'],
     actions: [
       { key: 'r', name: 'Refresh' },
-      { key: 'enter', name: 'Open Bucket' },
+      { key: 'enter', name: 'Open' },
     ]
   },
   Stacks: {
@@ -40,8 +40,9 @@ export const routes = {
     },
     actions: [
       { key: 'r', name: 'Refresh' },
-      { key: 'enter', name: 'Open Object / Dir' },
-    ]
+      { key: 'enter', name: 'Open' },
+    ],
+    filterPlaceholder: 'Press <Enter> to include objects in all subdirectories'
   },
   Vpcs: {
     id: 'vpcs',
@@ -97,6 +98,16 @@ export const routes = {
       { key: 'r', name: 'Refresh' },
       { key: 'enter', name: 'Open Browser' },
     ]
+  },
+  File: {
+    id: 'file',
+    args: {
+      bucket: '',
+      key: '',
+      title: ''
+    },
+    alias: [] as string[],
+    actions: []
   }
 };
 export const [cmdVisible, setCmdVisible] = createSignal(false);
@@ -143,16 +154,7 @@ export function undoPopRoute() {
 }
 
 /********* modal management ********/
-export const modals = {
-  File: {
-    id: 'file',
-    args: {
-      bucket: '',
-      key: '',
-      title: ''
-    }
-  }
-};
+export const modals = { };
 export const [modal, setModal] = createSignal<{ id: string, args: { title: string } & object }>(null as any);
 
 /********* notifications *********/
@@ -178,16 +180,17 @@ export const actions = () => {
     all.push({ key: 'enter', name: 'Apply' });
   } else {
     all.push({ key: '˸', name: 'Command Line', });
+    all.push({ key: '/', name: 'Filter', });
     all.push({ key: 'j|down', name: 'Move Down' });
     all.push({ key: 'k|up', name: 'Move Up' });
+    all.push(...(route().actions || []));
   }
   if (routeStackLen() >= 2) {
-    all.push({ key: 'esc', name: 'Go Back' });
+    all.push({ key: 'ctrl+p', name: 'Go Back' });
   }
   if (routeStackLen() < routeStack.length) {
     all.push({ key: 'ctrl+n', name: 'Go Forward' });
   }
-  all.push(...(route().actions || []));
 
   return all;
 };

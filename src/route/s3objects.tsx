@@ -40,8 +40,8 @@ export const S3Objects = (p: { args: { bucket: string, prefix: string } }) => {
       });
     } else {
       setFilterText('');
-      setModal({
-        ...modals.File,
+      pushRoute({
+        ...routes.File,
         args: {
           bucket: p.args.bucket,
           key: p.args.prefix + item.Key,
@@ -52,7 +52,7 @@ export const S3Objects = (p: { args: { bucket: string, prefix: string } }) => {
   };
 
   return (
-    <box flexGrow={1}>
+    <box>
       <Title
         title={p.args.bucket}
         filter={(p.args.prefix ? '/' + p.args.prefix : undefined)}
