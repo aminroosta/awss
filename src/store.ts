@@ -86,16 +86,7 @@ export const routes = {
       { key: 'enter', name: 'Open' },
     ]
   },
-  Images: {
-    id: 'images',
-    alias: [] as string[],
-    args: {
-      repositoryName: '',
-    },
-    actions: [
-      { key: 'r', name: 'Refresh' },
-    ]
-  },
+
   Instances: {
     id: 'instances',
     args: {},

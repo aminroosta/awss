@@ -39,10 +39,10 @@ export const registerRoute = <R, A, T extends Record<string, string>>(r: {
       <box flexGrow={1}>
         <Title
           title={r.title(p.args)}
-          count={resource.loading ? '⏳' : resource().length + ' lines'}
+          count={resource.loading ? '⏳' : resource()!.length + ''}
         />
         <List
-          items={resource.loading ? initialValue : resource()}
+          items={resource.loading ? initialValue : resource()!}
           columns={r.columns}
           onEnter={() => { }}
           onKey={r.onKey}

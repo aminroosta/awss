@@ -5,13 +5,14 @@ import { Objects } from "./route/objects";
 import { Resources } from "./route/resources";
 import { Vpcs } from "./route/vpcs";
 import { Repositories } from "./route/repositories";
-import { Images } from "./route/images";
+
 import { Instances } from "./route/instances";
 import { SecurityGroups } from "./route/securitygroups";
 import { Users } from "./route/users";
 import "./route/stackevents";
 import "./route/stackparameters";
 import "./route/file";
+import "./route/images";
 import { route } from "./store";
 import { RenderRoute, routes } from "./route/factory/registerRoute.tsx";
 
@@ -38,9 +39,7 @@ export function Router() {
       <Match when={route().id === 'repositories'}>
         <Repositories />
       </Match>
-      <Match when={route().id === 'images'}>
-        <Images args={route().args as any} />
-      </Match>
+
       <Match when={route().id === 'instances'}>
         <Instances />
       </Match>

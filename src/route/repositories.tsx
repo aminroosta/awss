@@ -13,7 +13,7 @@ export const Repositories = () => {
 
   const onEnter = (repo: any) => {
     pushRoute({
-      ...routes.Images,
+      id: 'images',
       args: { repositoryName: repo.repositoryName }
     });
   };
