@@ -1,5 +1,5 @@
 import { createResource } from "solid-js";
-import { awsCfDescribeStackParameters } from "../aws";
+import { awsCfDescribeStack } from "../aws";
 import { Title } from "../ui/title";
 import { List } from "../ui/list";
 import { revision } from "../store";
@@ -11,7 +11,10 @@ export const StackParameters = (p: { args: { stackName: string } }) => {
   }];
   const [parameters] = createResource(
     () => ({ stackName: p.args.stackName, revision: revision() }),
-    ({ stackName }) => awsCfDescribeStackParameters(stackName),
+    async ({ stackName }) => {
+      const stack = await awsCfDescribeStack(stackName);
+      return stack.Parameters || [];
+    },
     { initialValue }
   );
 
