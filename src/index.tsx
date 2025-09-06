@@ -1,12 +1,10 @@
 import { getKeyHandler, TextAttributes } from "@opentui/core";
 import { render, useRenderer } from "@opentui/solid";
-import { createSignal, ErrorBoundary, Match, onMount, Show, Switch } from "solid-js";
+import { ErrorBoundary, onMount, Show} from "solid-js";
 import { colors } from "./util/colors";
-import { cmdVisible, popRoute, route, setCmdVisible, undoPopRoute, setRevision, revision, filterVisible, setFilterVisible, setFilterText, filterText, modal, setModal } from "./store";
+import { cmdVisible, popRoute, setCmdVisible, undoPopRoute, setRevision, revision, filterVisible, setFilterVisible, setFilterText, filterText} from "./store";
 import { Header } from "./ui/header";
 import { CommandLine } from "./ui/commandline";
-import { log } from "./util/log";
-import { Modal } from "./ui/modal";
 import { Notif } from "./ui/notif";
 import { Router } from "./router";
 import { Filter } from "./ui/filter";
@@ -24,7 +22,6 @@ function App() {
     if (key.name === ":") {
       setCmdVisible(true);
       setFilterVisible(false);
-      setModal(null as any);
     }
     if (key.name === "/") {
       setFilterText('');
@@ -38,9 +35,6 @@ function App() {
       else if (filterText()) {
         setFilterText('');
         setFilterVisible(false);
-      }
-      else if (modal()) {
-        setModal(null as any);
       }
     }
     if (key.name === "p" && key.ctrl) {
@@ -72,7 +66,6 @@ function App() {
         </Show>
       </box >
       <Router />
-      <Modal />
       <Notif />
     </box>
   );

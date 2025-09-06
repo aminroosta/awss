@@ -1,7 +1,7 @@
 import { TextAttributes, type ParsedKey } from "@opentui/core";
 import { batch, createEffect, createSignal, For, Index } from "solid-js";
 import { colors } from "../util/colors";
-import { cmdVisible, constants, filterText, filterVisible, modal } from "../store";
+import { cmdVisible, constants, filterText, filterVisible} from "../store";
 import { useKeyHandler, useTerminalDimensions } from "@opentui/solid";
 import { log } from "../util/log";
 

@@ -178,10 +178,6 @@ export function undoPopRoute() {
   }
 }
 
-/********* modal management ********/
-export const modals = {};
-export const [modal, setModal] = createSignal<{ id: string, args: { title: string } & object }>(null as any);
-
 /********* notifications *********/
 type Notification = { message: string; level: 'info' | 'warn' | 'error'; timeout: number } | null;
 export const [notification, setNotification] = createSignal<Notification>(null);
