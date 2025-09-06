@@ -17,6 +17,10 @@ export const Repositories = () => {
       args: { repositoryName: repo.repositoryName }
     });
   };
+  const repositoriesFormatted = () => repositories().map((r) => ({
+    ...r,
+    CreatedAt: r.createdAt?.split('T')[0],
+  }));
 
   return (
     <box flexGrow={1}>
@@ -29,7 +33,7 @@ export const Repositories = () => {
         onEnter={onEnter}
         columns={[
           { title: 'REPOSITORY NAME', render: 'repositoryName' },
-          { title: 'CREATED', render: (repo: any) => repo.createdAt.split('T')[0] },
+          { title: 'CREATED', render: 'CreatedAt' },
           { title: 'TAG MUTABILITY', render: 'imageTagMutability' },
         ]} />
     </box>

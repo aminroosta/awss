@@ -4,7 +4,7 @@ import { List } from "../ui/list";
 import { Title } from "../ui/title";
 import { pushRoute, revision, routes, setNotification } from "../store";
 import { colors } from "../util/colors";
-import { TextAttributes } from "@opentui/core";
+import { bold, dim, strikethrough, TextAttributes } from "@opentui/core";
 
 export const Stacks = () => {
   const [filter, setFilter] = createSignal('all');
@@ -19,15 +19,7 @@ export const Stacks = () => {
         StackStatus: '',
       }]
     });
-
-
-  const statusAttrs = (item: { StackStatus: string }) => {
-    const s = item.StackStatus;
-    if (s.endsWith('_IN_PROGRESS')) return { fg: colors().main.v400 }
-    else if (s.endsWith('_FAILED') || s.includes('ROLLBACK')) return { fg: colors().warn };
-    else if (s === 'DELETE_COMPLETE') return { attributes: TextAttributes.STRIKETHROUGH, fg: colors().dim };
-    else return {};
-  };
+  type Item = Awaited<ReturnType<typeof awsListStacks>>[number];
 
   const onEnter = (stack: { StackId: string; StackName: string; StackStatus?: string }) => {
     const status = (stack.StackStatus || '').trim();
@@ -45,6 +37,10 @@ export const Stacks = () => {
     });
   };
 
+  const attrs = (s: Item) => {
+    return s.StackStatus === "DELETE_COMPLETE" ? TextAttributes.STRIKETHROUGH | TextAttributes.DIM : 0;
+  }
+
   return (
     <box flexGrow={1}>
       <Title
@@ -56,13 +52,9 @@ export const Stacks = () => {
         items={stacks()}
         onEnter={onEnter}
         columns={[
-          { title: 'STACK', render: 'StackName' },
-          { title: 'CREATED', render: (item: any) => item.CreationTime.split('T')[0] },
-          {
-            title: 'STATUS',
-            render: (item: any, props: any) =>
-              <text {...props} {...statusAttrs(item)}>{item.StackStatus}</text>
-          },
+          { title: 'STACK', render: 'StackName', attrs },
+          { title: 'CREATED', render: 'CreationTime', attrs },
+          { title: 'STATUS', render: 'StackStatus', attrs },
         ]}
       />
     </box>

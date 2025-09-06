@@ -42,6 +42,7 @@ export { usage };
 export async function openInBrowser(
   item: { VpcId?: string; InstanceId?: string; GroupId?: string; UserName?: string }
 ) {
+  setNotification({ level: 'info', message: 'Openning in browser …', timeout: 1500 });
   const region = await awsRegion();
 
   let url: string | undefined;

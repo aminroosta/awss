@@ -1,4 +1,4 @@
-import { bold, dim, getKeyHandler, TextAttributes } from "@opentui/core";
+import { bold, dim, getKeyHandler, RGBA, TextAttributes } from "@opentui/core";
 import { batch, createEffect, createSignal, For, Index, onCleanup, onMount, Show, type Accessor } from "solid-js";
 import { colors } from "../util/colors";
 import { cmdVisible, constants, modal } from "../store";
@@ -6,10 +6,14 @@ import { useKeyHandler, useTerminalDimensions } from "@opentui/solid";
 import { log } from "../util/log";
 
 
-export const List = (p: {
-  items: any[],
-  onEnter: (item: any) => void,
-  columns: { title: string, render: any }[],
+export const List = <T extends Record<string, string>>(p: {
+  items: T[],
+  onEnter: (item: T) => void,
+  columns: {
+    title: string,
+    render: keyof T,
+    attrs?: (item: T) => number,
+  }[],
   isModal?: boolean
 }) => {
   const [idx, setIdx] = createSignal(-1);
@@ -54,7 +58,7 @@ export const List = (p: {
         setIndex(p.items.length - 1);
       } else if (key.name === 'return') {
         if (i >= 0) {
-          p.onEnter(p.items[i]);
+          p.onEnter(p.items[i]!);
         }
       }
     });
@@ -72,12 +76,6 @@ export const List = (p: {
     }));
   };
 
-  const columns = () => p.columns.map(c => ({
-    title: c.title,
-    render: typeof c.render === 'string' ?
-      (item: any, props: any) => <text {...props}>{item[c.render]} </text> :
-      c.render
-  }));
 
   return (
     <box
@@ -85,7 +83,7 @@ export const List = (p: {
       flexDirection="row" flexGrow={1}
       paddingLeft={1} paddingRight={1}
     >
-      <Index each={columns()}>
+      <Index each={p.columns}>
         {(column, colIndex) => (
           <>
             <box>
@@ -93,9 +91,14 @@ export const List = (p: {
               <Index each={visibleItems()}>
                 {(vitem) => (
                   <box backgroundColor={vitem().props.bg}>
-                    {
-                      column().render(vitem().item, vitem().props)
-                    }
+                    <text
+                      fg={vitem().props.fg}
+                      attributes={vitem().props.attrs | (column().attrs?.(vitem().item) || 0)}
+                    >
+                      {
+                        vitem().item[column().render]
+                      }
+                    </text>
                   </box>
                 )}
               </Index>

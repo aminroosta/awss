@@ -21,6 +21,11 @@ export const Resources = (p: { args: { stackName: string } }) => {
     }
   );
 
+  const resourcesFormatted = () => resources().StackResourceSummaries.map(r => ({
+    ...r,
+    'LastUpdatedTimestamp': (r.LastUpdatedTimestamp || '').split('T')[0],
+  }));
+
   return (
     <box flexGrow={1}>
       <Title
@@ -29,13 +34,13 @@ export const Resources = (p: { args: { stackName: string } }) => {
         count={resources.loading ? '⏳' : resources().StackResourceSummaries.length}
       />
       <List
-        items={resources().StackResourceSummaries}
+        items={resourcesFormatted()}
         onEnter={() => { }}
         columns={[
           { title: 'Name', render: 'LogicalResourceId' },
           { title: 'TYPE', render: 'ResourceType' },
           { title: 'STATUS', render: 'ResourceStatus' },
-          { title: 'UPDATED', render: (item: any) => (item.LastUpdatedTimestamp || '').split('T')[0] },
+          { title: 'UPDATED', render: 'LastUpdatedTimestamp' },
         ]}
       />
     </box>

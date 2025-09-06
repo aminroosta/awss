@@ -15,6 +15,12 @@ export const Images = ({ args }: { args: { repositoryName: string } }) => {
     console.log(image);
   };
 
+  const imagesFormatted = () => images().map((i) => ({
+    ...i,
+    imageTag: i.imageTag || 'untagged',
+    ImageDigest: i.imageDigest ? i.imageDigest.substring(7, 19) : '',
+    }));
+
   return (
     <box flexGrow={1}>
       <Title
@@ -22,11 +28,11 @@ export const Images = ({ args }: { args: { repositoryName: string } }) => {
         filter='all'
         count={images.loading ? '⏳' : images().length}
       />
-      <List items={images()}
+      <List items={imagesFormatted()}
         onEnter={onEnter}
         columns={[
-          { title: 'IMAGE TAG', render: (image: any) => image.imageTag || 'untagged' },
-          { title: 'IMAGE DIGEST', render: (image: any) => image.imageDigest ? image.imageDigest.slice(7, 19) : '' },
+          { title: 'IMAGE TAG', render: 'imageTag' },
+          { title: 'IMAGE DIGEST', render: 'ImageDigest' },
         ]} />
     </box>
   );

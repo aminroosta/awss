@@ -16,6 +16,12 @@ export const Vpcs = () => {
     openInBrowser(vpc);
   };
 
+  const vpcsFormatted = () => vpcs().map(v => ({
+    ...v,
+    Default: v.IsDefault ? 'Yes' : 'No',
+  }));
+
+
   return (
     <box flexGrow={1}>
       <Title
@@ -23,13 +29,13 @@ export const Vpcs = () => {
         filter='all'
         count={vpcs.loading ? '⏳' : vpcs().length}
       />
-      <List items={vpcs()}
+      <List items={vpcsFormatted()}
         onEnter={onEnter}
         columns={[
           { title: 'VPC ID', render: 'VpcId' },
           { title: 'STATE', render: 'State' },
           { title: 'CIDR BLOCK', render: 'CidrBlock' },
-          { title: 'DEFAULT', render: (vpc: any) => vpc.IsDefault ? 'Yes' : 'No' },
+          { title: 'DEFAULT', render: 'Default' },
         ]} />
     </box>
   );

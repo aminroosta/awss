@@ -16,6 +16,11 @@ export const Users = () => {
     openInBrowser(user);
   };
 
+  const usersFormatted = () => users().map(u => ({
+    ...u,
+    'CreateDate': u.CreateDate?.split('T')[0],
+  }));
+
   return (
     <box flexGrow={1}>
       <Title
@@ -23,13 +28,13 @@ export const Users = () => {
         filter='all'
         count={users.loading ? '⏳' : users().length}
       />
-      <List items={users()}
+      <List items={usersFormatted()}
         onEnter={onEnter}
         columns={[
           { title: 'USER NAME', render: 'UserName' },
           { title: 'USER ID', render: 'UserId' },
           { title: 'ARN', render: 'Arn' },
-          { title: 'CREATED', render: (u: any) => u.CreateDate?.split('T')[0] }
+          { title: 'CREATED', render: 'CreateDate' },
         ]} />
     </box>
   );
