@@ -1,7 +1,7 @@
 import { Match, Switch } from "solid-js";
 import { Stacks } from "./route/stacks";
 import { Buckets } from "./route/buckets";
-import { S3Objects } from "./route/s3objects";
+import { Objects } from "./route/objects";
 import { Resources } from "./route/resources";
 import { Vpcs } from "./route/vpcs";
 import { Repositories } from "./route/repositories";
@@ -22,7 +22,7 @@ export function Router() {
         <Buckets />
       </Match>
       <Match when={route().id === 'objects'}>
-        <S3Objects args={route().args as any} />
+        <Objects args={route().args as any} />
       </Match>
       <Match when={route().id === 'resources'}>
         <Resources args={route().args as any} />

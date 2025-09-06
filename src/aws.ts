@@ -94,6 +94,27 @@ export const awsListObjectsV2 = memo(async (bucket: string, prefix: string, deli
   }
 }, 30_000);
 
+
+export const awsListObjectsV2Search = memo(async (bucket: string, search: string, prefix: string = '') => {
+  if (!search.trim()) {
+    return [];
+  }
+  const words = search.trim().split(/\s+/);
+  const queryFilter = words.map(w => `contains(Key, \`${w}\`)`).join(' || ');
+  try {
+    const result = await $`aws s3api list-objects-v2 --bucket='${bucket}' --prefix='${prefix}' --query="Contents[?${queryFilter}][]" --output=json`.json() as {
+      Key: string;
+      LastModified: string;
+      Size: number;
+      StorageClass: string;
+    }[];
+    return result || [];
+  } catch (e: any) {
+    e.command = `aws s3api list-objects-v2 --bucket='${bucket}' --prefix='${prefix}' --query="Contents[?${queryFilter}][]" --output=json`
+    throw e;
+  }
+}, 30_000);
+
 export const awsS3GetObject = memo(async (bucket: string, key: string) => {
   try {
     return await $`aws s3 cp 's3://${bucket}/${key}' -`.text();

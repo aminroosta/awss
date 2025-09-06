@@ -83,13 +83,13 @@ function Root() {
     <ErrorBoundary
       fallback={(error: any) => (
         <box flexDirection="column">
-          <text fg={colors().fg}>⚠️ Something went wrong!</text>
-          <text fg={colors().fg} attributes={TextAttributes.BOLD}>
+          <text fg={colors().fg} bg={colors().bg}>⚠️ Something went wrong!</text>
+          <text fg={colors().fg} bg={colors().bg} attributes={TextAttributes.BOLD}>
             {error.command ? '$ ' + error.command + '\n' : ''}
             {error.stderr ? '> ' + `${error.stderr}`.trim() + '\n' : ''}
           </text>
-          <text fg={colors().fg} attributes={TextAttributes.DIM}>{error.message}</text>
-          <text fg={colors().fg} attributes={TextAttributes.DIM}>{error.stack}</text>
+          <text fg={colors().fg} bg={colors().bg} attributes={TextAttributes.DIM}>{error.message}</text>
+          <text fg={colors().fg} bg={colors().bg} attributes={TextAttributes.DIM}>{error.stack}</text>
         </box>
       )}
     >

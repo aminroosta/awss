@@ -1,25 +1,47 @@
-import { createResource } from "solid-js";
-import { awsListObjectsV2 } from "../aws";
+import { createEffect, createResource, createSignal } from "solid-js";
+import { awsListObjectsV2, awsListObjectsV2Search } from "../aws";
 import { Title } from "../ui/title";
 import { List } from "../ui/list";
-import { modals, popRoute, pushRoute, routes, setModal, revision, setFilterText } from "../store";
+import { modals, popRoute, pushRoute, routes, setModal, revision, setFilterText, filterText, filterVisible } from "../store";
+import { log } from "../util/log";
 
-export const S3Objects = (p: { args: { bucket: string, prefix: string } }) => {
-  const [objects] = createResource(
+export const Objects = (p: { args: { bucket: string, prefix: string } }) => {
+  const [folderObjects] = createResource(
     () => ({ bucket: p.args.bucket, prefix: p.args.prefix, revision: revision() }),
     ({ bucket, prefix }) => awsListObjectsV2(bucket, prefix),
     {
       initialValue: { Contents: [], CommonPrefixes: [], Prefix: '' }
     }
   );
+  const search = () => filterVisible() ? '' : filterText();
+
+  const [searchObjects] = createResource(
+    () => ({ bucket: p.args.bucket, prefix: p.args.prefix, search: search(), revision: revision() }),
+    ({ bucket, prefix, search }) => awsListObjectsV2Search(bucket, search, prefix),
+    { initialValue: [] }
+  );
+  createEffect(() => {
+    log({ searchObjects: searchObjects() });
+  });
+
+  const objects = () => search() ? ({
+    Contents: searchObjects(),
+    CommonPrefixes: [],
+    Prefix: p.args.prefix,
+  }) : folderObjects();
+
+  const loading = () => {
+    return folderObjects.loading || (search() && searchObjects.loading);
+  };
+
 
   const parentDir = { Key: '.. (up a dir)', LastModified: '', Size: '' };
   const items = () => {
-    if (objects.loading) { return [{ Key: '⏳', LastModified: '', Size: '' }] }
+    if (loading()) { return [{ Key: '⏳', LastModified: '', Size: '' }] }
 
     const contents = (objects().Contents || []).map(c => ({
       Key: c.Key.replace(p.args.prefix, ''),
-      LastModified: c.LastModified.split('+')[0],
+      LastModified: c.LastModified.split('+')[0]!,
       Size: (c.Size < 1024 ? c.Size + ' B' : c.Size < 1024 * 1024 ? (c.Size / 1024).toFixed(1) + ' KB' : c.Size < 1024 * 1024 * 1024 ? (c.Size / (1024 * 1024)).toFixed(1) + ' MB' : (c.Size / (1024 * 1024 * 1024)).toFixed(1) + ' GB'),
     }));
     const prefixes = (objects().CommonPrefixes || []).map(cp => ({
@@ -56,7 +78,7 @@ export const S3Objects = (p: { args: { bucket: string, prefix: string } }) => {
       <Title
         title={p.args.bucket}
         filter={(p.args.prefix ? '/' + p.args.prefix : undefined)}
-        count={objects.loading ? '⏳' : items().length}
+        count={loading() ? '⏳' : items().length}
       />
       <List
         items={items()}
