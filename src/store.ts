@@ -40,6 +40,7 @@ export const routes = {
     },
     actions: [
       { key: 'r', name: 'Refresh' },
+      { key: 'a', name: 'Aws Website' },
       { key: 'enter', name: 'Open' },
     ],
     filterPlaceholder: 'Press <Enter> to include objects in all subdirectories'
@@ -172,6 +173,7 @@ createEffect(() => {
 /********* actions ********/
 export const actions = () => {
   let all = [];
+  let showRouteActions = false;
   if (cmdVisible()) {
     all.push({ key: 'esc', name: 'Dismiss', });
     all.push({ key: 'enter', name: 'Run Command' });
@@ -179,17 +181,20 @@ export const actions = () => {
     all.push({ key: 'esc', name: 'Dismiss', });
     all.push({ key: 'enter', name: 'Apply' });
   } else {
+    showRouteActions = true;
     all.push({ key: '˸', name: 'Command Line', });
     all.push({ key: '/', name: 'Filter', });
     all.push({ key: 'j|down', name: 'Move Down' });
     all.push({ key: 'k|up', name: 'Move Up' });
-    all.push(...(route().actions || []));
   }
   if (routeStackLen() >= 2) {
     all.push({ key: 'ctrl+p', name: 'Go Back' });
   }
   if (routeStackLen() < routeStack.length) {
     all.push({ key: 'ctrl+n', name: 'Go Forward' });
+  }
+  if (showRouteActions) {
+    all.push(...(route().actions || []));
   }
 
   return all;

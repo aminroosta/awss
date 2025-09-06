@@ -40,14 +40,17 @@ setInterval(() => {
 export { usage };
 
 export async function openInBrowser(
-  item: { VpcId?: string; InstanceId?: string; GroupId?: string; UserName?: string }
+  item: { VpcId?: string; InstanceId?: string; GroupId?: string; UserName?: string } | string
 ) {
   setNotification({ level: 'info', message: 'Openning in browser …', timeout: 1500 });
   const region = await awsRegion();
 
   let url: string | undefined;
 
-  if (item.InstanceId) {
+  if(typeof item === 'string') {
+    url = item;
+  }
+  else if (item.InstanceId) {
     url = `https://${region}.console.aws.amazon.com/ec2/home?region=${region}#InstanceDetails:instanceId=${item.InstanceId}`;
   } else if (item.GroupId) {
     url = `https://${region}.console.aws.amazon.com/ec2/home?region=${region}#SecurityGroup:groupId=${item.GroupId}`;

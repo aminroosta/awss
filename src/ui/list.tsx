@@ -9,7 +9,7 @@ import { log } from "../util/log";
 export const List = <T extends Record<string, string>>(p: {
   items: T[],
   onEnter: (item: T) => void,
-  onKey?: (key: ParsedKey, item: T) => void,
+  onKey?: (key: ParsedKey, item: T) => any,
   columns: {
     title: string,
     render: keyof T,

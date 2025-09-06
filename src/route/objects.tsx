@@ -1,9 +1,11 @@
 import { createEffect, createResource, createSignal } from "solid-js";
-import { awsListObjectsV2, awsListObjectsV2Search } from "../aws";
+import { awsListObjectsV2, awsListObjectsV2Search, awsRegion } from "../aws";
 import { Title } from "../ui/title";
 import { List } from "../ui/list";
 import { modals, popRoute, pushRoute, routes, setModal, revision, setFilterText, filterText, filterVisible } from "../store";
 import { log } from "../util/log";
+import type { ParsedKey } from "@opentui/core";
+import { openInBrowser } from "../util/system";
 
 export const Objects = (p: { args: { bucket: string, prefix: string } }) => {
   const [folderObjects] = createResource(
@@ -72,6 +74,18 @@ export const Objects = (p: { args: { bucket: string, prefix: string } }) => {
       })
     }
   };
+  const onKey = async (key: ParsedKey, item: any) => {
+    if (!item || item.Key === parentDir.Key) { return; }
+
+    const region = await awsRegion();
+    if (key.name === 'a') {
+      if (item.Size !== '<DIR>') {
+        openInBrowser(`https://${region}.console.aws.amazon.com/s3/object/${p.args.bucket}?region=us-east-2&prefix=${encodeURIComponent(p.args.prefix + item.Key)}`);
+      } else {
+        openInBrowser(`https://${region}.console.aws.amazon.com/s3/buckets/${p.args.bucket}?region=us-east-2&prefix=${encodeURIComponent(p.args.prefix + item.Key)}&showversions=false`);
+      }
+    }
+  };
 
   return (
     <box>
@@ -83,6 +97,7 @@ export const Objects = (p: { args: { bucket: string, prefix: string } }) => {
       <List
         items={items()}
         onEnter={onEnter}
+        onKey={onKey}
         columns={[
           { title: 'KEY', render: 'Key' },
           { title: 'SIZE', render: 'Size' },
