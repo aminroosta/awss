@@ -1,10 +1,9 @@
 import { awsListStacks } from "../aws";
-import { batch, createResource, createSignal, For } from "solid-js";
+import { createResource, createSignal } from "solid-js";
 import { List } from "../ui/list";
 import { Title } from "../ui/title";
 import { pushRoute, revision, routes, setNotification } from "../store";
-import { colors } from "../util/colors";
-import { bold, dim, strikethrough, TextAttributes, type ParsedKey } from "@opentui/core";
+import { TextAttributes, type ParsedKey } from "@opentui/core";
 
 export const Stacks = () => {
   const initialValue = [{ StackName: '⏳', StackId: '', CreationTime: '', StackStatus: '' }];
@@ -46,7 +45,6 @@ export const Stacks = () => {
         pushRoute({
           id: 'stackevents',
           args: { stackName: stack.StackName },
-          alias: [],
         });
       });
     } else if (key.name === 'p' && !key.ctrl) {
@@ -54,7 +52,6 @@ export const Stacks = () => {
         pushRoute({
           id: 'stackparameters',
           args: { stackName: stack.StackName },
-          alias: [],
         });
       });
     }

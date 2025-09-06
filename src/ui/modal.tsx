@@ -2,7 +2,7 @@ import { useKeyHandler } from "@opentui/solid";
 import { cmdVisible, constants, filterVisible, modal, modals, setModal } from "../store";
 import { colors } from "../util/colors";
 import { Match, Show, Switch } from "solid-js";
-import { File } from '../route/file';
+import { RenderRoute } from '../route/factory/registerRoute';
 
 export const Modal = () => {
   const top = () => {
@@ -19,7 +19,7 @@ export const Modal = () => {
       >
         <Switch>
           <Match when={modal().id === modals.File.id}>
-            <File args={modal().args as any} />
+            <RenderRoute route={modal()} />
           </Match>
         </Switch>
       </box>

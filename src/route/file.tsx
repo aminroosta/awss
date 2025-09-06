@@ -1,30 +1,20 @@
-import { createResource } from "solid-js";
 import { awsS3GetObject } from "../aws";
-import { revision } from "../store";
-import { List } from "../ui/list";
-import { Title } from "../ui/title";
+import { registerRoute } from "./factory/registerRoute";
 
-export const File = (p: { args: { bucket: string, key: string } }) => {
-  const [file] = createResource(
-    () => ({ bucket: p.args.bucket, key: p.args.key, revision: revision() }),
-    ({ bucket, key }) => awsS3GetObject(bucket, key),
-    { initialValue: '⏳' }
-  );
-
-  const lines = () => file().split('\n').map((line, idx) => ({ line }));
-  return (
-    <box flexGrow={1}>
-      <Title
-        title={p.args.key}
-        count={file.loading ? '⏳' : lines().length + ' lines'}
-      />
-      <List
-        items={lines()}
-        columns={[
-          { title: '', render: 'line' },
-        ]}
-        onEnter={() => { }}
-      />
-    </box>
-  );
-}
+registerRoute({
+  id: 'file',
+  alias: [],
+  actions: [
+    { key: 'r', name: 'Refresh' },
+  ],
+  args: (a: { bucket: string, key: string }) => ({ bucket: a.bucket, key: a.key }),
+  aws: async ({ bucket, key }) => {
+    const content = await awsS3GetObject(bucket, key);
+    return content.split('\n').map((line, idx) => ({ line }));
+  },
+  title: (args) => args.key,
+  columns: [
+    { title: '', render: 'line' },
+  ],
+  onKey: (key, item) => { },
+});

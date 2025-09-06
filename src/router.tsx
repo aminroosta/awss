@@ -11,7 +11,7 @@ import { SecurityGroups } from "./route/securitygroups";
 import { Users } from "./route/users";
 import "./route/stackevents";
 import "./route/stackparameters";
-import { File } from "./route/file.tsx";
+import "./route/file";
 import { route } from "./store";
 import { RenderRoute, routes } from "./route/factory/registerRoute.tsx";
 
@@ -49,10 +49,6 @@ export function Router() {
       </Match>
       <Match when={route().id === 'users'}>
         <Users />
-      </Match>
-
-      <Match when={route().id === 'file'}>
-        <File args={route().args as any} />
       </Match>
       <Match when={routeIds.includes(route().id)}>
         <RenderRoute route={route()} />

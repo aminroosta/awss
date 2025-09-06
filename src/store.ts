@@ -1,6 +1,7 @@
 import { log } from "./util/log";
 import { createEffect, createSignal } from "solid-js";
 import { saveSession, loadSession } from "./util/session";
+import { routes as registeredRoutes } from "./route/factory/registerRoute";
 
 export const routes = {
   Buckets: {
@@ -150,17 +151,18 @@ export const [route, setRoute] = createSignal(initialRoute);
 export function pushRoute(r: {
   id: string;
   args: { [key: string]: any };
-  alias: string[];
+  alias?: string[];
 }) {
-  if (JSON.stringify(route()) === JSON.stringify(r)) {
+  const r2 = { ...(registeredRoutes[r.id] || {}), ...r };
+  if (JSON.stringify(route()) === JSON.stringify(r2)) {
     return;
   }
-  routeStack = [...routeStack.slice(0, routeStackLen()), r]
+  routeStack = [...routeStack.slice(0, routeStackLen()), r2]
   setRouteStackLen(routeStack.length);
-  setRoute(r);
+  setRoute(r2);
 
-  if (r.alias.length > 0) {
-    saveSession({ lastRoute: r });
+  if (r2.alias.length > 0) {
+    saveSession({ lastRoute: r2 });
   }
 }
 export function popRoute() {

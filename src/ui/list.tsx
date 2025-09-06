@@ -86,7 +86,9 @@ export const List = <T extends Record<string, string>>(p: {
           p.onEnter(items[i]!);
         }
       } else {
-        p.onKey?.(key, items[i]!);
+        if (items[i]) {
+          p.onKey?.(key, items[i]);
+        }
       }
     });
   });

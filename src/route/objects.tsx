@@ -2,7 +2,7 @@ import { createEffect, createResource, createSignal } from "solid-js";
 import { awsListObjectsV2, awsListObjectsV2Search, awsRegion } from "../aws";
 import { Title } from "../ui/title";
 import { List } from "../ui/list";
-import { modals, popRoute, pushRoute, routes, setModal, revision, setFilterText, filterText, filterVisible } from "../store";
+import { popRoute, pushRoute, routes, revision, setFilterText, filterText, filterVisible } from "../store";
 import { log } from "../util/log";
 import type { ParsedKey } from "@opentui/core";
 import { openInBrowser } from "../util/system";
@@ -65,7 +65,7 @@ export const Objects = (p: { args: { bucket: string, prefix: string } }) => {
     } else {
       setFilterText('');
       pushRoute({
-        ...routes.File,
+        id: 'file',
         args: {
           bucket: p.args.bucket,
           key: p.args.prefix + item.Key,
