@@ -3,12 +3,7 @@ import * as fs from "fs";
 const SESSION_FILE = '/tmp/awss.session.json';
 
 export interface SessionData {
-  lastRoute?: {
-    id: string;
-    args: { [key: string]: any };
-    alias: string[];
-    filterPlaceholder?: string;
-  };
+  lastRouteId?: string
 }
 
 export function saveSession(data: SessionData): void {

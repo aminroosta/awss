@@ -1,10 +1,11 @@
-import { log } from "./util/log";
 import { createEffect, createSignal } from "solid-js";
 import { saveSession, loadSession } from "./util/session";
+import './router';
 import { routes as registeredRoutes } from "./route/factory/registerRoute";
+import { log } from "./util/log";
 
 export const routes = {
-  Buckets: {
+  buckets: {
     id: 'buckets',
     args: {},
     alias: ['s3', 'buckets'],
@@ -13,7 +14,7 @@ export const routes = {
       { key: 'enter', name: 'Open' },
     ]
   },
-  Stacks: {
+  stacks: {
     id: 'stacks',
     args: {},
     alias: ['stacks'],
@@ -24,27 +25,7 @@ export const routes = {
       { key: 'enter', name: 'Open' },
     ]
   },
-  StackEvents: {
-    id: 'stackevents',
-    alias: [] as string[],
-    args: {
-      stackName: '',
-    },
-    actions: [
-      { key: 'r', name: 'Refresh' },
-    ]
-  },
-  StackParameters: {
-    id: 'stackparameters',
-    alias: [] as string[],
-    args: {
-      stackName: '',
-    },
-    actions: [
-      { key: 'r', name: 'Refresh' },
-    ]
-  },
-  Resources: {
+  resources: {
     id: 'resources',
     alias: [] as string[],
     args: {
@@ -54,7 +35,7 @@ export const routes = {
       { key: 'r', name: 'Refresh' },
     ]
   },
-  Objects: {
+  objects: {
     id: 'objects',
     alias: [] as string[],
     args: {
@@ -68,7 +49,7 @@ export const routes = {
     ],
     filterPlaceholder: 'Press <Enter> to include objects in all subdirectories'
   },
-  Vpcs: {
+  vpcs: {
     id: 'vpcs',
     args: {},
     alias: ['vpcs'],
@@ -77,17 +58,8 @@ export const routes = {
       { key: 'a', name: 'Aws Website' },
     ]
   },
-  Repositories: {
-    id: 'repositories',
-    args: {},
-    alias: ['repos', 'repositories'],
-    actions: [
-      { key: 'r', name: 'Refresh' },
-      { key: 'enter', name: 'Open' },
-    ]
-  },
 
-  Instances: {
+  instances: {
     id: 'instances',
     args: {},
     alias: ['ec2', 'instances'],
@@ -96,7 +68,7 @@ export const routes = {
       { key: 'a', name: 'Aws Website' },
     ]
   },
-  SecurityGroups: {
+  securitygroups: {
     id: 'securitygroups',
     args: {},
     alias: ['sgs', 'securitygroups'],
@@ -105,7 +77,7 @@ export const routes = {
       { key: 'a', name: 'Aws Website' },
     ]
   },
-  Users: {
+  users: {
     id: 'users',
     args: {},
     alias: ['users'],
@@ -114,17 +86,10 @@ export const routes = {
       { key: 'a', name: 'Aws Website' },
     ]
   },
-  File: {
-    id: 'file',
-    args: {
-      bucket: '',
-      key: '',
-      title: ''
-    },
-    alias: [] as string[],
-    actions: []
-  }
+  ...registeredRoutes,
 };
+
+
 export const [cmdVisible, setCmdVisible] = createSignal(false);
 export const [revision, setRevision] = createSignal(1);
 
@@ -134,7 +99,7 @@ export const constants = {
 }
 
 /******** route management ********/
-const initialRoute = loadSession().lastRoute || routes.Buckets;
+const initialRoute = routes[loadSession().lastRouteId || 'buckets'];
 let routeStack = [initialRoute];
 let [routeStackLen, setRouteStackLen] = createSignal(1);
 export const [route, setRoute] = createSignal(initialRoute);
@@ -144,7 +109,13 @@ export function pushRoute(r: {
   args: { [key: string]: any };
   alias?: string[];
 }) {
-  const r2 = { ...(registeredRoutes[r.id] || {}), ...r };
+  const r2 = {
+    id: r.id,
+    args: r.args,
+    actions: routes[r.id].actions,
+    alias: routes[r.id].alias,
+  };
+
   if (JSON.stringify(route()) === JSON.stringify(r2)) {
     return;
   }
@@ -153,7 +124,7 @@ export function pushRoute(r: {
   setRoute(r2);
 
   if (r2.alias.length > 0) {
-    saveSession({ lastRoute: r2 });
+    saveSession({ lastRouteId: r2.id });
   }
 }
 export function popRoute() {

@@ -34,7 +34,7 @@ export const Stacks = () => {
   const onEnter = (stack: { StackId: string; StackName: string; StackStatus?: string }) => {
     checkResourceCapable(stack, () => {
       pushRoute({
-        ...routes.Resources,
+        ...routes.resources,
         args: { stackName: stack.StackName.trim() }
       });
     });

@@ -1,41 +1,35 @@
-import { createResource } from "solid-js";
 import { awsEcrDescribeRepositories } from "../aws";
-import { List } from "../ui/list";
-import { Title } from "../ui/title";
-import { revision, pushRoute, routes } from "../store";
+import { pushRoute } from "../store";
+import { log } from "../util/log";
+import { registerRoute } from "./factory/registerRoute";
 
-export const Repositories = () => {
-  const [repositories] = createResource(
-    () => ({ revision: revision() }),
-    () => awsEcrDescribeRepositories(),
-    { initialValue: [{ repositoryName: '⏳', repositoryUri: '', createdAt: '', imageTagMutability: '' } as any] }
-  );
-
-  const onEnter = (repo: any) => {
-    pushRoute({
-      id: 'images',
-      args: { repositoryName: repo.repositoryName }
-    });
-  };
-  const repositoriesFormatted = () => repositories().map((r) => ({
-    ...r,
-    CreatedAt: r.createdAt?.split('T')[0],
-  }));
-
-  return (
-    <box flexGrow={1}>
-      <Title
-        title="repositories"
-        filter='all'
-        count={repositories.loading ? '⏳' : repositories().length}
-      />
-      <List items={repositories()}
-        onEnter={onEnter}
-        columns={[
-          { title: 'REPOSITORY NAME', render: 'repositoryName' },
-          { title: 'CREATED', render: 'CreatedAt' },
-          { title: 'TAG MUTABILITY', render: 'imageTagMutability' },
-        ]} />
-    </box>
-  );
-};
+registerRoute({
+  id: 'repositories',
+  alias: ['repos', 'repositories'],
+  actions: [
+    { key: 'r', name: 'Refresh' },
+    { key: 'enter', name: 'Open' },
+  ],
+  args: (a: {}) => ({}),
+  aws: async () => {
+    const repositories = await awsEcrDescribeRepositories();
+    return repositories.map((r) => ({
+      ...r,
+      CreatedAt: r.createdAt?.split('T')[0] || '',
+    }));
+  },
+  title: () => 'repositories',
+  columns: [
+    { title: 'REPOSITORY NAME', render: 'repositoryName' },
+    { title: 'CREATED', render: 'CreatedAt' },
+    { title: 'TAG MUTABILITY', render: 'imageTagMutability' },
+  ],
+  onKey: (key, item) => {
+    if (key.name === 'return') {
+      pushRoute({
+        id: 'images',
+        args: { repositoryName: item.repositoryName }
+      });
+    }
+  },
+});

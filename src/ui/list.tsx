@@ -82,7 +82,8 @@ export const List = <T extends Record<string, string>>(p: {
       } else if (key.name === 'g' && key.shift) {
         setIndex(items.length - 1);
       } else if (key.name === 'return') {
-        if (i >= 0) {
+        if (i >= 0 && items[i]) {
+          p.onKey?.(key, items[i]!);
           p.onEnter(items[i]!);
         }
       } else {

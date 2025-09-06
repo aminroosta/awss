@@ -22,9 +22,6 @@ export const Objects = (p: { args: { bucket: string, prefix: string } }) => {
     ({ bucket, prefix, search }) => awsListObjectsV2Search(bucket, search, prefix),
     { initialValue: [] }
   );
-  createEffect(() => {
-    log({ searchObjects: searchObjects() });
-  });
 
   const objects = () => search() ? ({
     Contents: searchObjects(),
@@ -59,7 +56,7 @@ export const Objects = (p: { args: { bucket: string, prefix: string } }) => {
       popRoute();
     } else if (item.Size === '<DIR>') {
       pushRoute({
-        ...routes.Objects,
+        ...routes.objects,
         args: { bucket: p.args.bucket, prefix: p.args.prefix + item.Key },
       });
     } else {

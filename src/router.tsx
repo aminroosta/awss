@@ -1,16 +1,16 @@
-import { createSignal, Match, Switch } from "solid-js";
+import { createSignal, For, Match, Switch } from "solid-js";
 import { Stacks } from "./route/stacks";
 import { Buckets } from "./route/buckets";
 import { Objects } from "./route/objects";
 import { Resources } from "./route/resources";
 import { Vpcs } from "./route/vpcs";
-import { Repositories } from "./route/repositories";
 
 import { Instances } from "./route/instances";
 import { SecurityGroups } from "./route/securitygroups";
 import { Users } from "./route/users";
 import "./route/stackevents";
 import "./route/stackparameters";
+import "./route/repositories";
 import "./route/file";
 import "./route/images";
 import { route } from "./store";
@@ -36,10 +36,6 @@ export function Router() {
       <Match when={route().id === 'vpcs'}>
         <Vpcs />
       </Match>
-      <Match when={route().id === 'repositories'}>
-        <Repositories />
-      </Match>
-
       <Match when={route().id === 'instances'}>
         <Instances />
       </Match>
@@ -49,9 +45,13 @@ export function Router() {
       <Match when={route().id === 'users'}>
         <Users />
       </Match>
-      <Match when={routeIds.includes(route().id)}>
-        <RenderRoute route={route()} />
-      </Match>
+      <For each={routeIds}>
+        {id =>
+          <Match when={route().id === id}>
+            <RenderRoute route={route()} />
+          </Match>
+        }
+      </For>
     </Switch>
   )
 }

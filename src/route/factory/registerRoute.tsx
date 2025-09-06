@@ -3,6 +3,7 @@ import { createResource, createSignal } from "solid-js";
 import { revision } from "../../store";
 import { Title } from "../../ui/title";
 import { List } from "../../ui/list";
+import { log } from "../../util/log";
 
 export const routes = {} as Record<string, {
   component: Function;
@@ -60,6 +61,7 @@ export const registerRoute = <R, A, T extends Record<string, string>>(r: {
 
 export const RenderRoute = (p: { route: { args: any, id: string } }) => {
   let Component = routes[p.route.id]!.component
+  log({ r: p.route });
 
   return <Component args={p.route.args} />
 }
