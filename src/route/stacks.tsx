@@ -48,6 +48,13 @@ export const Stacks = () => {
           args: { stackName: stack.StackName }
         });
       });
+    } else if (key.name === 'p' && !key.ctrl) {
+      checkResourceCapable(stack, () => {
+        pushRoute({
+          ...routes.StackParameters,
+          args: { stackName: stack.StackName }
+        });
+      });
     }
   }
 

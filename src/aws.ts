@@ -167,6 +167,20 @@ export const awsCfDescribeStack = memo(async (stackName: string) => {
   }
 }, 30_000);
 
+export const awsCfDescribeStackParameters = memo(async (stackName: string) => {
+  try {
+    const result = await $`aws cloudformation describe-stacks --stack-name='${stackName}' --output json`.json() as {
+      Stacks: {
+        Parameters: { ParameterKey: string; ParameterValue: string; }[];
+      }[];
+    };
+    return result.Stacks[0]?.Parameters || [];
+  } catch (e: any) {
+    e.command = `aws cloudformation describe-stacks --stack-name='${stackName}' --output json`
+    throw e;
+  }
+}, 30_000);
+
 export const awsEc2DescribeVpcs = memo(async () => {
   try {
     let result = await $`aws ec2 describe-vpcs --output json`.json() as {

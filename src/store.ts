@@ -19,11 +19,22 @@ export const routes = {
     actions: [
       { key: 'r', name: 'Refresh' },
       { key: 'e', name: 'Events' },
+      { key: 'p', name: 'Parameters' },
       { key: 'enter', name: 'Open' },
     ]
   },
   StackEvents: {
     id: 'stackevents',
+    alias: [] as string[],
+    args: {
+      stackName: '',
+    },
+    actions: [
+      { key: 'r', name: 'Refresh' },
+    ]
+  },
+  StackParameters: {
+    id: 'stackparameters',
     alias: [] as string[],
     args: {
       stackName: '',
