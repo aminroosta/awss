@@ -2,13 +2,14 @@ import { getKeyHandler, TextAttributes } from "@opentui/core";
 import { render, useRenderer } from "@opentui/solid";
 import { createSignal, ErrorBoundary, Match, onMount, Show, Switch } from "solid-js";
 import { colors } from "./util/colors";
-import { cmdVisible, popRoute, route, setCmdVisible, undoPopRoute, setRevision, revision } from "./store";
+import { cmdVisible, popRoute, route, setCmdVisible, undoPopRoute, setRevision, revision, filterVisible, setFilterVisible, setFilterText, filterText, modal } from "./store";
 import { Header } from "./ui/header";
 import { CommandLine } from "./ui/commandline";
 import { log } from "./util/log";
 import { Modal } from "./ui/modal";
 import { Notif } from "./ui/notif";
 import { Router } from "./router";
+import { Filter } from "./ui/filter";
 
 
 function App() {
@@ -22,9 +23,21 @@ function App() {
   keyHandler.on('keypress', (key: any) => {
     if (key.name === ":") {
       setCmdVisible(true);
+      setFilterVisible(false);
+    }
+    if (key.name === "/") {
+      setFilterText('');
+      setFilterVisible(true);
+      setCmdVisible(false);
     }
     if (key.name === "escape") {
-      popRoute();
+      if (filterText()) {
+        setFilterText('');
+      }
+      else if (modal()) { }
+      else {
+        popRoute();
+      }
     }
     if (key.name === "n" && key.ctrl) {
       undoPopRoute();
@@ -46,6 +59,11 @@ function App() {
           <CommandLine />
         </Show>
       </box>
+      <box>
+        <Show when={filterVisible()}>
+          <Filter />
+        </Show>
+      </box >
       <Router />
       <Modal />
       <Notif />

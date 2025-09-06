@@ -1,5 +1,5 @@
 import { log } from "./util/log";
-import { createSignal } from "solid-js";
+import { createEffect, createSignal } from "solid-js";
 import { saveSession, loadSession } from "./util/session";
 
 export const routes = {
@@ -124,7 +124,7 @@ export function pushRoute(r: {
   routeStack = [...routeStack.slice(0, routeStackLen()), r]
   setRouteStackLen(routeStack.length);
   setRoute(r);
-  
+
   if (r.alias.length > 0) {
     saveSession({ lastRoute: r });
   }
@@ -159,12 +159,23 @@ export const [modal, setModal] = createSignal<{ id: string, args: { title: strin
 type Notification = { message: string; level: 'info' | 'warn' | 'error'; timeout: number } | null;
 export const [notification, setNotification] = createSignal<Notification>(null);
 
+/********* filter ********/
+export const [filterText, setFilterText] = createSignal('');
+export const [filterVisible, setFilterVisible] = createSignal(false);
+createEffect(() => {
+  const _ = route();
+  setFilterText('');
+});
+
 /********* actions ********/
 export const actions = () => {
   let all = [];
   if (cmdVisible()) {
     all.push({ key: 'esc', name: 'Dismiss', });
     all.push({ key: 'enter', name: 'Run Command' });
+  } else if (filterVisible()) {
+    all.push({ key: 'esc', name: 'Dismiss', });
+    all.push({ key: 'enter', name: 'Apply' });
   } else {
     all.push({ key: '˸', name: 'Command Line', });
     all.push({ key: 'j|down', name: 'Move Down' });

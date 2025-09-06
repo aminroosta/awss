@@ -1,5 +1,5 @@
 import { awsListStacks } from "../aws";
-import { createResource, createSignal, For } from "solid-js";
+import { batch, createResource, createSignal, For } from "solid-js";
 import { List } from "../ui/list";
 import { Title } from "../ui/title";
 import { pushRoute, revision, routes, setNotification } from "../store";

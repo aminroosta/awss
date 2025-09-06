@@ -1,7 +1,6 @@
 import { useKeyHandler } from "@opentui/solid";
 import { modal, modals, setModal } from "../store";
 import { colors } from "../util/colors";
-import { log } from "../util/log";
 import { Match, Show, Switch } from "solid-js";
 import { File } from '../route/file';
 
