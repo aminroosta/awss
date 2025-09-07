@@ -41,6 +41,22 @@ setInterval(() => {
 
 export { usage };
 
+export async function copyToClipboard(text: string) {
+  setNotification({ level: 'info', message: 'Copying to clipboard …', timeout: 1500 });
+  try {
+    if (process.platform === "darwin") {
+      await $`echo ${text} | pbcopy`.quiet();
+    } else if (process.platform === "linux") {
+      await $`echo ${text} | xclip -selection clipboard`.quiet();
+    } else {
+      throw new Error('Unsupported platform');
+    }
+    setNotification({ level: 'info', message: 'Copied to clipboard', timeout: 1500 });
+  } catch {
+    setNotification({ level: 'error', message: 'Failed to copy to clipboard', timeout: 2500 });
+  }
+}
+
 export async function openInBrowser(
   item: { VpcId?: string; InstanceId?: string; GroupId?: string; UserName?: string } | string
 ) {
