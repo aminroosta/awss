@@ -57,7 +57,7 @@ registerRoute({
     }
   },
   onKey: async (key, item, args) => {
-    if (!item || item.Key === PARENT_DIR_KEY) { return; }
+    if (item.Key === PARENT_DIR_KEY) { return; }
     const region = await awsRegion();
     if (key.name === 'a') {
       if (item.Size !== '<DIR>') {
@@ -67,8 +67,10 @@ registerRoute({
       }
     } else if (key.name === 'n') {
       if (item.Size !== '<DIR>') {
+        setNotification({ level: 'info', message: 'Openning in novim …', timeout: 1500 });
         const fullKey = args.prefix + item.Key;
         const content = await awsS3GetObject(args.bucket, fullKey);
+        setNotification(null as any);
         await openInVim(content, item.Key);
       }
     }
