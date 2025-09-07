@@ -4,6 +4,8 @@ import { popRoute, pushRoute, routes, setFilterText } from "../store";
 import type { ParsedKey } from "@opentui/core";
 import { openInBrowser } from "../util/system";
 
+const PARENT_DIR_KEY = '.. (up a dir)';
+
 registerRoute({
   id: 'objects',
   alias: [],
@@ -26,7 +28,7 @@ registerRoute({
       LastModified: '',
       Size: '<DIR>',
     }));
-    const parentDir = { Key: '.. (up a dir)', LastModified: '', Size: '' };
+    const parentDir = { Key: PARENT_DIR_KEY, LastModified: '', Size: '' };
     return [parentDir, ...prefixes, ...contents];
   },
   title: (args) => args.bucket,
@@ -37,7 +39,7 @@ registerRoute({
     { title: 'LAST MODIFIED', render: 'LastModified' },
   ],
   onEnter: (item, args) => {
-    if (item.Key === '.. (up a dir)') {
+    if (item.Key === PARENT_DIR_KEY) {
       popRoute();
     } else if (item.Size === '<DIR>') {
       pushRoute({
@@ -57,7 +59,7 @@ registerRoute({
     }
   },
   onKey: async (key, item, args) => {
-    if (!item || item.Key === '.. (up a dir)') { return; }
+    if (!item || item.Key === PARENT_DIR_KEY) { return; }
     const region = await awsRegion();
     if (key.name === 'a') {
       if (item.Size !== '<DIR>') {
