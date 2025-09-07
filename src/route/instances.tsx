@@ -40,7 +40,7 @@ registerRoute({
   ],
   keymaps: [
     {
-      key: 'a', name: 'Aws Website', fn: async (item) => {
+      key: 'a', name: 'AWS Website', fn: async (item) => {
         const region = await awsRegion();
         const url = `https://${region}.console.aws.amazon.com/ec2/home?region=${region}#InstanceDetails:instanceId=${item.InstanceId}`;
         openInBrowser(url);

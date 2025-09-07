@@ -1,7 +1,8 @@
-import { awsListStacks } from "../aws";
-import { registerRoute } from "./factory/registerRoute";
-import { pushRoute, setNotification } from "../store";
-import { TextAttributes, type ParsedKey } from "@opentui/core";
+ import { awsListStacks, awsRegion } from "../aws";
+ import { registerRoute } from "./factory/registerRoute";
+ import { pushRoute, setNotification } from "../store";
+ import { openInBrowser } from "../util/system";
+ import { TextAttributes, type ParsedKey } from "@opentui/core";
 
 const resourceCapableStatuses = new Set<string>([
   'CREATE_IN_PROGRESS',
@@ -66,14 +67,24 @@ registerRoute({
         args: { stackName: stack.StackName },
       })
     },
-    {
-      key: 'return',
-      name: 'Open',
-      when: valiateStackStatus,
-      fn: (stack) => pushRoute({
-        id: 'resources',
-        args: { stackName: stack.StackName.trim() }
-      })
-    },
-  ],
+     {
+       key: 'return',
+       name: 'Open',
+       when: valiateStackStatus,
+       fn: (stack) => pushRoute({
+         id: 'resources',
+         args: { stackName: stack.StackName.trim() }
+       })
+     },
+     {
+       key: { name: 'a'},
+       name: 'AWS website',
+       when: valiateStackStatus,
+       fn: async (stack) => {
+         const region = await awsRegion();
+         const url = `https://console.aws.amazon.com/cloudformation/home?region=${region}#/stacks/stackinfo?stackId=${encodeURIComponent(stack.StackId)}`;
+         openInBrowser(url);
+       }
+     },
+   ],
 });

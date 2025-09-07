@@ -36,7 +36,7 @@ registerRoute({
   keymaps: [
     {
       key: 'a',
-      name: 'Aws Website',
+      name: 'AWS Website',
       when: (item) => item.Key !== PARENT_DIR_KEY,
       fn: async (item, args) => {
         const region = await awsRegion();

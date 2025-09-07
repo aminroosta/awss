@@ -25,7 +25,7 @@ registerRoute({
   keymaps: [
     {
       key: 'a',
-      name: 'Aws Website',
+      name: 'AWS Website',
       fn: async (item, _args) => {
         const region = await awsRegion();
         openInBrowser(`https://console.aws.amazon.com/iam/home?region=${region}#/users/${item.UserName}`);
