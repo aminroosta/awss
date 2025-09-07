@@ -1,22 +1,10 @@
 import { createEffect, createSignal } from "solid-js";
 import { saveSession, loadSession } from "./util/session";
 import './router';
-import { routes as registeredRoutes } from "./route/factory/registerRoute";
-import { log } from "./util/log";
-
-export const routes = {
+import { routes } from "./route/factory/registerRoute";
 
 
-
-
-
-
-
-
-
-  ...registeredRoutes,
-};
-
+export { routes } from "./route/factory/registerRoute";
 
 export const [cmdVisible, setCmdVisible] = createSignal(false);
 export const [revision, setRevision] = createSignal(1);
@@ -35,25 +23,21 @@ export const [route, setRoute] = createSignal(initialRoute);
 export function pushRoute(r: {
   id: string;
   args: { [key: string]: any };
-  alias?: string[];
 }) {
-  const r2 = {
-    id: r.id,
+  const newRoute = {
+    ...routes[r.id],
     args: r.args,
-    actions: routes[r.id].actions,
-    alias: routes[r.id].alias,
-    filterPlaceholder: routes[r.id].filterPlaceholder,
   };
 
-  if (JSON.stringify(route()) === JSON.stringify(r2)) {
+  if (JSON.stringify(route()) === JSON.stringify(newRoute)) {
     return;
   }
-  routeStack = [...routeStack.slice(0, routeStackLen()), r2]
+  routeStack = [...routeStack.slice(0, routeStackLen()), newRoute]
   setRouteStackLen(routeStack.length);
-  setRoute(r2);
+  setRoute(newRoute);
 
-  if (r2.alias.length > 0) {
-    saveSession({ lastRouteId: r2.id });
+  if (newRoute.alias.length > 0) {
+    saveSession({ lastRouteId: newRoute.id });
   }
 }
 export function popRoute() {
