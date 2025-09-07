@@ -1,6 +1,6 @@
 import type { ParsedKey } from "@opentui/core";
 import { createResource, createSignal } from "solid-js";
-import { revision, filterText, filterVisible } from "../../store";
+import { revision, searchText, searchVisible } from "../../store";
 import { Title } from "../../ui/title";
 import { List } from "../../ui/list";
 import { log } from "../../util/log";
@@ -10,7 +10,7 @@ export const routes = {} as Record<string, {
   id: string;
   alias: string[];
   actions: { key: string; name: string; }[]
-  filterPlaceholder?: string;
+  searchPlaceholder?: string;
   onEnter?: Function;
   onKey: Function;
 }>;
@@ -19,7 +19,7 @@ export const registerRoute = <R, A, T extends Record<string, string>>(r: {
   id: string;
   alias: string[];
   actions: { key: string; name: string; }[]
-  filterPlaceholder?: string;
+  searchPlaceholder?: string;
   args: (_: A) => A;
   aws: (_: A & { revision: number; search?: string }) => Promise<T[]>;
   title: (_: A) => string;
@@ -36,7 +36,7 @@ export const registerRoute = <R, A, T extends Record<string, string>>(r: {
   const Route = (p: { args: A }) => {
     const initialValue = [Object.fromEntries(r.columns.map((c, i) => [c.render, i === 0 ? '⏳' : ''])) as T];
     const [resource] = createResource(
-      () => ({ ...r.args(p.args), revision: revision(), search: filterVisible() ? '' : filterText() }),
+      () => ({ ...r.args(p.args), revision: revision(), search: searchVisible() ? '' : searchText() }),
       async (a) => r.aws(a)
     );
 

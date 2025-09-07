@@ -1,6 +1,6 @@
 import { awsListObjectsV2, awsListObjectsV2Search, awsRegion } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
-import { popRoute, pushRoute, routes, setFilterText } from "../store";
+import { popRoute, pushRoute, routes, setSearchText } from "../store";
 import { openInBrowser } from "../util/system";
 
 const PARENT_DIR_KEY = '.. (up a dir)';
@@ -13,7 +13,7 @@ registerRoute({
     { key: 'a', name: 'Aws Website' },
     { key: 'enter', name: 'Open' },
   ],
-  filterPlaceholder: 'Press <Enter> to include objects in all subdirectories',
+  searchPlaceholder: 'Press <Enter> to include objects in all subdirectories',
   args: (a: { bucket: string, prefix: string }) => a,
   aws: async ({ bucket, prefix, search }) => {
     const data = search ? await awsListObjectsV2Search(bucket, search, prefix) : await awsListObjectsV2(bucket, prefix);
@@ -46,7 +46,7 @@ registerRoute({
         args: { bucket: args.bucket, prefix: args.prefix + item.Key },
       });
     } else {
-      setFilterText('');
+      setSearchText('');
       pushRoute({
         id: 'file',
         args: {

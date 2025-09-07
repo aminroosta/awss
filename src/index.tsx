@@ -2,12 +2,12 @@ import { getKeyHandler, TextAttributes } from "@opentui/core";
 import { render, useRenderer } from "@opentui/solid";
 import { ErrorBoundary, onMount, Show } from "solid-js";
 import { colors } from "./util/colors";
-import { cmdVisible, popRoute, setCmdVisible, undoPopRoute, setRevision, revision, filterVisible, setFilterVisible, setFilterText, filterText } from "./store";
+import { cmdVisible, popRoute, setCmdVisible, undoPopRoute, setRevision, revision, searchVisible, setSearchVisible, setSearchText, searchText } from "./store";
 import { Header } from "./ui/header";
 import { CommandLine } from "./ui/commandline";
 import { Notif } from "./ui/notif";
 import { Router } from "./router";
-import { Filter } from "./ui/filter";
+import { Search } from "./ui/search";
 
 
 function App() {
@@ -23,19 +23,19 @@ function App() {
       if (cmdVisible()) {
         setCmdVisible(false);
       }
-      else if (filterText()) {
-        setFilterText('');
-        setFilterVisible(false);
+      else if (searchText()) {
+        setSearchText('');
+        setSearchVisible(false);
       }
     }
-    if (cmdVisible() || filterVisible()) { return; }
+    if (cmdVisible() || searchVisible()) { return; }
     if (key.name === ":") {
       setCmdVisible(true);
-      setFilterVisible(false);
+      setSearchVisible(false);
     }
     if (key.name === "/") {
-      setFilterText('');
-      setFilterVisible(true);
+      setSearchText('');
+      setSearchVisible(true);
       setCmdVisible(false);
     }
     if (key.name === "p" && key.ctrl) {
@@ -62,8 +62,8 @@ function App() {
         </Show>
       </box>
       <box>
-        <Show when={filterVisible()}>
-          <Filter />
+        <Show when={searchVisible()}>
+          <Search />
         </Show>
       </box >
       <Router />

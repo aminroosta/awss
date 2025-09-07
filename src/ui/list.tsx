@@ -1,7 +1,7 @@
 import { TextAttributes, type ParsedKey } from "@opentui/core";
 import { batch, createEffect, createSignal, For, Index } from "solid-js";
 import { colors } from "../util/colors";
-import { cmdVisible, constants, filterText, filterVisible} from "../store";
+import { cmdVisible, constants, searchText, searchVisible} from "../store";
 import { useKeyHandler, useTerminalDimensions } from "@opentui/solid";
 import { log } from "../util/log";
 
@@ -25,7 +25,7 @@ export const List = <T extends Record<string, string>>(p: {
     return constants.HEADER_HEIGHT
       + borderY + titleHeight
       + (cmdVisible() ? constants.CMDLINE_HEIGHT : 0)
-      + (filterVisible() ? constants.CMDLINE_HEIGHT : 0)
+      + (searchVisible() ? constants.CMDLINE_HEIGHT : 0)
   };
   const height = () => {
     let { height } = terminalDim();
@@ -33,7 +33,7 @@ export const List = <T extends Record<string, string>>(p: {
   };
 
 
-  const query = () => filterText().toLowerCase();
+  const query = () => searchText().toLowerCase();
   const queryWords = () => query().split(' ').filter(q => q.trim().length > 0);
   const itemsFiltered = () => {
     const words = queryWords();
@@ -64,7 +64,7 @@ export const List = <T extends Record<string, string>>(p: {
 
   const [last_g, setLast_g] = createSignal(0);
   useKeyHandler(key => {
-    if (cmdVisible() || filterVisible()) return;
+    if (cmdVisible() || searchVisible()) return;
 
     batch(() => {
       const i = idx();
@@ -137,7 +137,7 @@ export const List = <T extends Record<string, string>>(p: {
     }));
   };
 
-  const title = () => !filterVisible() && query() ? ` /${query()} ` : undefined;
+  const title = () => !searchVisible() && query() ? ` /${query()} ` : undefined;
   const width = () => {
     const { width } = terminalDim();
     return width;

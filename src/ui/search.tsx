@@ -1,24 +1,24 @@
-import { constants, filterText, route, setFilterText, setFilterVisible } from "../store";
+import { constants, searchText, route, setSearchText, setSearchVisible } from "../store";
 import { colors } from "../util/colors";
 import { log } from "../util/log";
 
-export const Filter = () => {
+export const Search = () => {
   let ref: any;
 
   const onSubmit = () => {
-    setFilterVisible(false);
+    setSearchVisible(false);
   };
   const onKeyDown = (key: any) => {
     if (key.name === "escape") {
-      setFilterText('')
-      setFilterVisible(false);
+      setSearchText('')
+      setSearchVisible(false);
     }
   };
   const onInput = (text: string) => {
-    setFilterText(text);
+    setSearchText(text);
   };
   const color = () => colors().accent.v700;
-  const placeholder = () => route().filterPlaceholder || 'Type to filter';
+  const placeholder = () => route().searchPlaceholder || 'Type to search';
   return (
     <box
       flexDirection="row"
@@ -34,9 +34,9 @@ export const Filter = () => {
         textColor={colors().fg}
         focusedTextColor={colors().accent.v800}
         ref={el => { ref = el }}
-        width={filterText().length ? filterText().length + 2 : 60}
+        width={searchText().length ? searchText().length + 2 : 60}
         onInput={onInput}
-        value={filterText()}
+        value={searchText()}
         onSubmit={onSubmit}
         onKeyDown={onKeyDown}
         focused

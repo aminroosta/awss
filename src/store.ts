@@ -57,12 +57,12 @@ export function undoPopRoute() {
 type Notification = { message: string; level: 'info' | 'warn' | 'error'; timeout: number } | null;
 export const [notification, setNotification] = createSignal<Notification>(null);
 
-/********* filter ********/
-export const [filterText, setFilterText] = createSignal('');
-export const [filterVisible, setFilterVisible] = createSignal(false);
+/********* search ********/
+export const [searchText, setSearchText] = createSignal('');
+export const [searchVisible, setSearchVisible] = createSignal(false);
 createEffect(() => {
   const _ = route();
-  setFilterText('');
+  setSearchText('');
 });
 
 /********* actions ********/
@@ -72,13 +72,13 @@ export const actions = () => {
   if (cmdVisible()) {
     all.push({ key: 'esc', name: 'Dismiss', });
     all.push({ key: 'enter', name: 'Run Command' });
-  } else if (filterVisible()) {
+  } else if (searchVisible()) {
     all.push({ key: 'esc', name: 'Dismiss', });
     all.push({ key: 'enter', name: 'Apply' });
   } else {
     showRouteActions = true;
     all.push({ key: '˸', name: 'Command Line', });
-    all.push({ key: '/', name: 'Filter', });
+    all.push({ key: '/', name: 'Search', });
     all.push({ key: 'j|down', name: 'Move Down' });
     all.push({ key: 'k|up', name: 'Move Up' });
   }
