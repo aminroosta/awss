@@ -1,44 +1,21 @@
-import { createResource } from "solid-js";
-import { awsEc2DescribeInstances } from "../aws";
-import { List } from "../ui/list";
-import { Title } from "../ui/title";
-import { revision } from "../store";
+import { awsEc2DescribeInstances, awsRegion } from "../aws";
+import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import type { ParsedKey } from "@opentui/core";
 
 const getTag = (item: any, key: string) => item?.Tags?.find((t: any) => t.Key === key)?.Value || '';
 
-export const Instances = () => {
-  const [instances] = createResource(
-    () => ({ revision: revision() }),
-    () => awsEc2DescribeInstances(),
-    {
-      initialValue: [{
-        Tags: [],
-        InstanceId: '⏳',
-        State: { Name: '' },
-        InstanceType: '',
-        Monitoring: { State: '' },
-        Placement: { AvailabilityZone: '' },
-        PublicDnsName: '',
-        PublicIpAddress: '',
-        NetworkInterfaces: [],
-        KeyName: '',
-        LaunchTime: '',
-        PlatformDetails: '',
-      }] as any
-    }
-  );
-
-  const onEnter = (instance: any) => { };
-  const onKey = (key: ParsedKey, instance: any) => {
-    if (key.name === 'a' && instance) {
-      openInBrowser(instance);
-    }
-  }
-
-  const instancesFormatted = () =>
-    instances().map(i => ({
+registerRoute({
+  id: 'instances',
+  alias: ['ec2', 'instances'],
+  actions: [
+    { key: 'r', name: 'Refresh' },
+    { key: 'a', name: 'Aws Website' },
+  ],
+  args: () => ({}),
+  aws: async () => {
+    const data = await awsEc2DescribeInstances();
+    return data.map(i => ({
       Name: getTag(i, 'Name') as string,
       InstanceId: i.InstanceId,
       State: i.State?.Name || '',
@@ -53,8 +30,10 @@ export const Instances = () => {
       InstanceType: i.InstanceType,
       Zone: i.Placement?.AvailabilityZone || '',
     }));
-
-  const columns = [
+  },
+  title: () => 'instances',
+  filter: () => 'all',
+  columns: [
     { title: 'NAME', render: 'Name' },
     { title: 'INSTANCE ID', render: 'InstanceId' },
     { title: 'STATE', render: 'State' },
@@ -62,19 +41,13 @@ export const Instances = () => {
     { title: 'AGE', render: 'Age' },
     { title: 'TYPE', render: 'InstanceType' },
     { title: 'A. ZONE', render: 'Zone' },
-  ];
-
-  return (
-    <box flexGrow={1}>
-      <Title
-        title="instances"
-        filter='all'
-        count={instances.loading ? '⏳' : instances().length}
-      />
-      <List items={instancesFormatted()}
-        onEnter={onEnter}
-        onKey={onKey}
-        columns={columns} />
-    </box>
-  );
-};
+  ],
+  onEnter: (item) => { },
+  onKey: async (key, item) => {
+    if (key.name === 'a' && item) {
+      const region = await awsRegion();
+      const url = `https://${region}.console.aws.amazon.com/ec2/home?region=${region}#InstanceDetails:instanceId=${item.InstanceId}`;
+      openInBrowser(url);
+    }
+  },
+});

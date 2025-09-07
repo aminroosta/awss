@@ -1,7 +1,6 @@
 import { awsListObjectsV2, awsListObjectsV2Search, awsRegion } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { popRoute, pushRoute, routes, setFilterText } from "../store";
-import type { ParsedKey } from "@opentui/core";
 import { openInBrowser } from "../util/system";
 
 const PARENT_DIR_KEY = '.. (up a dir)';

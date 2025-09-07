@@ -46,15 +46,7 @@ export const routes = {
     ]
   },
 
-  instances: {
-    id: 'instances',
-    args: {},
-    alias: ['ec2', 'instances'],
-    actions: [
-      { key: 'r', name: 'Refresh' },
-      { key: 'a', name: 'Aws Website' },
-    ]
-  },
+
   securitygroups: {
     id: 'securitygroups',
     args: {},

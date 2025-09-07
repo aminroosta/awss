@@ -5,7 +5,7 @@ import "./route/objects";
 import { Resources } from "./route/resources";
 import { Vpcs } from "./route/vpcs";
 
-import { Instances } from "./route/instances";
+import "./route/instances";
 import { SecurityGroups } from "./route/securitygroups";
 import { Users } from "./route/users";
 import "./route/stackevents";
@@ -33,9 +33,7 @@ export function Router() {
       <Match when={route().id === 'vpcs'}>
         <Vpcs />
       </Match>
-      <Match when={route().id === 'instances'}>
-        <Instances />
-      </Match>
+
       <Match when={route().id === 'securitygroups'}>
         <SecurityGroups />
       </Match>
