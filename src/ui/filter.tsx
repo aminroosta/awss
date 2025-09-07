@@ -1,10 +1,11 @@
 import { constants, filterText, route, setFilterText, setFilterVisible } from "../store";
 import { colors } from "../util/colors";
+import { log } from "../util/log";
 
 export const Filter = () => {
   let ref: any;
 
-  const onEnter = () => {
+  const onSubmit = () => {
     setFilterVisible(false);
   };
   const onKeyDown = (key: any) => {
@@ -36,7 +37,7 @@ export const Filter = () => {
         width={filterText().length ? filterText().length + 2 : 60}
         onInput={onInput}
         value={filterText()}
-        onSubmit={onEnter}
+        onSubmit={onSubmit}
         onKeyDown={onKeyDown}
         focused
         focusedBackgroundColor={colors().bg}

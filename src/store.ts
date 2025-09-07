@@ -35,20 +35,7 @@ export const routes = {
       { key: 'r', name: 'Refresh' },
     ]
   },
-  objects: {
-    id: 'objects',
-    alias: [] as string[],
-    args: {
-      bucket: '',
-      prefix: '',
-    },
-    actions: [
-      { key: 'r', name: 'Refresh' },
-      { key: 'a', name: 'Aws Website' },
-      { key: 'enter', name: 'Open' },
-    ],
-    filterPlaceholder: 'Press <Enter> to include objects in all subdirectories'
-  },
+
   vpcs: {
     id: 'vpcs',
     args: {},
@@ -114,6 +101,7 @@ export function pushRoute(r: {
     args: r.args,
     actions: routes[r.id].actions,
     alias: routes[r.id].alias,
+    filterPlaceholder: routes[r.id].filterPlaceholder,
   };
 
   if (JSON.stringify(route()) === JSON.stringify(r2)) {
