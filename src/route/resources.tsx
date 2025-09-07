@@ -1,4 +1,4 @@
-import { awsCfListStackResources, awsEc2DescribeSecurityGroup, awsRegion } from "../aws";
+import { awsCfListStackResources, awsEc2DescribeSecurityGroup, awsRegion, awsUrls } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import type { ParsedKey } from "@opentui/core";
@@ -57,42 +57,44 @@ registerRoute({
     {
       key: { name: 'a', ctrl: false },
       name: 'AWS Website',
-      fn: async (item, args) => {
-        log({ item, args });
-        const region = await awsRegion();
-        let url = '';
+       fn: async (item, args) => {
+         let url = '';
 
-        switch (item.ResourceType) {
-          case 'AWS::S3::Bucket':
-            url = `https://console.aws.amazon.com/s3/buckets/${item.PhysicalResourceId}`;
-            break;
-          case 'AWS::EC2::Instance':
-            url = `https://console.aws.amazon.com/ec2/home?region=${region}#InstanceDetails:instanceId=${item.PhysicalResourceId}`;
-            break;
-          case 'AWS::EC2::SecurityGroup':
-            const group = await awsEc2DescribeSecurityGroup(item.PhysicalResourceId);
-            url = `https://console.aws.amazon.com/ec2/home?region=${region}#SecurityGroup:groupId=${group.GroupId}`;
-            break;
-          case 'AWS::EC2::Subnet':
-            url = `https://console.aws.amazon.com/vpcconsole/home?region=${region}#SubnetDetails:subnetId=${item.PhysicalResourceId}`;
-            break;
-          case 'AWS::EC2::VPC':
-            url = `https://console.aws.amazon.com/vpcconsole/home?region=${region}#VpcDetails:VpcId=${item.PhysicalResourceId}`;
-            break;
-          case 'AWS::AutoScaling::AutoScalingGroup':
-            url = `https://console.aws.amazon.com/ec2/home?region=${region}#AutoScalingGroupDetails:id=${item.PhysicalResourceId};view=details`;
-            break;
-          case 'AWS::EC2::LaunchTemplate':
-            url = `https://console.aws.amazon.com/ec2/home?region=${region}#LaunchTemplateDetails:launchTemplateId=${item.PhysicalResourceId}`;
-            break;
-          default:
-            // Fallback to CloudFormation resources tab
-            url = `https://console.aws.amazon.com/cloudformation/home?region=${region}#/stacks/resources?stackId=${encodeURIComponent(args.StackId)}&tabId=resources`;
-            break;
-        }
+         switch (item.ResourceType) {
+           case 'AWS::S3::Bucket':
+             url = await awsUrls.buckets(item.PhysicalResourceId);
+             break;
+           case 'AWS::EC2::Instance':
+             url = await awsUrls.instances(item.PhysicalResourceId);
+             break;
+           case 'AWS::EC2::SecurityGroup':
+             const group = await awsEc2DescribeSecurityGroup(item.PhysicalResourceId);
+             url = await awsUrls.securitygroup(group.GroupId);
+             break;
+           case 'AWS::EC2::Subnet':
+             url = await awsUrls.subnets(item.PhysicalResourceId);
+             break;
+           case 'AWS::EC2::VPC':
+             url = await awsUrls.vpc(item.PhysicalResourceId);
+             break;
+           case 'AWS::AutoScaling::AutoScalingGroup':
+             // Note: AutoScalingGroup URL not in awsUrls, keeping original
+             const region = await awsRegion();
+             url = `https://console.aws.amazon.com/ec2/home?region=${region}#AutoScalingGroupDetails:id=${item.PhysicalResourceId};view=details`;
+             break;
+           case 'AWS::EC2::LaunchTemplate':
+             // Note: LaunchTemplate URL not in awsUrls, keeping original
+             const region2 = await awsRegion();
+             url = `https://console.aws.amazon.com/ec2/home?region=${region2}#LaunchTemplateDetails:launchTemplateId=${item.PhysicalResourceId}`;
+             break;
+           default:
+             // Fallback to CloudFormation resources tab
+             url = await awsUrls.resources(args.StackId);
+             break;
+         }
 
-        openInBrowser(url);
-      }
+         openInBrowser(url);
+       }
     },
   ],
 });

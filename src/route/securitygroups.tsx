@@ -1,4 +1,4 @@
-import { awsEc2DescribeSecurityGroups, awsRegion } from "../aws";
+import { awsEc2DescribeSecurityGroups, awsRegion, awsUrls } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import { pushRoute } from "../store";
@@ -32,13 +32,13 @@ registerRoute({
         });
       }
     },
-    {
-      key: 'a',
-      name: 'AWS Website',
-      fn: async (item) => {
-        const region = await awsRegion();
-        openInBrowser(`https://console.aws.amazon.com/ec2/home?region=${region}#SecurityGroup:groupId=${item.GroupId}`);
-      }
-    },
+     {
+       key: 'a',
+       name: 'AWS Website',
+       fn: async (item) => {
+         const url = await awsUrls.securitygroup(item.GroupId);
+         openInBrowser(url);
+       }
+     },
   ],
 });

@@ -1,4 +1,4 @@
-import { awsEc2DescribeSubnets, awsRegion } from "../aws";
+import { awsEc2DescribeSubnets, awsRegion, awsUrls } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import type { ParsedKey } from "@opentui/core";
@@ -27,13 +27,13 @@ registerRoute({
     { title: 'STATE', render: 'State' },
   ],
   keymaps: [
-    {
-      key: 'a',
-      name: 'AWS Website',
-      fn: async (item, _args) => {
-        const region = await awsRegion();
-        openInBrowser(`https://console.aws.amazon.com/vpcconsole/home?region=${region}#SubnetDetails:subnetId=${item.SubnetId}`);
-      }
-    },
+     {
+       key: 'a',
+       name: 'AWS Website',
+       fn: async (item, _args) => {
+         const url = await awsUrls.subnets(item.SubnetId);
+         openInBrowser(url);
+       }
+     },
   ],
 });

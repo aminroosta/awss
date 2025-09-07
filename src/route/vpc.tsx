@@ -1,4 +1,4 @@
-import { awsEc2DescribeVpc } from "../aws";
+import { awsEc2DescribeVpc, awsUrls } from "../aws";
 import { createYamlRoute } from "./yaml";
 
 createYamlRoute({
@@ -6,5 +6,5 @@ createYamlRoute({
   args: (a: { VpcId: string }) => a,
   aws: (args) => awsEc2DescribeVpc(args.VpcId, 'yaml') as Promise<string>,
   title: (args) => `VPC: ${args.VpcId}`,
-  url: (region, args) => `https://console.aws.amazon.com/vpcconsole/home?region=${region}#VpcDetails:VpcId=${args.VpcId}`,
+  url: (args) => awsUrls.vpc!(args.VpcId),
 });

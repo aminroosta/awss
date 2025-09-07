@@ -1,4 +1,4 @@
-import { awsEc2DescribeInstances, awsRegion } from "../aws";
+import { awsEc2DescribeInstances, awsRegion, awsUrls } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import type { ParsedKey } from "@opentui/core";
@@ -39,12 +39,11 @@ registerRoute({
     { title: 'A. ZONE', render: 'Zone' },
   ],
   keymaps: [
-    {
-      key: 'a', name: 'AWS Website', fn: async (item) => {
-        const region = await awsRegion();
-        const url = `https://${region}.console.aws.amazon.com/ec2/home?region=${region}#InstanceDetails:instanceId=${item.InstanceId}`;
-        openInBrowser(url);
-      }
-    },
+     {
+       key: 'a', name: 'AWS Website', fn: async (item) => {
+         const url = await awsUrls.instances(item.InstanceId);
+         openInBrowser(url);
+       }
+     },
   ],
 });

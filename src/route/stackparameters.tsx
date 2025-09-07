@@ -1,4 +1,4 @@
-import { awsCfDescribeStack, awsRegion } from "../aws";
+import { awsCfDescribeStack, awsRegion, awsUrls } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import { log } from "../util/log";
@@ -14,14 +14,13 @@ registerRoute({
     { title: 'VALUE', render: 'ParameterValue' },
   ],
   keymaps: [
-    {
-      key: { name: 'a', ctrl: false },
-      name: 'AWS Website',
-      fn: async (item, args) => {
-        const region = await awsRegion();
-        const url = `https://console.aws.amazon.com/cloudformation/home?region=${region}#/stacks/parameters?stackId=${encodeURIComponent(args.StackId)}&tabId=parameters`;
-        openInBrowser(url);
-      }
-    },
+     {
+       key: { name: 'a', ctrl: false },
+       name: 'AWS Website',
+       fn: async (item, args) => {
+         const url = await awsUrls.stackparameters(args.StackId);
+         openInBrowser(url);
+       }
+     },
   ],
 });

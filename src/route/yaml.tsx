@@ -15,7 +15,7 @@ export function createYamlRoute<A extends Record<string, string>>({
   args: (a: A) => A,
   aws: (args: A) => Promise<string>;
   title: (args: A) => string;
-  url: (region: string, args: A) => string;
+  url: (args: A) => Promise<string>;
 }) {
   registerRoute({
     id,
@@ -43,10 +43,7 @@ export function createYamlRoute<A extends Record<string, string>>({
       {
         key: 'a',
         name: 'AWS Website',
-        fn: async (item, args: A) => {
-          const region = await awsRegion();
-          openInBrowser(url(region, args));
-        }
+        fn: (item, args: A) => url(args).then(openInBrowser)
       },
       {
         key: 'y',

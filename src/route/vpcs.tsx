@@ -1,4 +1,4 @@
-import { awsEc2DescribeVpcs, awsRegion } from "../aws";
+import { awsEc2DescribeVpcs, awsRegion, awsUrls } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import { pushRoute } from "../store";
@@ -34,13 +34,13 @@ registerRoute({
          });
        }
      },
-     {
-       key: 'a',
-       name: 'AWS Website',
-       fn: async (item, _args) => {
-         const region = await awsRegion();
-         openInBrowser(`https://console.aws.amazon.com/vpcconsole/home?region=${region}#VpcDetails:VpcId=${item.VpcId}`);
-       }
-     },
+      {
+        key: 'a',
+        name: 'AWS Website',
+        fn: async (item, _args) => {
+          const url = await awsUrls.vpc(item.VpcId);
+          openInBrowser(url);
+        }
+      },
    ],
 });

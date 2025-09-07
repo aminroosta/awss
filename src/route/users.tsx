@@ -1,4 +1,4 @@
-import { awsIamListUsers, awsRegion } from "../aws";
+import { awsIamListUsers, awsRegion, awsUrls } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import type { ParsedKey } from "@opentui/core";
@@ -23,13 +23,13 @@ registerRoute({
     { title: 'CREATED', render: 'CreateDate' },
   ],
   keymaps: [
-    {
-      key: 'a',
-      name: 'AWS Website',
-      fn: async (item, _args) => {
-        const region = await awsRegion();
-        openInBrowser(`https://console.aws.amazon.com/iam/home?region=${region}#/users/${item.UserName}`);
-      }
-    },
+     {
+       key: 'a',
+       name: 'AWS Website',
+       fn: async (item, _args) => {
+         const url = await awsUrls.users(item.UserName);
+         openInBrowser(url);
+       }
+     },
   ],
 });

@@ -2,7 +2,7 @@ import { $ } from "bun";
 import os from "os";
 import process from "process";
 import { createResource } from "solid-js";
-import { awsRegion } from "../aws";
+import { awsRegion, awsUrls } from "../aws";
 import { setNotification, vimVisible } from "../store";
 
 export async function getSystemUsage() {
@@ -57,39 +57,15 @@ export async function copyToClipboard(text: string) {
   }
 }
 
-export async function openInBrowser(
-  item: { VpcId?: string; InstanceId?: string; GroupId?: string; UserName?: string } | string
-) {
+export async function openInBrowser(url: string) {
   setNotification({ level: 'info', message: 'Openning in browser …', timeout: 1500 });
-  const region = await awsRegion();
-
-  let url: string | undefined;
-
-  if (typeof item === 'string') {
-    url = item;
-  }
-  else if (item.InstanceId) {
-    url = `https://${region}.console.aws.amazon.com/ec2/home?region=${region}#InstanceDetails:instanceId=${item.InstanceId}`;
-  } else if (item.GroupId) {
-    url = `https://${region}.console.aws.amazon.com/ec2/home?region=${region}#SecurityGroup:groupId=${item.GroupId}`;
-  } else if (item.UserName) {
-    url = `https://console.aws.amazon.com/iam/home#/users/${item.UserName}`;
-  } else if (item.VpcId) {
-    url = `https://${region}.console.aws.amazon.com/vpc/home?region=${region}#VpcDetails:VpcId=${item.VpcId}`;
-  }
-
-  if (!url) {
-    setNotification({ level: 'warn', message: 'Unsupported resource to open', timeout: 2000 });
-    return;
-  }
-
   try {
     if (process.platform === "darwin") {
       await $`open ${url}`;
     } else if (process.platform === "linux") {
       await $`xdg-open ${url}`;
-    } else if (process.platform === "win32") {
-      await $`start ${url}`;
+    } else {
+      throw new Error('Unsupported platform');
     }
     setNotification({ level: 'info', message: 'Opened in browser', timeout: 1500 });
   } catch {

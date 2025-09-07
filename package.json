@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "typecheck": "bun run tsc --noEmit"
+    "format": "bun run prettier --write ."
   },
   "devDependencies": {
     "@types/bun": "latest"

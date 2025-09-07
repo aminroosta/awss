@@ -1,4 +1,4 @@
-import { awsListStacks, awsRegion } from "../aws";
+import { awsListStacks, awsRegion, awsUrls } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { pushRoute, setNotification } from "../store";
 import { openInBrowser } from "../util/system";
@@ -76,15 +76,14 @@ registerRoute({
         args: { ...stack },
       })
     },
-    {
-      key: { name: 'a' },
-      name: 'AWS website',
-      when: valiateStackStatus,
-      fn: async (stack) => {
-        const region = await awsRegion();
-        const url = `https://console.aws.amazon.com/cloudformation/home?region=${region}#/stacks/stackinfo?stackId=${encodeURIComponent(stack.StackId)}`;
-        openInBrowser(url);
-      }
-    },
+     {
+       key: { name: 'a' },
+       name: 'AWS website',
+       when: valiateStackStatus,
+       fn: async (stack) => {
+         const url = await awsUrls.stacks!(stack.StackId);
+         openInBrowser(url);
+       }
+     },
   ],
 });
