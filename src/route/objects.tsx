@@ -1,6 +1,6 @@
 import { awsListObjectsV2, awsListObjectsV2Search, awsRegion, awsS3GetObject } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
-import { popRoute, pushRoute, routes, setSearchText } from "../store";
+import { popRoute, pushRoute, routes, setNotification, setSearchText } from "../store";
 import { openInBrowser } from "../util/system";
 import { openInVim } from "../util/vim";
 
@@ -12,7 +12,8 @@ registerRoute({
   actions: [
     { key: 'r', name: 'Refresh' },
     { key: 'a', name: 'Aws Website' },
-    { key: 'enter', name: 'Open in neovim' },
+    { key: 'n', name: 'Open in neovim' },
+    { key: 'enter', name: 'View file' },
   ],
   searchPlaceholder: 'Press <Enter> to include objects in all subdirectories',
   args: (a: { bucket: string, prefix: string }) => a,
@@ -49,8 +50,10 @@ registerRoute({
     } else {
       setSearchText('');
       const fullKey = args.prefix + item.Key;
-      const content = await awsS3GetObject(args.bucket, fullKey);
-      await openInVim(content, item.Key);
+      pushRoute({
+        id: 'file',
+        args: { bucket: args.bucket, key: fullKey },
+      });
     }
   },
   onKey: async (key, item, args) => {
@@ -61,6 +64,12 @@ registerRoute({
         openInBrowser(`https://${region}.console.aws.amazon.com/s3/object/${args.bucket}?region=us-east-2&prefix=${encodeURIComponent(args.prefix + item.Key)}`);
       } else {
         openInBrowser(`https://${region}.console.aws.amazon.com/s3/buckets/${args.bucket}?region=us-east-2&prefix=${encodeURIComponent(args.prefix + item.Key)}&showversions=false`);
+      }
+    } else if (key.name === 'n') {
+      if (item.Size !== '<DIR>') {
+        const fullKey = args.prefix + item.Key;
+        const content = await awsS3GetObject(args.bucket, fullKey);
+        await openInVim(content, item.Key);
       }
     }
   },
