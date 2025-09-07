@@ -41,10 +41,11 @@ export const CommandLine = () => {
       setRest('');
     }
   }
+  const limit = 80;
   const placeholder = (
     ''.padEnd(8, ' ') +
     Object.values(routes).filter(r => r.alias.length).map(r => r.alias[0] || '').join('|')
-  ).slice(0, 49) + '…';
+  ).slice(0, limit - 1) + '…';
 
   const color = () => colors().accent.v700;
   return (
@@ -62,7 +63,7 @@ export const CommandLine = () => {
         textColor={colors().fg}
         focusedTextColor={colors().accent.v800}
         ref={el => { ref = el }}
-        width={value().length ? value().length + 2 : 50}
+        width={value().length ? value().length + 2 : limit}
         onInput={onInput}
         value={value()}
         onSubmit={onEnter}

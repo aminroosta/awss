@@ -193,6 +193,36 @@ export const awsEc2DescribeVpcs = memo(async () => {
   }
 }, 30_000);
 
+export const awsEc2DescribeSubnets = memo(async () => {
+  try {
+    const result = await $`aws ec2 describe-subnets --output json`.json() as {
+      Subnets: {
+        SubnetId: string;
+        VpcId: string;
+        State: string;
+        CidrBlock: string;
+        AvailabilityZone: string;
+        AvailabilityZoneId: string;
+        AvailableIpAddressCount: number;
+        DefaultForAz: boolean;
+        MapPublicIpOnLaunch: boolean;
+        OwnerId: string;
+        AssignIpv6AddressOnCreation: boolean;
+        Ipv6CidrBlockAssociationSet?: {
+          AssociationId: string;
+          Ipv6CidrBlock: string;
+          Ipv6CidrBlockState: { State: string };
+        }[];
+        Tags?: { Key: string; Value: string }[];
+      }[];
+    };
+    return result.Subnets;
+  } catch (e: any) {
+    e.command = 'aws ec2 describe-subnets --output json'
+    throw e;
+  }
+}, 30_000);
+
 export const awsEcrDescribeRepositories = memo(async () => {
   try {
     const result = await $`aws ecr describe-repositories --output json`.json() as {

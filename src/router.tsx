@@ -12,6 +12,7 @@ import "./route/stackparameters";
 import "./route/repositories";
 import "./route/file";
 import "./route/images";
+import "./route/subnets.tsx";
 import { route } from "./store";
 import { RenderRoute, routes } from "./route/factory/registerRoute.tsx";
 
