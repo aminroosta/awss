@@ -1,15 +1,27 @@
-import { awsCfDescribeStack } from "../aws";
+import { awsCfDescribeStack, awsRegion } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
+import { openInBrowser } from "../util/system";
+import { log } from "../util/log";
 
 registerRoute({
   id: 'stackparameters',
   alias: [],
-  args: (a: { stackName: string }) => ({ stackName: a.stackName }),
-  aws: ({ stackName }) => awsCfDescribeStack(stackName).then(s => s.Parameters || []),
-  title: (args) => `${args.stackName} parameters`,
+  args: (a: { StackName: string, StackId: string }) => ({ StackName: a.StackName, StackId: a.StackId }),
+  aws: ({ StackName }) => awsCfDescribeStack(StackName).then(s => s.Parameters || []),
+  title: (args) => `${args.StackName} parameters`,
   columns: [
     { title: 'PARAMETER', render: 'ParameterKey' },
     { title: 'VALUE', render: 'ParameterValue' },
   ],
-  keymaps: [ ],
+  keymaps: [
+    {
+      key: { name: 'a', ctrl: false },
+      name: 'AWS Website',
+      fn: async (item, args) => {
+        const region = await awsRegion();
+        const url = `https://console.aws.amazon.com/cloudformation/home?region=${region}#/stacks/parameters?stackId=${encodeURIComponent(args.StackId)}&tabId=parameters`;
+        openInBrowser(url);
+      }
+    },
+  ],
 });
