@@ -1,46 +1,36 @@
-import { createResource } from "solid-js";
-import { awsIamListUsers } from "../aws";
-import { List } from "../ui/list";
-import { Title } from "../ui/title";
-import { revision } from "../store";
+import { awsIamListUsers, awsRegion } from "../aws";
+import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import type { ParsedKey } from "@opentui/core";
 
-export const Users = () => {
-  const [users] = createResource(
-    () => ({ revision: revision() }),
-    () => awsIamListUsers(),
-    { initialValue: [{ UserName: '⏳', UserId: '', Arn: '', Path: '', CreateDate: '', Tags: [] } as any] }
-  );
-
-  const onEnter = (user: any) => { };
-  const onKey = (key: ParsedKey, user: any) => {
-    if (key.name === 'a' && user) {
-      openInBrowser(user);
+registerRoute({
+  id: 'users',
+  alias: ['users'],
+  actions: [
+    { key: 'r', name: 'Refresh' },
+    { key: 'a', name: 'Aws Website' },
+  ],
+  args: () => ({}),
+  aws: async () => {
+    const data = await awsIamListUsers();
+    return data.map(u => ({
+      ...u,
+      'CreateDate': u.CreateDate?.split('T')[0],
+    }));
+  },
+  title: () => 'users',
+  filter: () => 'all',
+  columns: [
+    { title: 'USER NAME', render: 'UserName' },
+    { title: 'USER ID', render: 'UserId' },
+    { title: 'ARN', render: 'Arn' },
+    { title: 'CREATED', render: 'CreateDate' },
+  ],
+  onEnter: () => {},
+  onKey: async (key, item) => {
+    if (key.name === 'a' && item) {
+      const region = await awsRegion();
+      openInBrowser(`https://console.aws.amazon.com/iam/home?region=${region}#/users/${item.UserName}`);
     }
-  }
-
-  const usersFormatted = () => users().map(u => ({
-    ...u,
-    'CreateDate': u.CreateDate?.split('T')[0],
-  }));
-
-  return (
-    <box flexGrow={1}>
-      <Title
-        title="users"
-        filter='all'
-        count={users.loading ? '⏳' : users().length}
-      />
-      <List items={usersFormatted()}
-        onEnter={onEnter}
-        onKey={onKey}
-        columns={[
-          { title: 'USER NAME', render: 'UserName' },
-          { title: 'USER ID', render: 'UserId' },
-          { title: 'ARN', render: 'Arn' },
-          { title: 'CREATED', render: 'CreateDate' },
-        ]} />
-    </box>
-  );
-};
+  },
+});

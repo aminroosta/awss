@@ -24,12 +24,11 @@ registerRoute({
     { title: 'CREATED', render: 'CreatedAt' },
     { title: 'TAG MUTABILITY', render: 'imageTagMutability' },
   ],
-  onKey: (key, item) => {
-    if (key.name === 'return') {
-      pushRoute({
-        id: 'images',
-        args: { repositoryName: item.repositoryName }
-      });
-    }
+  onEnter: (item) => {
+    pushRoute({
+      id: 'images',
+      args: { repositoryName: item.repositoryName }
+    });
   },
+  onKey: () => {},
 });

@@ -1,8 +1,8 @@
 import { getKeyHandler, TextAttributes } from "@opentui/core";
 import { render, useRenderer } from "@opentui/solid";
-import { ErrorBoundary, onMount, Show} from "solid-js";
+import { ErrorBoundary, onMount, Show } from "solid-js";
 import { colors } from "./util/colors";
-import { cmdVisible, popRoute, setCmdVisible, undoPopRoute, setRevision, revision, filterVisible, setFilterVisible, setFilterText, filterText} from "./store";
+import { cmdVisible, popRoute, setCmdVisible, undoPopRoute, setRevision, revision, filterVisible, setFilterVisible, setFilterText, filterText } from "./store";
 import { Header } from "./ui/header";
 import { CommandLine } from "./ui/commandline";
 import { Notif } from "./ui/notif";
@@ -19,15 +19,6 @@ function App() {
   });
 
   keyHandler.on('keypress', (key: any) => {
-    if (key.name === ":") {
-      setCmdVisible(true);
-      setFilterVisible(false);
-    }
-    if (key.name === "/") {
-      setFilterText('');
-      setFilterVisible(true);
-      setCmdVisible(false);
-    }
     if (key.name === "escape") {
       if (cmdVisible()) {
         setCmdVisible(false);
@@ -36,6 +27,16 @@ function App() {
         setFilterText('');
         setFilterVisible(false);
       }
+    }
+    if (cmdVisible() || filterVisible()) { return; }
+    if (key.name === ":") {
+      setCmdVisible(true);
+      setFilterVisible(false);
+    }
+    if (key.name === "/") {
+      setFilterText('');
+      setFilterVisible(true);
+      setCmdVisible(false);
     }
     if (key.name === "p" && key.ctrl) {
       popRoute();

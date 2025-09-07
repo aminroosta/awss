@@ -28,35 +28,11 @@ export const routes = {
     ]
   },
 
-  vpcs: {
-    id: 'vpcs',
-    args: {},
-    alias: ['vpcs'],
-    actions: [
-      { key: 'r', name: 'Refresh' },
-      { key: 'a', name: 'Aws Website' },
-    ]
-  },
 
 
-  securitygroups: {
-    id: 'securitygroups',
-    args: {},
-    alias: ['sgs', 'securitygroups'],
-    actions: [
-      { key: 'r', name: 'Refresh' },
-      { key: 'a', name: 'Aws Website' },
-    ]
-  },
-  users: {
-    id: 'users',
-    args: {},
-    alias: ['users'],
-    actions: [
-      { key: 'r', name: 'Refresh' },
-      { key: 'a', name: 'Aws Website' },
-    ]
-  },
+
+
+
   ...registeredRoutes,
 };
 

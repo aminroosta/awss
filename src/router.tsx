@@ -3,11 +3,11 @@ import { Stacks } from "./route/stacks";
 import "./route/buckets";
 import "./route/objects";
 import { Resources } from "./route/resources";
-import { Vpcs } from "./route/vpcs";
+import "./route/vpcs";
 
 import "./route/instances";
-import { SecurityGroups } from "./route/securitygroups";
-import { Users } from "./route/users";
+import "./route/securitygroups";
+import "./route/users";
 import "./route/stackevents";
 import "./route/stackparameters";
 import "./route/repositories";
@@ -28,16 +28,10 @@ export function Router() {
       <Match when={route().id === 'resources'}>
         <Resources args={route().args as any} />
       </Match>
-      <Match when={route().id === 'vpcs'}>
-        <Vpcs />
-      </Match>
 
-      <Match when={route().id === 'securitygroups'}>
-        <SecurityGroups />
-      </Match>
-      <Match when={route().id === 'users'}>
-        <Users />
-      </Match>
+
+
+
       <For each={routeIds}>
         {id =>
           <Match when={route().id === id}>
