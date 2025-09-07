@@ -397,10 +397,56 @@ export const awsEc2DescribeSecurityGroups = memo(async () => {
   }
 }, 30_000);
 
-export const awsEc2DescribeSecurityGroup = memo(async (groupIdOrGroupName: string) => {
-  const groups = await awsEc2DescribeSecurityGroups();
-  const group = groups.find(g => g.GroupId === groupIdOrGroupName || g.GroupName === groupIdOrGroupName);
-  return group;
+export const awsEc2DescribeSecurityGroup = memo(async (groupIdOrGroupName: string, format: 'json' | 'yaml' = 'json') => {
+  const isId = groupIdOrGroupName.startsWith('sg-');
+  const flag = isId ? '--group-ids' : '--group-names';
+  try {
+    if (format === 'yaml') {
+      return await $`aws ec2 describe-security-groups ${flag}='${groupIdOrGroupName}' --output yaml`.text();
+    } else {
+      const result = await $`aws ec2 describe-security-groups ${flag}='${groupIdOrGroupName}' --output json`.json() as {
+        SecurityGroups: {
+          Description: string;
+          GroupName: string;
+          IpPermissions: {
+            FromPort?: number;
+            ToPort?: number;
+            IpProtocol: string;
+            IpRanges: { CidrIp: string; Description?: string }[];
+            Ipv6Ranges: { CidrIpv6: string; Description?: string }[];
+            PrefixListIds: { PrefixListId: string; Description?: string }[];
+            UserIdGroupPairs: {
+              GroupId: string;
+              GroupName?: string;
+              VpcId?: string;
+            }[];
+          }[];
+          OwnerId: string;
+          GroupId: string;
+          VpcId?: string;
+          Tags?: { Key: string; Value: string }[];
+          SecurityGroupArn: string;
+          IpPermissionsEgress?: {
+            FromPort?: number;
+            ToPort?: number;
+            IpProtocol: string;
+            IpRanges: { CidrIp: string; Description?: string }[];
+            Ipv6Ranges: { CidrIpv6: string; Description?: string }[];
+            PrefixListIds: { PrefixListId: string; Description?: string }[];
+            UserIdGroupPairs: {
+              GroupId: string;
+              GroupName?: string;
+              VpcId?: string;
+            }[];
+          }[];
+        }[];
+      };
+      return result.SecurityGroups[0];
+    }
+  } catch (e: any) {
+    e.command = `aws ec2 describe-security-groups ${flag}='${groupIdOrGroupName}' --output json`
+    throw e;
+  }
 }, 30_000);
 
 export const awsEc2DescribeVpc = memo(async (vpcId: string) => {
