@@ -9,12 +9,6 @@ const PARENT_DIR_KEY = '.. (up a dir)';
 registerRoute({
   id: 'objects',
   alias: [],
-  actions: [
-    { key: 'r', name: 'Refresh' },
-    { key: 'a', name: 'Aws Website' },
-    { key: 'n', name: 'Open in neovim' },
-    { key: 'enter', name: 'View file' },
-  ],
   searchPlaceholder: 'Press <Enter> to include objects in all subdirectories',
   args: (a: { bucket: string, prefix: string }) => a,
   aws: async ({ bucket, prefix, search }) => {
@@ -39,40 +33,53 @@ registerRoute({
     { title: 'SIZE', render: 'Size' },
     { title: 'LAST MODIFIED', render: 'LastModified' },
   ],
-  onEnter: async (item, args) => {
-    if (item.Key === PARENT_DIR_KEY) {
-      popRoute();
-    } else if (item.Size === '<DIR>') {
-      pushRoute({
-        id: 'objects',
-        args: { bucket: args.bucket, prefix: args.prefix + item.Key },
-      });
-    } else {
-      setSearchText('');
-      const fullKey = args.prefix + item.Key;
-      pushRoute({
-        id: 'file',
-        args: { bucket: args.bucket, key: fullKey },
-      });
-    }
-  },
-  onKey: async (key, item, args) => {
-    if (item.Key === PARENT_DIR_KEY) { return; }
-    const region = await awsRegion();
-    if (key.name === 'a') {
-      if (item.Size !== '<DIR>') {
-        openInBrowser(`https://${region}.console.aws.amazon.com/s3/object/${args.bucket}?region=us-east-2&prefix=${encodeURIComponent(args.prefix + item.Key)}`);
-      } else {
-        openInBrowser(`https://${region}.console.aws.amazon.com/s3/buckets/${args.bucket}?region=us-east-2&prefix=${encodeURIComponent(args.prefix + item.Key)}&showversions=false`);
+  keymaps: [
+    { key: 'r', name: 'Refresh', fn: () => { } },
+    {
+      key: 'a',
+      name: 'Aws Website',
+      when: (item) => item.Key !== PARENT_DIR_KEY,
+      fn: async (item, args) => {
+        const region = await awsRegion();
+        if (item.Size !== '<DIR>') {
+          openInBrowser(`https://${region}.console.aws.amazon.com/s3/object/${args.bucket}?region=us-east-2&prefix=${encodeURIComponent(args.prefix + item.Key)}`);
+        } else {
+          openInBrowser(`https://${region}.console.aws.amazon.com/s3/buckets/${args.bucket}?region=us-east-2&prefix=${encodeURIComponent(args.prefix + item.Key)}&showversions=false`);
+        }
       }
-    } else if (key.name === 'n') {
-      if (item.Size !== '<DIR>') {
+    },
+    {
+      key: 'n',
+      name: 'Open in neovim',
+      when: (item) => item.Key !== PARENT_DIR_KEY && item.Size !== '<DIR>',
+      fn: async (item, args) => {
         setNotification({ level: 'info', message: 'Openning in novim …', timeout: 1500 });
         const fullKey = args.prefix + item.Key;
         const content = await awsS3GetObject(args.bucket, fullKey);
         setNotification(null as any);
         await openInVim(content, item.Key);
       }
-    }
-  },
+    },
+    {
+      key: 'return',
+      name: 'View file',
+      fn: async (item, args) => {
+        if (item.Key === PARENT_DIR_KEY) {
+          popRoute();
+        } else if (item.Size === '<DIR>') {
+          pushRoute({
+            id: 'objects',
+            args: { bucket: args.bucket, prefix: args.prefix + item.Key },
+          });
+        } else {
+          setSearchText('');
+          const fullKey = args.prefix + item.Key;
+          pushRoute({
+            id: 'file',
+            args: { bucket: args.bucket, key: fullKey },
+          });
+        }
+      }
+    },
+  ],
 });

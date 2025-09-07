@@ -5,10 +5,6 @@ import { pushRoute } from "../store";
 registerRoute({
   id: 'buckets',
   alias: ['s3', 'buckets'],
-  actions: [
-    { key: 'r', name: 'Refresh' },
-    { key: 'enter', name: 'Open' },
-  ],
   args: () => ({}),
   aws: async () => {
     const data = await awsListBuckets();
@@ -20,11 +16,13 @@ registerRoute({
     { title: 'BUCKET', render: 'Name' },
     { title: 'CREATED', render: 'CreationDate' },
   ],
-  onEnter: (item) => {
-    pushRoute({
-      id: 'objects',
-      args: { bucket: item.Name.trim(), prefix: '' }
-    });
-  },
-  onKey: () => {},
+  keymaps: [
+    { key: 'r', name: 'Refresh', fn: () => { } },
+    {
+      key: 'return', name: 'Open', fn: (item) => pushRoute({
+        id: 'objects',
+        args: { bucket: item.Name.trim(), prefix: '' }
+      })
+    },
+  ],
 });

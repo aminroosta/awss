@@ -4,9 +4,6 @@ import { registerRoute } from "./factory/registerRoute";
 registerRoute({
   id: 'images',
   alias: [],
-  actions: [
-    { key: 'r', name: 'Refresh' },
-  ],
   args: (a: { repositoryName: string }) => ({ repositoryName: a.repositoryName }),
   aws: ({ repositoryName }) => awsEcrListImages(repositoryName).then(images => 
     images.map((i: any) => ({
@@ -20,5 +17,7 @@ registerRoute({
     { title: 'IMAGE TAG', render: 'imageTag' },
     { title: 'IMAGE DIGEST', render: 'ImageDigest' },
   ],
-  onKey: (key, item) => { },
+  keymaps: [
+    { key: 'r', name: 'Refresh', fn: () => {} },
+  ],
 });

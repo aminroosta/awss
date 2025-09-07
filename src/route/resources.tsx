@@ -5,9 +5,6 @@ import type { ParsedKey } from "@opentui/core";
 registerRoute({
   id: 'resources',
   alias: [],
-  actions: [
-    { key: 'r', name: 'Refresh' },
-  ],
   args: (a: { stackName: string }) => a,
   aws: async ({ stackName }) => {
     const data = await awsCfListStackResources(stackName);
@@ -24,6 +21,8 @@ registerRoute({
     { title: 'STATUS', render: 'ResourceStatus' },
     { title: 'UPDATED', render: 'LastUpdatedTimestamp' },
   ],
-  onEnter: () => {},
-  onKey: () => {},
+  onEnter: () => { },
+  keymaps: [
+    { key: 'r', name: 'Refresh', fn: (_item, _args) => { } },
+  ],
 });

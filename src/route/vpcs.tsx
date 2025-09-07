@@ -6,10 +6,6 @@ import type { ParsedKey } from "@opentui/core";
 registerRoute({
   id: 'vpcs',
   alias: ['vpcs'],
-  actions: [
-    { key: 'r', name: 'Refresh' },
-    { key: 'a', name: 'Aws Website' },
-  ],
   args: () => ({}),
   aws: async () => {
     const data = await awsEc2DescribeVpcs();
@@ -26,11 +22,15 @@ registerRoute({
     { title: 'CIDR BLOCK', render: 'CidrBlock' },
     { title: 'DEFAULT', render: 'Default' },
   ],
-  onEnter: () => {},
-  onKey: async (key, item) => {
-    if (key.name === 'a' && item) {
-      const region = await awsRegion();
-      openInBrowser(`https://console.aws.amazon.com/vpc/home?region=${region}#vpcs:vpcId=${item.VpcId}`);
-    }
-  },
+  keymaps: [
+    { key: 'r', name: 'Refresh', fn: (_item, _args) => { } },
+    {
+      key: 'a',
+      name: 'Aws Website',
+      fn: async (item, _args) => {
+        const region = await awsRegion();
+        openInBrowser(`https://console.aws.amazon.com/vpc/home?region=${region}#vpcs:vpcId=${item.VpcId}`);
+      }
+    },
+  ],
 });

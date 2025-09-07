@@ -8,7 +8,6 @@ import { log } from "../util/log";
 
 export const List = <T extends Record<string, string>>(p: {
   items: T[],
-  onEnter: (item: T) => void,
   onKey?: (key: ParsedKey, item: T) => any,
   columns: {
     title: string,
@@ -81,11 +80,6 @@ export const List = <T extends Record<string, string>>(p: {
         setLast_g(now);
       } else if (key.name === 'g' && key.shift) {
         setIndex(items.length - 1);
-      } else if (key.name === 'return') {
-        if (i >= 0 && items[i]) {
-          p.onKey?.(key, items[i]!);
-          p.onEnter(items[i]!);
-        }
       } else {
         if (items[i]) {
           p.onKey?.(key, items[i]);

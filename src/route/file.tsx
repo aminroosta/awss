@@ -4,9 +4,6 @@ import { registerRoute } from "./factory/registerRoute";
 registerRoute({
   id: 'file',
   alias: [],
-  actions: [
-    { key: 'r', name: 'Refresh' },
-  ],
   args: (a: { bucket: string, key: string }) => ({ bucket: a.bucket, key: a.key }),
   aws: async ({ bucket, key }) => {
     const content = await awsS3GetObject(bucket, key);
@@ -16,5 +13,7 @@ registerRoute({
   columns: [
     { title: '', render: 'line' },
   ],
-  onKey: (key, item) => { },
+  keymaps: [
+    { key: 'r', name: 'Refresh', fn: () => {} },
+  ],
 });

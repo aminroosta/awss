@@ -9,23 +9,29 @@ export const routes = {} as Record<string, {
   component: Function;
   id: string;
   alias: string[];
-  actions: { key: string; name: string; }[]
+  keymaps: {
+    key: string | Partial<ParsedKey>;
+    name: string;
+    when?: (item: any, props: any) => boolean;
+    fn: (item: any, args: any) => any
+  }[]
   searchPlaceholder?: string;
-  onEnter?: Function;
-  onKey: Function;
 }>;
 
 export const registerRoute = <R, A, T extends Record<string, string>>(r: {
   id: string;
   alias: string[];
-  actions: { key: string; name: string; }[]
+  keymaps: {
+    key: string | Partial<ParsedKey>;
+    name: string;
+    when?: (item: T, args: A) => boolean;
+    fn: (item: T, args: A) => any
+  }[]
   searchPlaceholder?: string;
   args: (_: A) => A;
   aws: (_: A & { revision: number; search?: string }) => Promise<T[]>;
   title: (_: A) => string;
   filter?: (_: A) => string | undefined;
-  onEnter?: (item: T, args: A) => any;
-  onKey: (key: ParsedKey, item: T, args: A) => any;
   columns: {
     title: string,
     render: keyof T,
@@ -50,8 +56,18 @@ export const registerRoute = <R, A, T extends Record<string, string>>(r: {
         <List
           items={resource.loading ? initialValue : resource()!}
           columns={r.columns}
-          onEnter={(item) => r.onEnter?.(item, p.args)}
-          onKey={(key, item) => r.onKey(key, item, p.args)}
+          onKey={(key, item) => {
+            const keymap = r.keymaps.find(km => {
+              if (typeof km.key === 'string') {
+                return km.key === key.name
+              } else {
+                return Object.entries(km.key).every(([k, v]) => (key as any)[k] === v);
+              }
+            });
+            if (keymap && (!keymap.when || keymap.when(item, p.args))) {
+              keymap.fn(item, p.args);
+            }
+          }}
         />
       </box>
     );
@@ -66,7 +82,6 @@ export const registerRoute = <R, A, T extends Record<string, string>>(r: {
 
 export const RenderRoute = (p: { route: { args: any, id: string } }) => {
   let Component = routes[p.route.id]!.component
-  log({ r: p.route });
 
   return <Component args={p.route.args} />
 }

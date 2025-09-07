@@ -8,10 +8,6 @@ const getTag = (item: any, key: string) => item?.Tags?.find((t: any) => t.Key ==
 registerRoute({
   id: 'instances',
   alias: ['ec2', 'instances'],
-  actions: [
-    { key: 'r', name: 'Refresh' },
-    { key: 'a', name: 'Aws Website' },
-  ],
   args: () => ({}),
   aws: async () => {
     const data = await awsEc2DescribeInstances();
@@ -42,12 +38,14 @@ registerRoute({
     { title: 'TYPE', render: 'InstanceType' },
     { title: 'A. ZONE', render: 'Zone' },
   ],
-  onEnter: (item) => { },
-  onKey: async (key, item) => {
-    if (key.name === 'a' && item) {
-      const region = await awsRegion();
-      const url = `https://${region}.console.aws.amazon.com/ec2/home?region=${region}#InstanceDetails:instanceId=${item.InstanceId}`;
-      openInBrowser(url);
-    }
-  },
+  keymaps: [
+    { key: 'r', name: 'Refresh', fn: () => { } },
+    {
+      key: 'a', name: 'Aws Website', fn: async (item) => {
+        const region = await awsRegion();
+        const url = `https://${region}.console.aws.amazon.com/ec2/home?region=${region}#InstanceDetails:instanceId=${item.InstanceId}`;
+        openInBrowser(url);
+      }
+    },
+  ],
 });

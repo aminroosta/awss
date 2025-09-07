@@ -6,10 +6,6 @@ import { registerRoute } from "./factory/registerRoute";
 registerRoute({
   id: 'repositories',
   alias: ['repos', 'repositories'],
-  actions: [
-    { key: 'r', name: 'Refresh' },
-    { key: 'enter', name: 'Open' },
-  ],
   args: (a: {}) => ({}),
   aws: async () => {
     const repositories = await awsEcrDescribeRepositories();
@@ -24,11 +20,11 @@ registerRoute({
     { title: 'CREATED', render: 'CreatedAt' },
     { title: 'TAG MUTABILITY', render: 'imageTagMutability' },
   ],
-  onEnter: (item) => {
-    pushRoute({
+  keymaps: [
+    { key: 'r', name: 'Refresh', fn: (_item, _args) => {} },
+    { key: 'return', name: 'Open', fn: (item, _args) => pushRoute({
       id: 'images',
       args: { repositoryName: item.repositoryName }
-    });
-  },
-  onKey: () => {},
+    }) },
+  ],
 });

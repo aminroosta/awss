@@ -2,6 +2,8 @@ import { createEffect, createSignal } from "solid-js";
 import { saveSession, loadSession } from "./util/session";
 import './router';
 import { routes } from "./route/factory/registerRoute";
+import type { ParsedKey } from "@opentui/core";
+import { log } from "./util/log";
 
 
 export { routes } from "./route/factory/registerRoute";
@@ -90,7 +92,23 @@ export const actions = () => {
     all.push({ key: 'ctrl+n', name: 'Go Forward' });
   }
   if (showRouteActions) {
-    all.push(...(route().actions || []));
+    const routeActions = route()?.keymaps?.map(km => {
+      if (typeof km.key === 'string') {
+        return { key: km.key, name: km.name };
+      }
+      if (km.key.ctrl) {
+        return { key: 'ctrl+' + km.key.name!, name: km.name };
+      }
+      if (km.key.meta) {
+        return { key: 'alt+' + km.key.name!, name: km.name };
+      }
+      if (km.key.shift) {
+        return { key: 'shift+' + km.key.name!, name: km.name };
+      }
+      return { key: km.key.name!, name: km.name };
+    });
+    log({ routeActions });
+    all.push(...(routeActions || []));
   }
 
   return all;

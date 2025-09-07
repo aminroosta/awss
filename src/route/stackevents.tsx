@@ -4,9 +4,6 @@ import { registerRoute } from "./factory/registerRoute";
 registerRoute({
   id: 'stackevents',
   alias: [],
-  actions: [
-    { key: 'r', name: 'Refresh' },
-  ],
   args: (a: { stackName: string }) => ({ stackName: a.stackName }),
   aws: ({ stackName }) => awsCfDescribeStackEvents(stackName).then(events => 
     events.map(e => ({
@@ -23,5 +20,7 @@ registerRoute({
     { title: 'REASON', render: 'ResourceStatusReason' },
     { title: 'TIMESTAMP', render: 'Timestamp' },
   ],
-  onKey: (key, item) => { },
+  keymaps: [
+    { key: 'r', name: 'Refresh', fn: () => {} },
+  ],
 });

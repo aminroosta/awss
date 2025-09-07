@@ -6,10 +6,6 @@ import type { ParsedKey } from "@opentui/core";
 registerRoute({
   id: 'users',
   alias: ['users'],
-  actions: [
-    { key: 'r', name: 'Refresh' },
-    { key: 'a', name: 'Aws Website' },
-  ],
   args: () => ({}),
   aws: async () => {
     const data = await awsIamListUsers();
@@ -26,11 +22,15 @@ registerRoute({
     { title: 'ARN', render: 'Arn' },
     { title: 'CREATED', render: 'CreateDate' },
   ],
-  onEnter: () => {},
-  onKey: async (key, item) => {
-    if (key.name === 'a' && item) {
-      const region = await awsRegion();
-      openInBrowser(`https://console.aws.amazon.com/iam/home?region=${region}#/users/${item.UserName}`);
-    }
-  },
+  keymaps: [
+    { key: 'r', name: 'Refresh', fn: (_item, _args) => { } },
+    {
+      key: 'a',
+      name: 'Aws Website',
+      fn: async (item, _args) => {
+        const region = await awsRegion();
+        openInBrowser(`https://console.aws.amazon.com/iam/home?region=${region}#/users/${item.UserName}`);
+      }
+    },
+  ],
 });

@@ -6,10 +6,6 @@ import type { ParsedKey } from "@opentui/core";
 registerRoute({
   id: 'securitygroups',
   alias: ['sgs', 'securitygroups'],
-  actions: [
-    { key: 'r', name: 'Refresh' },
-    { key: 'a', name: 'Aws Website' },
-  ],
   args: () => ({}),
   aws: async () => {
     const data = await awsEc2DescribeSecurityGroups();
@@ -23,11 +19,16 @@ registerRoute({
     { title: 'DESCRIPTION', render: 'Description' },
     { title: 'VPC ID', render: 'VpcId' },
   ],
-  onEnter: () => {},
-  onKey: async (key, item) => {
-    if (key.name === 'a' && item) {
-      const region = await awsRegion();
-      openInBrowser(`https://console.aws.amazon.com/ec2/v2/home?region=${region}#SecurityGroups:groupId=${item.GroupId}`);
-    }
-  },
+  onEnter: () => { },
+  keymaps: [
+    { key: 'r', name: 'Refresh', fn: () => { } },
+    {
+      key: 'a',
+      name: 'Aws Website',
+      fn: async (item) => {
+        const region = await awsRegion();
+        openInBrowser(`https://console.aws.amazon.com/ec2/v2/home?region=${region}#SecurityGroups:groupId=${item.GroupId}`);
+      }
+    },
+  ],
 });
