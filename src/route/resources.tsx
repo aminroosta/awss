@@ -21,8 +21,5 @@ registerRoute({
     { title: 'STATUS', render: 'ResourceStatus' },
     { title: 'UPDATED', render: 'LastUpdatedTimestamp' },
   ],
-  onEnter: () => { },
-  keymaps: [
-    { key: 'r', name: 'Refresh', fn: (_item, _args) => { } },
-  ],
+  keymaps: [ ],
 });

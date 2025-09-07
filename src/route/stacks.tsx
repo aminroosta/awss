@@ -48,7 +48,6 @@ registerRoute({
     { title: 'STATUS', render: 'StackStatus', attrs: (s) => s.StackStatus === "DELETE_COMPLETE" ? TextAttributes.STRIKETHROUGH | TextAttributes.DIM : 0 },
   ],
   keymaps: [
-    { key: 'r', name: 'Refresh', fn: () => { } },
     {
       key: { name: 'e', ctrl: false },
       name: 'Events',

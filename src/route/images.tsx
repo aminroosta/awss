@@ -17,7 +17,5 @@ registerRoute({
     { title: 'IMAGE TAG', render: 'imageTag' },
     { title: 'IMAGE DIGEST', render: 'ImageDigest' },
   ],
-  keymaps: [
-    { key: 'r', name: 'Refresh', fn: () => {} },
-  ],
+  keymaps: [ ],
 });

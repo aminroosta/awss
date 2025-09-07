@@ -11,7 +11,5 @@ registerRoute({
     { title: 'PARAMETER', render: 'ParameterKey' },
     { title: 'VALUE', render: 'ParameterValue' },
   ],
-  keymaps: [
-    { key: 'r', name: 'Refresh', fn: () => {} },
-  ],
+  keymaps: [ ],
 });

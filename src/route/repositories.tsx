@@ -21,10 +21,13 @@ registerRoute({
     { title: 'TAG MUTABILITY', render: 'imageTagMutability' },
   ],
   keymaps: [
-    { key: 'r', name: 'Refresh', fn: (_item, _args) => {} },
-    { key: 'return', name: 'Open', fn: (item, _args) => pushRoute({
-      id: 'images',
-      args: { repositoryName: item.repositoryName }
-    }) },
+    {
+      key: 'return',
+      name: 'Open',
+      fn: (item, _args) => pushRoute({
+        id: 'images',
+        args: { repositoryName: item.repositoryName }
+      })
+    },
   ],
 });

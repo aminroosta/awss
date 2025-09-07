@@ -13,7 +13,5 @@ registerRoute({
   columns: [
     { title: '', render: 'line' },
   ],
-  keymaps: [
-    { key: 'r', name: 'Refresh', fn: () => {} },
-  ],
+  keymaps: [ ],
 });

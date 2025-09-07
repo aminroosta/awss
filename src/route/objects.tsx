@@ -34,7 +34,6 @@ registerRoute({
     { title: 'LAST MODIFIED', render: 'LastModified' },
   ],
   keymaps: [
-    { key: 'r', name: 'Refresh', fn: () => { } },
     {
       key: 'a',
       name: 'Aws Website',

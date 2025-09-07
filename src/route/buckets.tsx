@@ -17,7 +17,6 @@ registerRoute({
     { title: 'CREATED', render: 'CreationDate' },
   ],
   keymaps: [
-    { key: 'r', name: 'Refresh', fn: () => { } },
     {
       key: 'return', name: 'Open', fn: (item) => pushRoute({
         id: 'objects',

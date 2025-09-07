@@ -23,7 +23,6 @@ registerRoute({
     { title: 'DEFAULT', render: 'Default' },
   ],
   keymaps: [
-    { key: 'r', name: 'Refresh', fn: (_item, _args) => { } },
     {
       key: 'a',
       name: 'Aws Website',

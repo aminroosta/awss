@@ -20,7 +20,5 @@ registerRoute({
     { title: 'REASON', render: 'ResourceStatusReason' },
     { title: 'TIMESTAMP', render: 'Timestamp' },
   ],
-  keymaps: [
-    { key: 'r', name: 'Refresh', fn: () => {} },
-  ],
+  keymaps: [ ],
 });

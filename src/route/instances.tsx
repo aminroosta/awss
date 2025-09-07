@@ -39,7 +39,6 @@ registerRoute({
     { title: 'A. ZONE', render: 'Zone' },
   ],
   keymaps: [
-    { key: 'r', name: 'Refresh', fn: () => { } },
     {
       key: 'a', name: 'Aws Website', fn: async (item) => {
         const region = await awsRegion();

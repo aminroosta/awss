@@ -84,6 +84,7 @@ export const actions = () => {
     all.push({ key: '/', name: 'Search', });
     all.push({ key: 'j|down', name: 'Move Down' });
     all.push({ key: 'k|up', name: 'Move Up' });
+    all.push({ key: 'r', name: 'Refresh', });
   }
   if (routeStackLen() >= 2) {
     all.push({ key: 'ctrl+p', name: 'Go Back' });

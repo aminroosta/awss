@@ -21,7 +21,6 @@ registerRoute({
   ],
   onEnter: () => { },
   keymaps: [
-    { key: 'r', name: 'Refresh', fn: () => { } },
     {
       key: 'a',
       name: 'Aws Website',
