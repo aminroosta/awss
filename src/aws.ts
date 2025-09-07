@@ -403,6 +403,15 @@ export const awsEc2DescribeSecurityGroup = memo(async (groupIdOrGroupName: strin
   return group;
 }, 30_000);
 
+export const awsEc2DescribeVpc = memo(async (vpcId: string) => {
+  try {
+    return await $`aws ec2 describe-vpcs --vpc-ids='${vpcId}' --output yaml`.text();
+  } catch (e: any) {
+    e.command = `aws ec2 describe-vpcs --vpc-ids='${vpcId}' --output yaml`
+    throw e;
+  }
+}, 30_000);
+
 export const awsIamListUsers = memo(async () => {
   try {
     const result = await $`aws iam list-users --output json`.json() as {

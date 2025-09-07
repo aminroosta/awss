@@ -1,6 +1,7 @@
 import { awsEc2DescribeVpcs, awsRegion } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
+import { pushRoute } from "../store";
 import type { ParsedKey } from "@opentui/core";
 
 registerRoute({
@@ -22,14 +23,24 @@ registerRoute({
     { title: 'CIDR BLOCK', render: 'CidrBlock' },
     { title: 'DEFAULT', render: 'Default' },
   ],
-  keymaps: [
-    {
-      key: 'a',
-      name: 'AWS Website',
-      fn: async (item, _args) => {
-        const region = await awsRegion();
-        openInBrowser(`https://console.aws.amazon.com/vpc/home?region=${region}#vpcs:vpcId=${item.VpcId}`);
-      }
-    },
-  ],
+   keymaps: [
+     {
+       key: 'return',
+       name: 'Open',
+       fn: async (item) => {
+         pushRoute({
+           id: 'vpc',
+           args: { VpcId: item.VpcId }
+         });
+       }
+     },
+     {
+       key: 'a',
+       name: 'AWS Website',
+       fn: async (item, _args) => {
+         const region = await awsRegion();
+         openInBrowser(`https://console.aws.amazon.com/vpc/home?region=${region}#vpcs:vpcId=${item.VpcId}`);
+       }
+     },
+   ],
 });

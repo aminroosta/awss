@@ -34,19 +34,24 @@ registerRoute({
             id: 'objects',
             args: { bucket: item.PhysicalResourceId, prefix: '' }
           });
-        } else if (item.ResourceType === 'AWS::EC2::SecurityGroup') {
-          const group = await awsEc2DescribeSecurityGroup(item.PhysicalResourceId);
-          pushRoute({
-            id: 'securitygroup',
-            args: { ...group }
-          });
-        } else {
-          setNotification({
-            message: 'Not implemented',
-            level: 'warn',
-            timeout: 3000
-          });
-        }
+         } else if (item.ResourceType === 'AWS::EC2::SecurityGroup') {
+           const group = await awsEc2DescribeSecurityGroup(item.PhysicalResourceId);
+           pushRoute({
+             id: 'securitygroup',
+             args: { ...group }
+           });
+         } else if (item.ResourceType === 'AWS::EC2::VPC') {
+           pushRoute({
+             id: 'vpc',
+             args: { VpcId: item.PhysicalResourceId }
+           });
+         } else {
+           setNotification({
+             message: 'Not implemented',
+             level: 'warn',
+             timeout: 3000
+           });
+         }
       }
     },
     {
