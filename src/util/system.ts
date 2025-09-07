@@ -11,11 +11,11 @@ export async function getSystemUsage() {
   const memUsage = ((totalMem - freeMem) / totalMem) * 100;
 
   const loadavg = os.loadavg()[0]!; // 1-minute load average
-  const cpuUsage = loadavg / os.cpus().length * 100; // Normalize by number of CPUs
+  const cpuUsage = (loadavg / os.cpus().length) * 100; // Normalize by number of CPUs
 
   return {
     cpu: `${cpuUsage.toFixed(0)}%`,
-    mem: `${memUsage.toFixed(0)}%`
+    mem: `${memUsage.toFixed(0)}%`,
   };
 }
 
@@ -31,7 +31,9 @@ export async function getSystemTheme() {
   return "dark";
 }
 
-const [usage, usageActions] = createResource(getSystemUsage, { initialValue: { cpu: '⏳', mem: '⏳' } });
+const [usage, usageActions] = createResource(getSystemUsage, {
+  initialValue: { cpu: "⏳", mem: "⏳" },
+});
 
 setInterval(() => {
   if (!vimVisible()) {
@@ -42,33 +44,57 @@ setInterval(() => {
 export { usage };
 
 export async function copyToClipboard(text: string) {
-  setNotification({ level: 'info', message: 'Copying to clipboard …', timeout: 1500 });
+  setNotification({
+    level: "info",
+    message: "Copying to clipboard …",
+    timeout: 1500,
+  });
   try {
     if (process.platform === "darwin") {
       await $`echo ${text} | pbcopy`.quiet();
     } else if (process.platform === "linux") {
       await $`echo ${text} | xclip -selection clipboard`.quiet();
     } else {
-      throw new Error('Unsupported platform');
+      throw new Error("Unsupported platform");
     }
-    setNotification({ level: 'info', message: 'Copied to clipboard', timeout: 1500 });
+    setNotification({
+      level: "info",
+      message: "Copied to clipboard",
+      timeout: 1500,
+    });
   } catch {
-    setNotification({ level: 'error', message: 'Failed to copy to clipboard', timeout: 2500 });
+    setNotification({
+      level: "error",
+      message: "Failed to copy to clipboard",
+      timeout: 2500,
+    });
   }
 }
 
 export async function openInBrowser(url: string) {
-  setNotification({ level: 'info', message: 'Openning in browser …', timeout: 1500 });
+  setNotification({
+    level: "info",
+    message: "Openning in browser …",
+    timeout: 1500,
+  });
   try {
     if (process.platform === "darwin") {
       await $`open ${url}`;
     } else if (process.platform === "linux") {
       await $`xdg-open ${url}`;
     } else {
-      throw new Error('Unsupported platform');
+      throw new Error("Unsupported platform");
     }
-    setNotification({ level: 'info', message: 'Opened in browser', timeout: 1500 });
+    setNotification({
+      level: "info",
+      message: "Opened in browser",
+      timeout: 1500,
+    });
   } catch {
-    setNotification({ level: 'error', message: 'Failed to open browser', timeout: 2500 });
+    setNotification({
+      level: "error",
+      message: "Failed to open browser",
+      timeout: 2500,
+    });
   }
 }

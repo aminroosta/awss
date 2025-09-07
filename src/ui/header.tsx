@@ -7,21 +7,27 @@ import { actions, constants } from "../store";
 import { chunkArray } from "../util/chunk";
 
 const TextCaption = ({ children }: { children: any }) => {
-  return <text fg={colors().caption} attributes={TextAttributes.BOLD}>{children}</text>
-}
+  return (
+    <text fg={colors().caption} attributes={TextAttributes.BOLD}>
+      {children}
+    </text>
+  );
+};
 
 const Region = () => {
-  const [region] = createResource(awsRegion, { initialValue: '⏳' });
+  const [region] = createResource(awsRegion, { initialValue: "⏳" });
   return (
     <box flexDirection="row">
-      <TextCaption>Region:  </TextCaption>
+      <TextCaption>Region: </TextCaption>
       <text fg={colors().fg}>{region()}</text>
     </box>
-  )
-}
+  );
+};
 
 const CallerIdentity = () => {
-  const [callerIdentity] = createResource(awsCallerIdentity, { initialValue: { Account: '⏳', UserId: '⏳', Arn: '⏳' } });
+  const [callerIdentity] = createResource(awsCallerIdentity, {
+    initialValue: { Account: "⏳", UserId: "⏳", Arn: "⏳" },
+  });
   return (
     <>
       <box flexDirection="row">
@@ -29,31 +35,30 @@ const CallerIdentity = () => {
         <text fg={colors().fg}>{callerIdentity().Account}</text>
       </box>
       <box flexDirection="row">
-        <TextCaption>User:    </TextCaption>
-        <text fg={colors().fg}>{callerIdentity().Arn.split('/').pop()}</text>
+        <TextCaption>User: </TextCaption>
+        <text fg={colors().fg}>{callerIdentity().Arn.split("/").pop()}</text>
       </box>
     </>
   );
-}
+};
 
 const SystemUsage = () => {
-
   return (
     <>
       <box flexDirection="row">
-        <TextCaption>CPU:     </TextCaption>
+        <TextCaption>CPU: </TextCaption>
         <text fg={colors().fg}>{usage().cpu}</text>
       </box>
       <box flexDirection="row">
-        <TextCaption>MEM:     </TextCaption>
+        <TextCaption>MEM: </TextCaption>
         <text fg={colors().fg}>{usage().mem}</text>
       </box>
     </>
   );
-}
+};
 
 const AwsVersion = () => {
-  const [version] = createResource(awsCliVersion, { initialValue: '⏳' });
+  const [version] = createResource(awsCliVersion, { initialValue: "⏳" });
 
   return (
     <box flexDirection="row">
@@ -61,9 +66,9 @@ const AwsVersion = () => {
       <text fg={colors().fg}>{version()}</text>
     </box>
   );
-}
+};
 const AwssVersion = () => {
-  const [version] = createResource(awsCliVersion, { initialValue: '⏳' });
+  const [version] = createResource(awsCliVersion, { initialValue: "⏳" });
 
   return (
     <box flexDirection="row">
@@ -71,20 +76,24 @@ const AwssVersion = () => {
       <text fg={colors().fg}>{process.env.APP_VERSION || "dev"}</text>
     </box>
   );
-}
+};
 
 const Actions = () => {
   const chunks = () => chunkArray(actions(), constants.HEADER_HEIGHT);
 
   return (
     <For each={chunks()}>
-      {chunk => (
+      {(chunk) => (
         <box flexDirection="column">
           <For each={chunk}>
-            {action => (
+            {(action) => (
               <box flexDirection="row">
-                <text fg={colors().main.v700}>{bold(`<${action.key}>`.padEnd(9, ' '))}</text>
-                <text fg={colors().dim}>{action.name.padEnd(12, ' ').slice(0, 15)}</text>
+                <text fg={colors().main.v700}>
+                  {bold(`<${action.key}>`.padEnd(9, " "))}
+                </text>
+                <text fg={colors().dim}>
+                  {action.name.padEnd(12, " ").slice(0, 15)}
+                </text>
               </box>
             )}
           </For>

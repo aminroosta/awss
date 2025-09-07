@@ -10,13 +10,14 @@ import { revision } from "../store";
 export function memo<T extends any[], R>(
   fn: (...args: T) => Promise<R>,
   cacheTimeout: number = 10_000,
-  keyFn?: (...args: T) => string
+  keyFn?: (...args: T) => string,
 ): (...args: T) => Promise<R> {
   type CacheEntry = { value: R; timestamp: number };
   const cache = new Map<string, CacheEntry>();
 
   // Default key function uses JSON.stringify
-  const getKey = keyFn ?? ((...args: T) => JSON.stringify({ args, rev: revision() }));
+  const getKey =
+    keyFn ?? ((...args: T) => JSON.stringify({ args, rev: revision() }));
 
   return async (...args: T): Promise<R> => {
     const key = getKey(...args);

@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "typecheck": "bun run tsc --noEmit"
+    "typecheck": "bun run tsc --noEmit",
     "format": "bun run prettier --write ."
   },
   "devDependencies": {
@@ -19,6 +19,7 @@
     "@opentui/core": "^0.1.13",
     "@opentui/solid": "^0.1.13",
     "babel-preset-solid": "^1.9.9",
+    "prettier": "^3.6.2",
     "solid-js": "^1.9.9"
   }
 }

@@ -2,21 +2,23 @@ import { createSignal } from "solid-js";
 import { constants, pushRoute, routes, setCmdVisible } from "../store";
 import { colors } from "../util/colors";
 
-
 export const CommandLine = () => {
-  const [value, setValue] = createSignal('');
-  const [rest, setRest] = createSignal('');
+  const [value, setValue] = createSignal("");
+  const [rest, setRest] = createSignal("");
   let ref;
 
-  const aliases = Object.values(routes).map(s => s.alias).flat();
+  const aliases = Object.values(routes)
+    .map((s) => s.alias)
+    .flat();
 
   const onEnter = () => {
-    const route = Object.values(routes).find(s => s.alias.includes(value() + rest()));
+    const route = Object.values(routes).find((s) =>
+      s.alias.includes(value() + rest()),
+    );
     setCmdVisible(false);
     if (route) {
       pushRoute(route);
     }
-
   };
   const onKeyDown = (key: any) => {
     if (key.name === "escape") {
@@ -25,27 +27,31 @@ export const CommandLine = () => {
     if (key.name === "tab") {
       const val = value() + rest();
       setValue(val);
-      setRest('');
+      setRest("");
       try {
         // @ts-ignore
         ref._cursorPosition = val.length;
-      } catch (_e) { }
+      } catch (_e) {}
     }
-  }
+  };
   const onInput = (text: string) => {
     setValue(text);
     if (text) {
-      let option = aliases.find(o => o.startsWith(text)) || '';
-      setRest(option.replace(text, ''));
+      let option = aliases.find((o) => o.startsWith(text)) || "";
+      setRest(option.replace(text, ""));
     } else {
-      setRest('');
+      setRest("");
     }
-  }
+  };
   const limit = 80;
-  const placeholder = (
-    ''.padEnd(8, ' ') +
-    Object.values(routes).filter(r => r.alias.length).map(r => r.alias[0] || '').join('|')
-  ).slice(0, limit - 1) + '…';
+  const placeholder =
+    (
+      "".padEnd(8, " ") +
+      Object.values(routes)
+        .filter((r) => r.alias.length)
+        .map((r) => r.alias[0] || "")
+        .join("|")
+    ).slice(0, limit - 1) + "…";
 
   const color = () => colors().accent.v700;
   return (
@@ -62,7 +68,9 @@ export const CommandLine = () => {
         cursorColor={color()}
         textColor={colors().fg}
         focusedTextColor={colors().accent.v800}
-        ref={el => { ref = el }}
+        ref={(el) => {
+          ref = el;
+        }}
         width={value().length ? value().length + 2 : limit}
         onInput={onInput}
         value={value()}
@@ -71,7 +79,9 @@ export const CommandLine = () => {
         focused
         focusedBackgroundColor={colors().bg}
       />
-      <text marginLeft={-2} fg={colors().accent.v400}>{rest()}</text>
+      <text marginLeft={-2} fg={colors().accent.v400}>
+        {rest()}
+      </text>
     </box>
   );
 };

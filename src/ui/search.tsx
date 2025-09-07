@@ -1,4 +1,10 @@
-import { constants, searchText, route, setSearchText, setSearchVisible } from "../store";
+import {
+  constants,
+  searchText,
+  route,
+  setSearchText,
+  setSearchVisible,
+} from "../store";
 import { colors } from "../util/colors";
 import { log } from "../util/log";
 
@@ -10,7 +16,7 @@ export const Search = () => {
   };
   const onKeyDown = (key: any) => {
     if (key.name === "escape") {
-      setSearchText('')
+      setSearchText("");
       setSearchVisible(false);
     }
   };
@@ -18,7 +24,7 @@ export const Search = () => {
     setSearchText(text);
   };
   const color = () => colors().accent.v700;
-  const placeholder = () => route().searchPlaceholder || 'Type to search';
+  const placeholder = () => route().searchPlaceholder || "Type to search";
   return (
     <box
       flexDirection="row"
@@ -33,7 +39,9 @@ export const Search = () => {
         cursorColor={color()}
         textColor={colors().fg}
         focusedTextColor={colors().accent.v800}
-        ref={el => { ref = el }}
+        ref={(el) => {
+          ref = el;
+        }}
         width={searchText().length ? searchText().length + 2 : 60}
         onInput={onInput}
         value={searchText()}

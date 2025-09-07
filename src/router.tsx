@@ -22,12 +22,12 @@ export function Router() {
   return (
     <Switch>
       <For each={Object.keys(routes)}>
-        {id =>
+        {(id) => (
           <Match when={route().id === id}>
             <RenderRoute route={route()} />
           </Match>
-        }
+        )}
       </For>
     </Switch>
-  )
+  );
 }

@@ -15,9 +15,9 @@ export const Notif = () => {
     const n = notification();
     if (!n) return colors().bg;
     switch (n.level) {
-      case 'error':
+      case "error":
         return colors().error;
-      case 'warn':
+      case "warn":
         return colors().warn;
       default:
         return colors().fg;
@@ -39,9 +39,9 @@ export const Notif = () => {
         border
         borderColor={color()}
       >
-        <For each={lines()}>{(line) => (
-          <text fg={color()}>{bold(line)}</text>
-        )}</For>
+        <For each={lines()}>
+          {(line) => <text fg={color()}>{bold(line)}</text>}
+        </For>
       </box>
     </Show>
   );

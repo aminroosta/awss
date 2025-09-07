@@ -12,7 +12,7 @@ export function createYamlRoute<A extends Record<string, string>>({
   url,
 }: {
   id: string;
-  args: (a: A) => A,
+  args: (a: A) => A;
   aws: (args: A) => Promise<string>;
   title: (args: A) => string;
   url: (args: A) => Promise<string>;
@@ -23,35 +23,37 @@ export function createYamlRoute<A extends Record<string, string>>({
     args: args,
     aws: async (args: A) => {
       const content = await awsFunction(args);
-      return content.split('\n').map((line, idx) => ({ line }));
+      return content.split("\n").map((line, idx) => ({ line }));
     },
     title: title,
-    filter: () => 'all',
+    filter: () => "all",
     columns: [
       {
-        title: '',
-        render: 'line',
+        title: "",
+        render: "line",
         syn: (snippet: string) => {
-          if (snippet === '-') return { fg: colors().accent.v500 };
-          if (snippet.endsWith(':')) return { fg: colors().accent.v800, attrs: TextAttributes.BOLD };
-          if (/^\d/.test(snippet) || /^["']/.test(snippet)) return { fg: colors().accent.v700 };
+          if (snippet === "-") return { fg: colors().accent.v500 };
+          if (snippet.endsWith(":"))
+            return { fg: colors().accent.v800, attrs: TextAttributes.BOLD };
+          if (/^\d/.test(snippet) || /^["']/.test(snippet))
+            return { fg: colors().accent.v700 };
           return {};
-        }
+        },
       },
     ],
     keymaps: [
       {
-        key: 'a',
-        name: 'AWS Website',
-        fn: (item, args: A) => url(args).then(openInBrowser)
+        key: "a",
+        name: "AWS Website",
+        fn: (item, args: A) => url(args).then(openInBrowser),
       },
       {
-        key: 'y',
-        name: 'Copy YAML',
+        key: "y",
+        name: "Copy YAML",
         fn: async (item, args: A) => {
           const content = await awsFunction(args);
           copyToClipboard(content);
-        }
+        },
       },
     ],
   });

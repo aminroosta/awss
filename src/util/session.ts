@@ -1,9 +1,9 @@
 import * as fs from "fs";
 
-const SESSION_FILE = '/tmp/awss.session.json';
+const SESSION_FILE = "/tmp/awss.session.json";
 
 export interface SessionData {
-  lastRouteId?: string
+  lastRouteId?: string;
 }
 
 export function saveSession(data: SessionData): void {
@@ -12,7 +12,7 @@ export function saveSession(data: SessionData): void {
 
 export function loadSession(): SessionData {
   if (fs.existsSync(SESSION_FILE)) {
-    const data = fs.readFileSync(SESSION_FILE, 'utf8');
+    const data = fs.readFileSync(SESSION_FILE, "utf8");
     return JSON.parse(data);
   }
   return {};
