@@ -1,4 +1,4 @@
-import type { ParsedKey } from "@opentui/core";
+import type { ParsedKey, RGBA } from "@opentui/core";
 import { createResource, createSignal } from "solid-js";
 import { revision, searchText, searchVisible } from "../../store";
 import { Title } from "../../ui/title";
@@ -32,11 +32,12 @@ export const registerRoute = <R, A, T extends Record<string, string>>(r: {
   aws: (_: A & { revision: number; search?: string }) => Promise<T[]>;
   title: (_: A) => string;
   filter?: (_: A) => string | undefined;
-  columns: {
-    title: string,
-    render: keyof T,
-    attrs?: (item: T) => number,
-  }[],
+   columns: {
+     title: string,
+     render: keyof T,
+     attrs?: (item: T) => number,
+     syn?: (snippet: string) => Partial<{fg: RGBA, bg: RGBA, attrs: number}>,
+   }[],
 }) => {
 
   const Route = (p: { args: A }) => {
