@@ -1,6 +1,7 @@
 import { awsEc2DescribeSecurityGroups, awsRegion } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
+import { pushRoute } from "../store";
 import type { ParsedKey } from "@opentui/core";
 
 registerRoute({
@@ -21,6 +22,16 @@ registerRoute({
   ],
   onEnter: () => { },
   keymaps: [
+    {
+      key: 'return',
+      name: 'View Details',
+      fn: (item) => {
+        pushRoute({
+          id: 'securitygroup',
+          args: { ...item }
+        });
+      }
+    },
     {
       key: 'a',
       name: 'AWS Website',

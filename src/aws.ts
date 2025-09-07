@@ -397,6 +397,12 @@ export const awsEc2DescribeSecurityGroups = memo(async () => {
   }
 }, 30_000);
 
+export const awsEc2DescribeSecurityGroup = memo(async (groupIdOrGroupName: string) => {
+  const groups = await awsEc2DescribeSecurityGroups();
+  const group = groups.find(g => g.GroupId === groupIdOrGroupName || g.GroupName === groupIdOrGroupName);
+  return group;
+}, 30_000);
+
 export const awsIamListUsers = memo(async () => {
   try {
     const result = await $`aws iam list-users --output json`.json() as {

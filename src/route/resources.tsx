@@ -1,8 +1,9 @@
-import { awsCfListStackResources, awsRegion } from "../aws";
+import { awsCfListStackResources, awsEc2DescribeSecurityGroup, awsRegion } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import type { ParsedKey } from "@opentui/core";
 import { log } from "../util/log";
+import { pushRoute, setNotification } from "../store";
 
 registerRoute({
   id: 'resources',
@@ -25,6 +26,30 @@ registerRoute({
   ],
   keymaps: [
     {
+      key: 'return',
+      name: 'Open',
+      fn: async (item) => {
+        if (item.ResourceType === 'AWS::S3::Bucket') {
+          pushRoute({
+            id: 'objects',
+            args: { bucket: item.PhysicalResourceId, prefix: '' }
+          });
+        } else if (item.ResourceType === 'AWS::EC2::SecurityGroup') {
+          const group = await awsEc2DescribeSecurityGroup(item.PhysicalResourceId);
+          pushRoute({
+            id: 'securitygroup',
+            args: { ...group }
+          });
+        } else {
+          setNotification({
+            message: 'Not implemented',
+            level: 'warn',
+            timeout: 3000
+          });
+        }
+      }
+    },
+    {
       key: { name: 'a', ctrl: false },
       name: 'AWS Website',
       fn: async (item, args) => {
@@ -40,7 +65,8 @@ registerRoute({
             url = `https://console.aws.amazon.com/ec2/home?region=${region}#InstanceDetails:instanceId=${item.PhysicalResourceId}`;
             break;
           case 'AWS::EC2::SecurityGroup':
-            url = `https://console.aws.amazon.com/ec2/home?region=${region}#SecurityGroups:search=${item.PhysicalResourceId}`;
+            const group = await awsEc2DescribeSecurityGroup(item.PhysicalResourceId);
+            url = `https://console.aws.amazon.com/ec2/v2/home?region=${region}#SecurityGroups:groupId=${group.GroupId}`;
             break;
           case 'AWS::EC2::Subnet':
             url = `https://console.aws.amazon.com/vpcconsole/home?region=${region}#SubnetDetails:subnetId=${item.PhysicalResourceId}`;
