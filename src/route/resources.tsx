@@ -71,7 +71,7 @@ registerRoute({
             break;
           case 'AWS::EC2::SecurityGroup':
             const group = await awsEc2DescribeSecurityGroup(item.PhysicalResourceId);
-            url = `https://console.aws.amazon.com/ec2/v2/home?region=${region}#SecurityGroups:groupId=${group.GroupId}`;
+            url = `https://console.aws.amazon.com/ec2/home?region=${region}#SecurityGroup:groupId=${group.GroupId}`;
             break;
           case 'AWS::EC2::Subnet':
             url = `https://console.aws.amazon.com/vpcconsole/home?region=${region}#SubnetDetails:subnetId=${item.PhysicalResourceId}`;

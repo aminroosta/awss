@@ -39,7 +39,7 @@ registerRoute({
        name: 'AWS Website',
        fn: async (item, _args) => {
          const region = await awsRegion();
-         openInBrowser(`https://console.aws.amazon.com/vpc/home?region=${region}#vpcs:vpcId=${item.VpcId}`);
+         openInBrowser(`https://console.aws.amazon.com/vpcconsole/home?region=${region}#VpcDetails:VpcId=${item.VpcId}`);
        }
      },
    ],

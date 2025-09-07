@@ -449,11 +449,32 @@ export const awsEc2DescribeSecurityGroup = memo(async (groupIdOrGroupName: strin
   }
 }, 30_000);
 
-export const awsEc2DescribeVpc = memo(async (vpcId: string) => {
+export const awsEc2DescribeVpc = memo(async (vpcId: string, format: 'json' | 'yaml' = 'json') => {
   try {
-    return await $`aws ec2 describe-vpcs --vpc-ids='${vpcId}' --output yaml`.text();
+    if (format === 'yaml') {
+      return await $`aws ec2 describe-vpcs --vpc-ids='${vpcId}' --output yaml`.text();
+    } else {
+      const result = await $`aws ec2 describe-vpcs --vpc-ids='${vpcId}' --output json`.json() as {
+        Vpcs: {
+          OwnerId: string;
+          VpcId: string;
+          State: string;
+          CidrBlock: string;
+          DhcpOptionsId: string;
+          InstanceTenancy: string;
+          CidrBlockAssociationSet?: {
+            AssociationId: string;
+            CidrBlock: string;
+            CidrBlockState: { State: string };
+          }[];
+          IsDefault: boolean;
+          Tags?: { Key: string; Value: string }[];
+        }[];
+      };
+      return result.Vpcs[0];
+    }
   } catch (e: any) {
-    e.command = `aws ec2 describe-vpcs --vpc-ids='${vpcId}' --output yaml`
+    e.command = `aws ec2 describe-vpcs --vpc-ids='${vpcId}' --output json`
     throw e;
   }
 }, 30_000);

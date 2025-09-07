@@ -3,6 +3,9 @@
   "module": "src/index.tsx",
   "type": "module",
   "private": true,
+  "scripts": {
+    "typecheck": "bun run tsc --noEmit"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },

@@ -37,7 +37,7 @@ registerRoute({
       name: 'AWS Website',
       fn: async (item) => {
         const region = await awsRegion();
-        openInBrowser(`https://console.aws.amazon.com/ec2/v2/home?region=${region}#SecurityGroups:groupId=${item.GroupId}`);
+        openInBrowser(`https://console.aws.amazon.com/ec2/home?region=${region}#SecurityGroup:groupId=${item.GroupId}`);
       }
     },
   ],
