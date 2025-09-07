@@ -1,8 +1,8 @@
 import { createSignal, For, Match, Switch } from "solid-js";
-import { Stacks } from "./route/stacks";
+import "./route/stacks";
 import "./route/buckets";
 import "./route/objects";
-import { Resources } from "./route/resources";
+import "./route/resources";
 import "./route/vpcs";
 
 import "./route/instances";
@@ -21,17 +21,6 @@ const routeIds = Object.keys(routes);
 export function Router() {
   return (
     <Switch>
-      <Match when={route().id === 'stacks'}>
-        <Stacks />
-      </Match>
-
-      <Match when={route().id === 'resources'}>
-        <Resources args={route().args as any} />
-      </Match>
-
-
-
-
       <For each={routeIds}>
         {id =>
           <Match when={route().id === id}>

@@ -6,27 +6,8 @@ import { log } from "./util/log";
 
 export const routes = {
 
-  stacks: {
-    id: 'stacks',
-    args: {},
-    alias: ['stacks'],
-    actions: [
-      { key: 'r', name: 'Refresh' },
-      { key: 'e', name: 'Events' },
-      { key: 'p', name: 'Parameters' },
-      { key: 'enter', name: 'Open' },
-    ]
-  },
-  resources: {
-    id: 'resources',
-    alias: [] as string[],
-    args: {
-      stackName: '',
-    },
-    actions: [
-      { key: 'r', name: 'Refresh' },
-    ]
-  },
+
+
 
 
 
