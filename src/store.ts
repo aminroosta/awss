@@ -5,15 +5,7 @@ import { routes as registeredRoutes } from "./route/factory/registerRoute";
 import { log } from "./util/log";
 
 export const routes = {
-  buckets: {
-    id: 'buckets',
-    args: {},
-    alias: ['s3', 'buckets'],
-    actions: [
-      { key: 'r', name: 'Refresh' },
-      { key: 'enter', name: 'Open' },
-    ]
-  },
+
   stacks: {
     id: 'stacks',
     args: {},

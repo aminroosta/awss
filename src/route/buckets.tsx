@@ -1,37 +1,30 @@
-import { createResource, createSignal, For } from "solid-js";
-import { useKeyHandler } from "@opentui/solid";
 import { awsListBuckets } from "../aws";
-import { List } from "../ui/list";
-import { Title } from "../ui/title";
-import { pushRoute, revision, routes } from "../store";
-import { log } from "../util/log";
+import { registerRoute } from "./factory/registerRoute";
+import { pushRoute } from "../store";
 
-export const Buckets = () => {
-  const [buckets] = createResource(
-    () => ({ revision: revision() }),
-    () => awsListBuckets(),
-    { initialValue: { Buckets: [{ Name: '⏳', CreationDate: '' }], Owner: { DisplayName: '', ID: '' } } }
-  );
-
-  const onEnter = (bucket: { Name: string }) => {
+registerRoute({
+  id: 'buckets',
+  alias: ['s3', 'buckets'],
+  actions: [
+    { key: 'r', name: 'Refresh' },
+    { key: 'enter', name: 'Open' },
+  ],
+  args: () => ({}),
+  aws: async () => {
+    const data = await awsListBuckets();
+    return data.Buckets;
+  },
+  title: () => 'buckets',
+  filter: () => 'all',
+  columns: [
+    { title: 'BUCKET', render: 'Name' },
+    { title: 'CREATED', render: 'CreationDate' },
+  ],
+  onEnter: (item) => {
     pushRoute({
-      ...routes.objects,
-      args: { bucket: bucket.Name.trim(), prefix: '' }
+      id: 'objects',
+      args: { bucket: item.Name.trim(), prefix: '' }
     });
-  };
-  return (
-    <box flexGrow={1}>
-      <Title
-        title="buckets"
-        filter='all'
-        count={buckets.loading ? '⏳' : buckets().Buckets.length}
-      />
-      <List items={buckets().Buckets}
-        onEnter={onEnter}
-        columns={[
-          { title: 'BUCKET', render: 'Name' },
-          { title: 'CREATED', render: 'CreationDate' },
-        ]} />
-    </box>
-  );
-};
+  },
+  onKey: () => {},
+});
