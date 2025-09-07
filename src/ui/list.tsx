@@ -1,7 +1,7 @@
 import { TextAttributes, type ParsedKey } from "@opentui/core";
 import { batch, createEffect, createSignal, For, Index } from "solid-js";
 import { colors } from "../util/colors";
-import { cmdVisible, constants, searchText, searchVisible} from "../store";
+import { cmdVisible, constants, searchText, searchVisible, vimVisible} from "../store";
 import { useKeyHandler, useTerminalDimensions } from "@opentui/solid";
 import { log } from "../util/log";
 
@@ -64,7 +64,7 @@ export const List = <T extends Record<string, string>>(p: {
 
   const [last_g, setLast_g] = createSignal(0);
   useKeyHandler(key => {
-    if (cmdVisible() || searchVisible()) return;
+    if (cmdVisible() || searchVisible() || vimVisible()) return;
 
     batch(() => {
       const i = idx();

@@ -83,8 +83,8 @@ const Actions = () => {
           <For each={chunk}>
             {action => (
               <box flexDirection="row">
-                <text fg={colors().main.v700}>{bold(`<${action.key}>`.padEnd(10, ' '))}</text>
-                <text fg={colors().dim}>{action.name.padEnd(12, ' ').slice(0, 12)}</text>
+                <text fg={colors().main.v700}>{bold(`<${action.key}>`.padEnd(9, ' '))}</text>
+                <text fg={colors().dim}>{action.name.padEnd(12, ' ').slice(0, 15)}</text>
               </box>
             )}
           </For>

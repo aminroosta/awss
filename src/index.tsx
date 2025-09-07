@@ -1,8 +1,8 @@
 import { getKeyHandler, TextAttributes } from "@opentui/core";
 import { render, useRenderer } from "@opentui/solid";
-import { ErrorBoundary, onMount, Show } from "solid-js";
+import { createEffect, ErrorBoundary, onMount, Show } from "solid-js";
 import { colors } from "./util/colors";
-import { cmdVisible, popRoute, setCmdVisible, undoPopRoute, setRevision, revision, searchVisible, setSearchVisible, setSearchText, searchText } from "./store";
+import { cmdVisible, popRoute, setCmdVisible, undoPopRoute, setRevision, revision, searchVisible, setSearchVisible, setSearchText, searchText, vimVisible } from "./store";
 import { Header } from "./ui/header";
 import { CommandLine } from "./ui/commandline";
 import { Notif } from "./ui/notif";
@@ -17,8 +17,17 @@ function App() {
   onMount(() => {
     renderer.setCursorStyle('line');
   });
+  createEffect(() => {
+    if (vimVisible()) {
+      renderer.pause();
+    } else {
+      renderer.start();
+      renderer.lib.render(renderer.rendererPtr, true)
+    }
+  });
 
   keyHandler.on('keypress', (key: any) => {
+    if (vimVisible()) { return; }
     if (key.name === "escape") {
       if (cmdVisible()) {
         setCmdVisible(false);

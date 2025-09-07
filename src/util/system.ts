@@ -3,7 +3,7 @@ import os from "os";
 import process from "process";
 import { createResource } from "solid-js";
 import { awsRegion } from "../aws";
-import { setNotification } from "../store";
+import { setNotification, vimVisible } from "../store";
 
 export async function getSystemUsage() {
   const totalMem = os.totalmem();
@@ -34,7 +34,9 @@ export async function getSystemTheme() {
 const [usage, usageActions] = createResource(getSystemUsage, { initialValue: { cpu: '⏳', mem: '⏳' } });
 
 setInterval(() => {
-  usageActions.refetch();
+  if (!vimVisible()) {
+    usageActions.refetch();
+  }
 }, 1000);
 
 export { usage };
@@ -47,7 +49,7 @@ export async function openInBrowser(
 
   let url: string | undefined;
 
-  if(typeof item === 'string') {
+  if (typeof item === 'string') {
     url = item;
   }
   else if (item.InstanceId) {

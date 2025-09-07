@@ -1,7 +1,8 @@
-import { awsListObjectsV2, awsListObjectsV2Search, awsRegion } from "../aws";
+import { awsListObjectsV2, awsListObjectsV2Search, awsRegion, awsS3GetObject } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { popRoute, pushRoute, routes, setSearchText } from "../store";
 import { openInBrowser } from "../util/system";
+import { openInVim } from "../util/vim";
 
 const PARENT_DIR_KEY = '.. (up a dir)';
 
@@ -11,7 +12,7 @@ registerRoute({
   actions: [
     { key: 'r', name: 'Refresh' },
     { key: 'a', name: 'Aws Website' },
-    { key: 'enter', name: 'Open' },
+    { key: 'enter', name: 'Open in neovim' },
   ],
   searchPlaceholder: 'Press <Enter> to include objects in all subdirectories',
   args: (a: { bucket: string, prefix: string }) => a,
@@ -37,7 +38,7 @@ registerRoute({
     { title: 'SIZE', render: 'Size' },
     { title: 'LAST MODIFIED', render: 'LastModified' },
   ],
-  onEnter: (item, args) => {
+  onEnter: async (item, args) => {
     if (item.Key === PARENT_DIR_KEY) {
       popRoute();
     } else if (item.Size === '<DIR>') {
@@ -47,14 +48,9 @@ registerRoute({
       });
     } else {
       setSearchText('');
-      pushRoute({
-        id: 'file',
-        args: {
-          bucket: args.bucket,
-          key: args.prefix + item.Key,
-          title: '/' + args.prefix + item.Key
-        }
-      });
+      const fullKey = args.prefix + item.Key;
+      const content = await awsS3GetObject(args.bucket, fullKey);
+      await openInVim(content, item.Key);
     }
   },
   onKey: async (key, item, args) => {

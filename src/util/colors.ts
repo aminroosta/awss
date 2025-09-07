@@ -1,6 +1,7 @@
 import { hexToRgb } from "@opentui/core";
 import { getSystemTheme } from "./system";
 import { createResource } from "solid-js";
+import { vimVisible } from "../store";
 
 
 const accent = {
@@ -68,7 +69,9 @@ const [colors, colorsActions] = createResource(async () => {
 }, { initialValue: dark });
 
 setInterval(() => {
-  colorsActions.refetch();
+  if (!vimVisible()) {
+    colorsActions.refetch();
+  }
 }, 1000);
 
 
