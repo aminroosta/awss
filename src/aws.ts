@@ -141,25 +141,39 @@ export const awsListObjectsV2 = memo(
 );
 
 export const awsListObjectsV2Search = memo(
-  async (bucket: string, search: string, prefix: string = "") => {
+  async (
+    bucket: string,
+    search: string,
+    prefix: string = "",
+    continuationToken: string | undefined = undefined,
+    maxKeys: number = 1000,
+  ) => {
     if (!search.trim()) {
-      return [];
+      return { Contents: [] };
     }
     const words = search.trim().split(/\s+/);
     const queryFilter = words
       .map((w) => `contains(Key, \`${w}\`)`)
       .join(" || ");
+
     try {
-      const result =
-        (await $`aws s3api list-objects-v2 --bucket='${bucket}' --prefix='${prefix}' --query="Contents[?${queryFilter}][]" --output=json`.json()) as {
+      const result = await (continuationToken ?
+        $`aws s3api list-objects-v2 --bucket='${bucket}' --prefix='${prefix}' --max-keys=${maxKeys} --query "{Objects: Contents[?${queryFilter}], NextToken: NextContinuationToken}" --continuation-token='${continuationToken}' --output=json`.json() :
+        $`aws s3api list-objects-v2 --bucket='${bucket}' --prefix='${prefix}' --max-keys=${maxKeys} --query "{Objects: Contents[?${queryFilter}], NextToken: NextContinuationToken}" --output=json`.json()
+      ) as {
+        Objects: {
           Key: string;
           LastModified: string;
           Size: number;
           StorageClass: string;
-        }[];
-      return result || [];
+        }[],
+        NextToken?: string;
+      };
+      return { Contents: result.Objects, NextToken: result.NextToken };
     } catch (e: any) {
-      e.command = `aws s3api list-objects-v2 --bucket='${bucket}' --prefix='${prefix}' --query="Contents[?${queryFilter}][]" --output=json`;
+      e.command = continuationToken ?
+        `aws s3api list-objects-v2 --bucket='${bucket}' --prefix='${prefix}' --max-keys=${maxKeys} --query "{Objects: Contents[?${queryFilter}], NextToken: NextContinuationToken}" --continuation-token='${continuationToken}' --output=json` :
+        `aws s3api list-objects-v2 --bucket='${bucket}' --prefix='${prefix}' --max-keys=${maxKeys} --query "{Objects: Contents[?${queryFilter}], NextToken: NextContinuationToken}" --output=json`;
       throw e;
     }
   },
