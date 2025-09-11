@@ -1,5 +1,5 @@
-import { getKeyHandler, TextAttributes } from "@opentui/core";
-import { render, useRenderer } from "@opentui/solid";
+import { getKeyHandler, Selection, TextAttributes } from "@opentui/core";
+import { render, useRenderer, useSelectionHandler } from "@opentui/solid";
 import { createEffect, ErrorBoundary, onMount, Show } from "solid-js";
 import { colors } from "./util/colors";
 import {
@@ -20,6 +20,8 @@ import { CommandLine } from "./ui/commandline";
 import { Notif } from "./ui/notif";
 import { Router } from "./router";
 import { Search } from "./ui/search";
+import { log } from "./util/log";
+import { copyToClipboard } from "./util/system";
 
 function App() {
   let renderer = useRenderer();
@@ -69,6 +71,14 @@ function App() {
     }
     if (key.name === "r") {
       setRevision((rev) => rev + 1);
+    }
+  });
+
+  useSelectionHandler((selection: Selection) => {
+    const selectedText = selection.getSelectedText();
+
+    if (selectedText) {
+      copyToClipboard(selectedText);
     }
   });
 
