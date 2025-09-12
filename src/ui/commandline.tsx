@@ -1,6 +1,7 @@
 import { createSignal } from "solid-js";
 import { constants, pushRoute, routes, setCmdVisible } from "../store";
 import { colors } from "../util/colors";
+import { log } from "../util/log";
 
 export const CommandLine = () => {
   const [value, setValue] = createSignal("");
@@ -20,6 +21,7 @@ export const CommandLine = () => {
       pushRoute(route);
     }
   };
+
   const onKeyDown = (key: any) => {
     if (key.name === "escape") {
       setCmdVisible(false);
@@ -32,6 +34,28 @@ export const CommandLine = () => {
         // @ts-ignore
         ref._cursorPosition = val.length;
       } catch (_e) {}
+    }
+
+    const clipboard = {
+      name: "",
+      ctrl: false,
+      meta: false,
+      shift: false,
+      option: false,
+      number: false,
+    };
+    if (Object.entries(clipboard).every(([k, v]) => key[k] === v)) {
+      if (key.sequence === key.raw) {
+        const stripped = key.raw.replace(/\x1b\[([0-?]*[ -/]*[@-~])/g, "");
+        if (stripped) {
+          const val = value() + stripped;
+          onInput(val);
+          try {
+            // @ts-ignore
+            ref._cursorPosition = val.length;
+          } catch (_e) {}
+        }
+      }
     }
   };
   const onInput = (text: string) => {

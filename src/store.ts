@@ -108,7 +108,6 @@ export const actions = () => {
       }
       return { key: km.key.name!, name: km.name };
     });
-    log({ routeActions });
     all.push(...(routeActions || []));
   }
 
