@@ -19,12 +19,34 @@ export const Search = () => {
       setSearchText("");
       setSearchVisible(false);
     }
+
+    const clipboard = {
+      name: "",
+      ctrl: false,
+      meta: false,
+      shift: false,
+      option: false,
+      number: false,
+    };
+    if (Object.entries(clipboard).every(([k, v]) => key[k] === v)) {
+      if (key.sequence === key.raw) {
+        const stripped = key.raw.replace(/\x1b\[([0-?]*[ -/]*[@-~])/g, "");
+        if (stripped) {
+          const val = searchText() + stripped;
+          onInput(val);
+          try {
+            // @ts-ignore
+            ref._cursorPosition = val.length;
+          } catch (_e) { }
+        }
+      }
+    }
   };
   const onInput = (text: string) => {
     setSearchText(text);
   };
   const color = () => colors().accent.v700;
-  const placeholder = () => route().searchPlaceholder || "Type to search";
+  const placeholder = () => route()!.searchPlaceholder || "Type to search";
   return (
     <box
       flexDirection="row"
