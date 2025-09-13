@@ -55,6 +55,11 @@ registerRoute({
             id: "securitygroup",
             args: { ...group },
           });
+        } else if (item.ResourceType === "AWS::EC2::Subnet") {
+          pushRoute({
+            id: "subnet",
+            args: { SubnetId: item.PhysicalResourceId },
+          });
         } else if (item.ResourceType === "AWS::EC2::VPC") {
           pushRoute({
             id: "vpc_yaml",

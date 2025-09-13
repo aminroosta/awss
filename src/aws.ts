@@ -288,6 +288,44 @@ export const awsEc2DescribeSubnets = memo(async () => {
   }
 }, 30_000);
 
+export const awsEc2DescribeSubnet = memo(
+  async (subnetId: string, format: "json" | "yaml" = "json") => {
+    try {
+      if (format === "yaml") {
+        return await $`aws ec2 describe-subnets --subnet-ids='${subnetId}' --output yaml`.text();
+      } else {
+        const result =
+          (await $`aws ec2 describe-subnets --subnet-ids='${subnetId}' --output json`.json()) as {
+            Subnets: {
+              SubnetId: string;
+              VpcId: string;
+              State: string;
+              CidrBlock: string;
+              AvailabilityZone: string;
+              AvailabilityZoneId: string;
+              AvailableIpAddressCount: number;
+              DefaultForAz: boolean;
+              MapPublicIpOnLaunch: boolean;
+              OwnerId: string;
+              AssignIpv6AddressOnCreation: boolean;
+              Ipv6CidrBlockAssociationSet?: {
+                AssociationId: string;
+                Ipv6CidrBlock: string;
+                Ipv6CidrBlockState: { State: string };
+              }[];
+              Tags?: { Key: string; Value: string }[];
+            }[];
+          };
+        return result.Subnets[0];
+      }
+    } catch (e: any) {
+      e.command = `aws ec2 describe-subnets --subnet-ids='${subnetId}' --output json`;
+      throw e;
+    }
+  },
+  30_000,
+);
+
 export const awsEcrDescribeRepositories = memo(async () => {
   try {
     const result =
@@ -677,7 +715,8 @@ export const awsIamListUsers = memo(async () => {
 
 export const awsCfGetTemplate = memo(async (stackName: string) => {
   try {
-    const result = await $`aws cloudformation get-template --stack-name='${stackName}' --output json`.json();
+    const result =
+      await $`aws cloudformation get-template --stack-name='${stackName}' --output json`.json();
     return result.TemplateBody! as string;
   } catch (e: any) {
     e.command = `aws cloudformation get-template --stack-name='${stackName}' --output json`;

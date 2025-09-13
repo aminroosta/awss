@@ -1,6 +1,7 @@
 import { awsEc2DescribeSubnets, awsRegion, awsUrls } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
+import { pushRoute } from "../store";
 import type { ParsedKey } from "@opentui/core";
 
 registerRoute({
@@ -20,7 +21,7 @@ registerRoute({
     }));
   },
   title: () => "subnets",
-  filter: (args) => (args.VpcId || "all"),
+  filter: (args) => args.VpcId || "all",
   columns: [
     { title: "Name", render: "Name" },
     { title: "ID", render: "SubnetId" },
@@ -30,6 +31,26 @@ registerRoute({
     { title: "STATE", render: "State" },
   ],
   keymaps: [
+    {
+      key: "return",
+      name: "Open",
+      fn: (item) => {
+        pushRoute({
+          id: "subnet",
+          args: { SubnetId: item.SubnetId },
+        });
+      },
+    },
+    {
+      key: "y",
+      name: "YAML",
+      fn: (item) => {
+        pushRoute({
+          id: "subnet_yaml",
+          args: { SubnetId: item.SubnetId },
+        });
+      },
+    },
     {
       key: "a",
       name: "AWS Website",
