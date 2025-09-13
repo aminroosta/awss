@@ -3,6 +3,8 @@ import { openInBrowser, copyToClipboard } from "../util/system";
 import { colors } from "../util/colors";
 import { TextAttributes } from "@opentui/core";
 import { awsRegion } from "../aws";
+import { setNotification } from "../store";
+import { openInVim } from "../util/vim";
 
 export function registerYamlRoute<A extends Record<string, string>>({
   id,
@@ -56,6 +58,21 @@ export function registerYamlRoute<A extends Record<string, string>>({
         when: () => true,
         name: "AWS Website",
         fn: (_, args: A) => url(args).then(openInBrowser),
+      },
+      {
+        key: "n",
+        name: "Open in neovim",
+        when: () => true,
+        fn: async (_, args: A) => {
+          setNotification({
+            level: "info",
+            message: "Opening in neovim …",
+            timeout: 1500,
+          });
+          const content = await awsFunction(args);
+          setNotification(null as any);
+          await openInVim(content, title(args) + ".yaml");
+        },
       },
     ],
   });
