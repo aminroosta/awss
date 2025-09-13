@@ -77,7 +77,7 @@ registerRoute({
     {
       key: "return",
       name: "Open",
-      when: stack => stack && valiateStackStatus(stack),
+      when: (stack) => stack && valiateStackStatus(stack),
       fn: (stack) =>
         pushRoute({
           id: "resources",
@@ -87,7 +87,7 @@ registerRoute({
     {
       key: { name: "e", ctrl: false },
       name: "Events",
-      when: stack => stack && valiateStackStatus(stack),
+      when: (stack) => stack && valiateStackStatus(stack),
       fn: (stack, _args) =>
         pushRoute({
           id: "stackevents",
@@ -97,7 +97,7 @@ registerRoute({
     {
       key: { name: "p", ctrl: false },
       name: "Parameters",
-      when: stack => stack && valiateStackStatus(stack),
+      when: (stack) => stack && valiateStackStatus(stack),
       fn: (stack) =>
         pushRoute({
           id: "stackparameters",
@@ -107,7 +107,7 @@ registerRoute({
     {
       key: { name: "a" },
       name: "AWS website",
-      when: stack => stack && valiateStackStatus(stack),
+      when: (stack) => stack && valiateStackStatus(stack),
       fn: async (stack) => {
         const url = await awsUrls.stacks!(stack.StackId);
         openInBrowser(url);
@@ -116,10 +116,10 @@ registerRoute({
     {
       key: "y",
       name: "YAML",
-      when: stack => stack && valiateStackStatus(stack),
+      when: (stack) => stack && valiateStackStatus(stack),
       fn: (stack) =>
         pushRoute({
-          id: "stacktemplate",
+          id: "stack_yaml",
           args: { stackName: stack.StackName },
         }),
     },
@@ -127,7 +127,7 @@ registerRoute({
 });
 
 registerYamlRoute({
-  id: "stacktemplate",
+  id: "stack_yaml",
   args: (args: { stackName: string }) => args,
   aws: (args) => awsCfGetTemplate(args.stackName),
   title: (args) => `template-${args.stackName}`,

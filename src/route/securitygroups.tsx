@@ -1,4 +1,9 @@
-import { awsEc2DescribeSecurityGroups, awsRegion, awsEc2DescribeSecurityGroup, awsUrls } from "../aws";
+import {
+  awsEc2DescribeSecurityGroups,
+  awsRegion,
+  awsEc2DescribeSecurityGroup,
+  awsUrls,
+} from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import { pushRoute } from "../store";
@@ -21,14 +26,14 @@ registerRoute({
     { title: "DESCRIPTION", render: "Description" },
     { title: "VPC ID", render: "VpcId" },
   ],
-  onEnter: () => { },
+  onEnter: () => {},
   keymaps: [
     {
       key: "y",
       name: "YAML",
       fn: (item) => {
         pushRoute({
-          id: "securitygroup",
+          id: "securitygroup_yaml",
           args: { ...item },
         });
       },
@@ -44,9 +49,8 @@ registerRoute({
   ],
 });
 
-
 registerYamlRoute({
-  id: "securitygroup",
+  id: "securitygroup_yaml",
   args: (a: { GroupId: string }) => a,
   aws: (args) =>
     awsEc2DescribeSecurityGroup(args.GroupId, "yaml") as Promise<string>,

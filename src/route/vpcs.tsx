@@ -1,4 +1,9 @@
-import { awsEc2DescribeVpcs, awsRegion, awsEc2DescribeVpc, awsUrls } from "../aws";
+import {
+  awsEc2DescribeVpcs,
+  awsRegion,
+  awsEc2DescribeVpc,
+  awsUrls,
+} from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import { pushRoute } from "../store";
@@ -30,7 +35,7 @@ registerRoute({
       name: "YAML",
       fn: async (item) => {
         pushRoute({
-          id: "vpc",
+          id: "vpc_yaml",
           args: { VpcId: item.VpcId },
         });
       },
@@ -47,7 +52,7 @@ registerRoute({
 });
 
 registerYamlRoute({
-  id: "vpc",
+  id: "vpc_yaml",
   args: (a: { VpcId: string }) => a,
   aws: (args) => awsEc2DescribeVpc(args.VpcId, "yaml") as Promise<string>,
   title: (args) => `VPC: ${args.VpcId}`,

@@ -44,7 +44,7 @@ registerRoute({
           });
         } else if (item.ResourceType === "AWS::EC2::Instance") {
           pushRoute({
-            id: "instance",
+            id: "instance_yaml",
             args: { InstanceId: item.PhysicalResourceId },
           });
         } else if (item.ResourceType === "AWS::EC2::SecurityGroup") {
@@ -52,12 +52,12 @@ registerRoute({
             item.PhysicalResourceId,
           );
           pushRoute({
-            id: "securitygroup",
+            id: "securitygroup_yaml",
             args: { ...group },
           });
         } else if (item.ResourceType === "AWS::EC2::VPC") {
           pushRoute({
-            id: "vpc",
+            id: "vpc_yaml",
             args: { VpcId: item.PhysicalResourceId },
           });
         } else {

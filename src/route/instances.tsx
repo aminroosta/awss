@@ -57,7 +57,7 @@ registerRoute({
       name: "YAML",
       fn: async (item) => {
         pushRoute({
-          id: "instance",
+          id: "instance_yaml",
           args: { InstanceId: item.InstanceId },
         });
       },
@@ -74,7 +74,7 @@ registerRoute({
 });
 
 registerYamlRoute({
-  id: "instance",
+  id: "instance_yaml",
   args: (a: { InstanceId: string }) => a,
   aws: (args) =>
     awsEc2DescribeInstance(args.InstanceId, "yaml") as Promise<string>,
