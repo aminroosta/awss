@@ -42,6 +42,11 @@ registerRoute({
             id: "objects",
             args: { bucket: item.PhysicalResourceId, prefix: "" },
           });
+        } else if (item.ResourceType === "AWS::EC2::Instance") {
+          pushRoute({
+            id: "instance",
+            args: { InstanceId: item.PhysicalResourceId },
+          });
         } else if (item.ResourceType === "AWS::EC2::SecurityGroup") {
           const group = await awsEc2DescribeSecurityGroup(
             item.PhysicalResourceId,
