@@ -63,6 +63,16 @@ registerRoute({
       },
     },
     {
+      key: "l",
+      name: "Console Log",
+      fn: async (item) => {
+        pushRoute({
+          id: "instance_log",
+          args: { InstanceId: item.InstanceId },
+        });
+      },
+    },
+    {
       key: "a",
       name: "AWS Website",
       fn: async (item) => {

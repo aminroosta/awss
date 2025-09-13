@@ -5,6 +5,7 @@ import "./route/objects";
 import "./route/resources";
 import "./route/vpcs";
 import "./route/instances";
+import "./route/instance_log";
 import "./route/securitygroups";
 import "./route/securitygroup";
 import "./route/users";
