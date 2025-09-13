@@ -6,10 +6,13 @@ import type { ParsedKey } from "@opentui/core";
 registerRoute({
   id: "subnets",
   alias: ["subnets"],
-  args: () => ({}),
-  aws: async () => {
+  args: (a: { VpcId?: string }) => a,
+  aws: async (args) => {
     const data = await awsEc2DescribeSubnets();
-    return data.map((s) => ({
+    const filtered = args.VpcId
+      ? data.filter((s) => s.VpcId === args.VpcId)
+      : data;
+    return filtered.map((s) => ({
       ...s,
       Name: s.Tags?.find((t) => t.Key === "Name")?.Value ?? "",
       DefaultForAz: s.DefaultForAz ? "Yes" : "No",
@@ -17,7 +20,7 @@ registerRoute({
     }));
   },
   title: () => "subnets",
-  filter: () => "all",
+  filter: (args) => (args.VpcId || "all"),
   columns: [
     { title: "Name", render: "Name" },
     { title: "ID", render: "SubnetId" },

@@ -31,6 +31,16 @@ registerRoute({
   ],
   keymaps: [
     {
+      key: "return",
+      name: "Open",
+      fn: async (item) => {
+        pushRoute({
+          id: "subnets",
+          args: { VpcId: item.VpcId },
+        });
+      },
+    },
+    {
       key: "y",
       name: "YAML",
       fn: async (item) => {
