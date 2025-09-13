@@ -423,6 +423,102 @@ export const awsEc2DescribeInstances = memo(async () => {
   }
 }, 30_000);
 
+export const awsEc2DescribeInstance = memo(
+  async (instanceId: string, format: "json" | "yaml" = "json") => {
+    try {
+      if (format === "yaml") {
+        return await $`aws ec2 describe-instances --instance-ids='${instanceId}' --output yaml`.text();
+      } else {
+        const result =
+          (await $`aws ec2 describe-instances --instance-ids='${instanceId}' --output json`.json()) as {
+            Reservations: {
+              Instances: {
+                InstanceId: string;
+                ImageId: string;
+                State: { Code: number; Name: string };
+                PrivateDnsName?: string;
+                PublicDnsName?: string;
+                InstanceType: string;
+                LaunchTime: string;
+                Placement: {
+                  AvailabilityZone: string;
+                  GroupName: string;
+                  Tenancy: string;
+                };
+                Monitoring: { State: string };
+                SubnetId?: string;
+                VpcId?: string;
+                PrivateIpAddress?: string;
+                PublicIpAddress?: string;
+                Architecture: string;
+                RootDeviceType: string;
+                RootDeviceName: string;
+                Hypervisor: string;
+                EnaSupport: boolean;
+                EbsOptimized: boolean;
+                ClientToken?: string;
+                BlockDeviceMappings?: {
+                  DeviceName: string;
+                  Ebs: {
+                    VolumeId: string;
+                    Status: string;
+                    AttachTime: string;
+                    DeleteOnTermination: boolean;
+                  };
+                }[];
+                NetworkInterfaces?: {
+                  Association?: {
+                    IpOwnerId?: string;
+                    PublicDnsName?: string;
+                    PublicIp?: string;
+                  };
+                  Attachment?: {
+                    AttachTime: string;
+                    AttachmentId: string;
+                    DeleteOnTermination: boolean;
+                    DeviceIndex: number;
+                    Status: string;
+                    NetworkCardIndex?: number;
+                  };
+                  Description?: string;
+                  Groups: { GroupId: string; GroupName: string }[];
+                  Ipv6Addresses?: any[];
+                  MacAddress: string;
+                  NetworkInterfaceId: string;
+                  OwnerId: string;
+                  PrivateDnsName: string;
+                  PrivateIpAddress: string;
+                  PrivateIpAddresses: {
+                    Association?: {
+                      IpOwnerId?: string;
+                      PublicDnsName?: string;
+                      PublicIp?: string;
+                    };
+                    Primary: boolean;
+                    PrivateDnsName: string;
+                    PrivateIpAddress: string;
+                  }[];
+                  SourceDestCheck: boolean;
+                  Status: string;
+                  SubnetId: string;
+                  VpcId: string;
+                  InterfaceType: string;
+                  Operator?: { Managed: boolean };
+                }[];
+                Tags?: { Key: string; Value: string }[];
+              }[];
+            }[];
+          };
+        return result.Reservations[0].Instances[0];
+      }
+    } catch (e: any) {
+      e.command = `aws ec2 describe-instances --instance-ids='${instanceId}' --output json`;
+      throw e;
+    }
+  },
+  30_000,
+);
+
 export const awsEc2DescribeSecurityGroups = memo(async () => {
   try {
     const result =

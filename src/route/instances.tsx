@@ -1,6 +1,13 @@
-import { awsEc2DescribeInstances, awsRegion, awsUrls } from "../aws";
+import {
+  awsEc2DescribeInstances,
+  awsEc2DescribeInstance,
+  awsRegion,
+  awsUrls,
+} from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
+import { pushRoute } from "../store";
+import { registerYamlRoute } from "./yaml";
 import type { ParsedKey } from "@opentui/core";
 
 const getTag = (item: any, key: string) =>
@@ -46,6 +53,16 @@ registerRoute({
   ],
   keymaps: [
     {
+      key: "y",
+      name: "YAML",
+      fn: async (item) => {
+        pushRoute({
+          id: "instance",
+          args: { InstanceId: item.InstanceId },
+        });
+      },
+    },
+    {
       key: "a",
       name: "AWS Website",
       fn: async (item) => {
@@ -54,4 +71,13 @@ registerRoute({
       },
     },
   ],
+});
+
+registerYamlRoute({
+  id: "instance",
+  args: (a: { InstanceId: string }) => a,
+  aws: (args) =>
+    awsEc2DescribeInstance(args.InstanceId, "yaml") as Promise<string>,
+  title: (args) => `Instance: ${args.InstanceId}`,
+  url: (args) => awsUrls.instances!(args.InstanceId),
 });
