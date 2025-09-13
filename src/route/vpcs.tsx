@@ -1,8 +1,9 @@
-import { awsEc2DescribeVpcs, awsRegion, awsUrls } from "../aws";
+import { awsEc2DescribeVpcs, awsRegion, awsEc2DescribeVpc, awsUrls } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import { pushRoute } from "../store";
 import type { ParsedKey } from "@opentui/core";
+import { registerYamlRoute } from "./yaml";
 
 registerRoute({
   id: "vpcs",
@@ -43,4 +44,12 @@ registerRoute({
       },
     },
   ],
+});
+
+registerYamlRoute({
+  id: "vpc",
+  args: (a: { VpcId: string }) => a,
+  aws: (args) => awsEc2DescribeVpc(args.VpcId, "yaml") as Promise<string>,
+  title: (args) => `VPC: ${args.VpcId}`,
+  url: (args) => awsUrls.vpc!(args.VpcId),
 });

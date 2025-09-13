@@ -4,7 +4,7 @@ import { colors } from "../util/colors";
 import { TextAttributes } from "@opentui/core";
 import { awsRegion } from "../aws";
 
-export function createYamlRoute<A extends Record<string, string>>({
+export function registerYamlRoute<A extends Record<string, string>>({
   id,
   args,
   aws: awsFunction,
