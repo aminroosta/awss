@@ -97,7 +97,8 @@ registerRoute({
     {
       key: "n",
       name: "Open in neovim",
-      when: (item) => item && item.Key !== PARENT_DIR_KEY && item.Size !== "<DIR>",
+      when: (item) =>
+        item && item.Key !== PARENT_DIR_KEY && item.Size !== "<DIR>",
       fn: async (item, args) => {
         setNotification({
           level: "info",

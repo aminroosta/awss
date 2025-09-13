@@ -82,10 +82,14 @@ const Actions = () => {
   const chunks = () => chunkArray(actions(), constants.HEADER_HEIGHT);
   const key = (action: Accessor<{ key: string; name: string }>) => {
     const k = action().key;
-    if (k === "return") { return "⏎"; }
-    if (k.startsWith("ctrl+")) { return "⌃" + k.slice(5); }
+    if (k === "return") {
+      return "⏎";
+    }
+    if (k.startsWith("ctrl+")) {
+      return "⌃" + k.slice(5);
+    }
     return `${k}`;
-  }
+  };
 
   return (
     <Index each={chunks()}>
@@ -93,7 +97,7 @@ const Actions = () => {
         <box flexDirection="column">
           <Index each={chunk()}>
             {(action) => (
-              <box visible={action().key != ''} flexDirection="row">
+              <box visible={action().key != ""} flexDirection="row">
                 <text fg={colors().main.v700} attributes={TextAttributes.BOLD}>
                   {key(action).padEnd(index === 0 ? 7 : 2, " ")}
                 </text>

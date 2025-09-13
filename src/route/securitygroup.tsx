@@ -1,7 +1,4 @@
-import {
-  awsEc2DescribeSecurityGroup,
-  awsUrls,
-} from "../aws";
+import { awsEc2DescribeSecurityGroup, awsUrls } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import { pushRoute } from "../store";
@@ -15,13 +12,15 @@ registerRoute({
     const sg = await awsEc2DescribeSecurityGroup(args.GroupId);
     const rules = [
       ...(sg.IpPermissions || []).map((perm) => {
-        const portRange = perm.FromPort === perm.ToPort
-          ? perm.FromPort?.toString() || "All"
-          : `${perm.FromPort}-${perm.ToPort}` || "All";
+        const portRange =
+          perm.FromPort === perm.ToPort
+            ? perm.FromPort?.toString() || "All"
+            : `${perm.FromPort}-${perm.ToPort}` || "All";
 
-        const sources = perm.IpRanges?.map(r => r.CidrIp).join(", ") ||
-          perm.UserIdGroupPairs?.map(g => g.GroupId).join(", ") ||
-          perm.PrefixListIds?.map(p => p.PrefixListId).join(", ") ||
+        const sources =
+          perm.IpRanges?.map((r) => r.CidrIp).join(", ") ||
+          perm.UserIdGroupPairs?.map((g) => g.GroupId).join(", ") ||
+          perm.PrefixListIds?.map((p) => p.PrefixListId).join(", ") ||
           "All";
 
         return {
@@ -34,13 +33,15 @@ registerRoute({
         };
       }),
       ...(sg.IpPermissionsEgress || []).map((perm) => {
-        const portRange = perm.FromPort === perm.ToPort
-          ? perm.FromPort?.toString() || "All"
-          : `${perm.FromPort}-${perm.ToPort}` || "All";
+        const portRange =
+          perm.FromPort === perm.ToPort
+            ? perm.FromPort?.toString() || "All"
+            : `${perm.FromPort}-${perm.ToPort}` || "All";
 
-        const destinations = perm.IpRanges?.map(r => r.CidrIp).join(", ") ||
-          perm.UserIdGroupPairs?.map(g => g.GroupId).join(", ") ||
-          perm.PrefixListIds?.map(p => p.PrefixListId).join(", ") ||
+        const destinations =
+          perm.IpRanges?.map((r) => r.CidrIp).join(", ") ||
+          perm.UserIdGroupPairs?.map((g) => g.GroupId).join(", ") ||
+          perm.PrefixListIds?.map((p) => p.PrefixListId).join(", ") ||
           "All";
 
         return {
@@ -51,7 +52,7 @@ registerRoute({
           Target: destinations,
           Description: perm.IpRanges?.[0]?.Description || "",
         };
-      })
+      }),
     ];
     return rules;
   },

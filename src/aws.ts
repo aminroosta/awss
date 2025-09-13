@@ -160,14 +160,14 @@ export const awsListObjectsV2Search = memo(
       const result = (await (continuationToken
         ? $`aws s3api list-objects-v2 --bucket='${bucket}' --prefix='${prefix}' --max-keys=${maxKeys} --query "{Objects: Contents[?${queryFilter}], NextToken: NextContinuationToken}" --continuation-token='${continuationToken}' --output=json`.json()
         : $`aws s3api list-objects-v2 --bucket='${bucket}' --prefix='${prefix}' --max-keys=${maxKeys} --query "{Objects: Contents[?${queryFilter}], NextToken: NextContinuationToken}" --output=json`.json())) as {
-          Objects: {
-            Key: string;
-            LastModified: string;
-            Size: number;
-            StorageClass: string;
-          }[];
-          NextToken?: string;
-        };
+        Objects: {
+          Key: string;
+          LastModified: string;
+          Size: number;
+          StorageClass: string;
+        }[];
+        NextToken?: string;
+      };
       return { Contents: result.Objects, NextToken: result.NextToken };
     } catch (e: any) {
       e.command = continuationToken
@@ -559,7 +559,8 @@ export const awsEc2DescribeInstance = memo(
 
 export const awsEc2GetConsoleOutput = memo(async (instanceId: string) => {
   try {
-    const result = await $`aws ec2 get-console-output --latest --instance-id='${instanceId}' --output text`.text();
+    const result =
+      await $`aws ec2 get-console-output --latest --instance-id='${instanceId}' --output text`.text();
     return result;
   } catch (e: any) {
     e.command = `aws ec2 get-console-output --latest --instance-id='${instanceId}' --output text`;

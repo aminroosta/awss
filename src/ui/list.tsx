@@ -1,5 +1,12 @@
 import { RGBA, TextAttributes, type ParsedKey } from "@opentui/core";
-import { batch, createEffect, createMemo, createSignal, For, Index } from "solid-js";
+import {
+  batch,
+  createEffect,
+  createMemo,
+  createSignal,
+  For,
+  Index,
+} from "solid-js";
 import { colors } from "../util/colors";
 import {
   cmdVisible,
@@ -59,7 +66,7 @@ export const List = <T extends Record<string, string>>(p: {
     );
   };
   createEffect(() => {
-    if (query() && (visIdx() + height() >= itemsFiltered().length)) {
+    if (query() && visIdx() + height() >= itemsFiltered().length) {
       setVisIdx(Math.max(0, itemsFiltered().length - height()));
     }
   });

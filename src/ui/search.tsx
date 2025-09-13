@@ -37,7 +37,7 @@ export const Search = () => {
           try {
             // @ts-ignore
             ref._cursorPosition = val.length;
-          } catch (_e) { }
+          } catch (_e) {}
         }
       }
     }

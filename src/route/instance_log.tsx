@@ -8,8 +8,9 @@ registerRoute({
   args: (a: { InstanceId: string }) => a,
   aws: async (args) => {
     const result = await awsEc2GetConsoleOutput(args.InstanceId);
-    const all = result.split("\n")
-      .map((line, idx) => ({ line: line.replace(/[\p{Cc}]/gu, '').trim() }));
+    const all = result
+      .split("\n")
+      .map((line, idx) => ({ line: line.replace(/[\p{Cc}]/gu, "").trim() }));
 
     return all;
   },
