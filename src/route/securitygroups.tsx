@@ -26,8 +26,23 @@ registerRoute({
     { title: "DESCRIPTION", render: "Description" },
     { title: "VPC ID", render: "VpcId" },
   ],
-  onEnter: () => {},
+  onEnter: (item) => {
+    pushRoute({
+      id: "securitygroup",
+      args: { GroupId: item.GroupId },
+    });
+  },
   keymaps: [
+    {
+      key: "return",
+      name: "Open",
+      fn: (item) => {
+        pushRoute({
+          id: "securitygroup",
+          args: { GroupId: item.GroupId },
+        });
+      },
+    },
     {
       key: "y",
       name: "YAML",
@@ -47,13 +62,4 @@ registerRoute({
       },
     },
   ],
-});
-
-registerYamlRoute({
-  id: "securitygroup_yaml",
-  args: (a: { GroupId: string }) => a,
-  aws: (args) =>
-    awsEc2DescribeSecurityGroup(args.GroupId, "yaml") as Promise<string>,
-  title: (args) => `Security Group: ${args.GroupId}`,
-  url: (args) => awsUrls.securitygroup!(args.GroupId),
 });

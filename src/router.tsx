@@ -6,6 +6,7 @@ import "./route/resources";
 import "./route/vpcs";
 import "./route/instances";
 import "./route/securitygroups";
+import "./route/securitygroup";
 import "./route/users";
 import "./route/stackevents";
 import "./route/stackparameters";

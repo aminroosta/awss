@@ -52,7 +52,7 @@ registerRoute({
             item.PhysicalResourceId,
           );
           pushRoute({
-            id: "securitygroup_yaml",
+            id: "securitygroup",
             args: { ...group },
           });
         } else if (item.ResourceType === "AWS::EC2::VPC") {
