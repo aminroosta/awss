@@ -93,9 +93,7 @@ export const List = <T extends Record<string, string>>(p: {
       } else if (key.name === "g" && key.shift) {
         setIndex(items.length - 1);
       } else {
-        if (items[i]) {
-          p.onKey?.(key, items[i]);
-        }
+        p.onKey?.(key, items[i]!);
       }
     });
   });

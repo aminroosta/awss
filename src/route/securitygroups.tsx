@@ -24,8 +24,8 @@ registerRoute({
   onEnter: () => { },
   keymaps: [
     {
-      key: "return",
-      name: "View Details",
+      key: "y",
+      name: "YAML",
       fn: (item) => {
         pushRoute({
           id: "securitygroup",

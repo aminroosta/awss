@@ -2,7 +2,7 @@ import { awsRegion, awsCallerIdentity, awsCliVersion } from "../aws";
 import { getSystemUsage, usage } from "../util/system";
 import { bold, TextAttributes } from "@opentui/core";
 import { colors } from "../util/colors";
-import { createResource, For } from "solid-js";
+import { createResource, For, Index, type Accessor } from "solid-js";
 import { actions, constants } from "../store";
 import { chunkArray } from "../util/chunk";
 
@@ -80,31 +80,37 @@ const AwssVersion = () => {
 
 const Actions = () => {
   const chunks = () => chunkArray(actions(), constants.HEADER_HEIGHT);
+  const key = (action: Accessor<{ key: string; name: string }>) => {
+    const k = action().key;
+    if (k === "return") { return "⏎"; }
+    if (k.startsWith("ctrl+")) { return "⌃" + k.slice(5); }
+    return `${k}`;
+  }
 
   return (
-    <For each={chunks()}>
-      {(chunk) => (
+    <Index each={chunks()}>
+      {(chunk, index) => (
         <box flexDirection="column">
-          <For each={chunk}>
+          <Index each={chunk()}>
             {(action) => (
-              <box flexDirection="row">
-                <text fg={colors().main.v700}>
-                  {bold(`<${action.key}>`.padEnd(9, " "))}
+              <box visible={action().key != ''} flexDirection="row">
+                <text fg={colors().main.v700} attributes={TextAttributes.BOLD}>
+                  {key(action).padEnd(index === 0 ? 7 : 2, " ")}
                 </text>
                 <text fg={colors().dim}>
-                  {action.name.padEnd(12, " ").slice(0, 15)}
+                  {action().name.padEnd(12, " ").slice(0, 12)}
                 </text>
               </box>
             )}
-          </For>
+          </Index>
         </box>
       )}
-    </For>
+    </Index>
   );
 };
 export const Header = () => {
   return (
-    <box flexDirection="row" gap={8} height={constants.HEADER_HEIGHT}>
+    <box flexDirection="row" gap={6} height={constants.HEADER_HEIGHT}>
       <box>
         <Region />
         <CallerIdentity />

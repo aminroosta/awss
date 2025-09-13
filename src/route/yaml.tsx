@@ -43,17 +43,19 @@ export function registerYamlRoute<A extends Record<string, string>>({
     ],
     keymaps: [
       {
-        key: "a",
-        name: "AWS Website",
-        fn: (item, args: A) => url(args).then(openInBrowser),
-      },
-      {
         key: "y",
         name: "Copy YAML",
-        fn: async (item, args: A) => {
+        when: () => true,
+        fn: async (_, args: A) => {
           const content = await awsFunction(args);
           copyToClipboard(content);
         },
+      },
+      {
+        key: "a",
+        when: () => true,
+        name: "AWS Website",
+        fn: (_, args: A) => url(args).then(openInBrowser),
       },
     ],
   });

@@ -26,8 +26,8 @@ registerRoute({
   ],
   keymaps: [
     {
-      key: "return",
-      name: "Open",
+      key: "y",
+      name: "YAML",
       fn: async (item) => {
         pushRoute({
           id: "vpc",

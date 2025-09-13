@@ -77,8 +77,11 @@ export const registerRoute = <R, A, T extends Record<string, string>>(r: {
                 );
               }
             });
-            if (keymap && (!keymap.when || keymap.when(item, p.args))) {
-              keymap.fn(item, p.args);
+            if (keymap) {
+              const when = keymap.when || ((item: T, _: A) => !!item);
+              if (when(item, p.args)) {
+                keymap.fn(item, p.args);
+              }
             }
           }}
         />

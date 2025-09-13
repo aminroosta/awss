@@ -92,6 +92,10 @@ export const actions = () => {
   if (routeStackLen() < routeStack.length) {
     all.push({ key: "ctrl+n", name: "Go Forward" });
   }
+  while (all.length < constants.HEADER_HEIGHT) {
+    all.push({ key: "", name: "" });
+  }
+
   if (showRouteActions) {
     const routeActions = route()?.keymaps?.map((km) => {
       if (typeof km.key === "string") {
