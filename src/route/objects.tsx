@@ -57,39 +57,6 @@ registerRoute({
   ],
   keymaps: [
     {
-      key: "a",
-      name: "AWS Website",
-      when: (item) => item.Key !== PARENT_DIR_KEY,
-      fn: async (item, args) => {
-        const region = await awsRegion();
-        if (item.Size !== "<DIR>") {
-          openInBrowser(
-            `https://${region}.console.aws.amazon.com/s3/object/${args.bucket}?region=us-east-2&prefix=${encodeURIComponent(args.prefix + item.Key)}`,
-          );
-        } else {
-          openInBrowser(
-            `https://${region}.console.aws.amazon.com/s3/buckets/${args.bucket}?region=us-east-2&prefix=${encodeURIComponent(args.prefix + item.Key)}&showversions=false`,
-          );
-        }
-      },
-    },
-    {
-      key: "n",
-      name: "Open in neovim",
-      when: (item) => item.Key !== PARENT_DIR_KEY && item.Size !== "<DIR>",
-      fn: async (item, args) => {
-        setNotification({
-          level: "info",
-          message: "Openning in novim …",
-          timeout: 1500,
-        });
-        const fullKey = args.prefix + item.Key;
-        const content = await awsS3GetObject(args.bucket, fullKey);
-        setNotification(null as any);
-        await openInVim(content, item.Key);
-      },
-    },
-    {
       key: "return",
       name: "View file",
       fn: async (item, args) => {
@@ -108,6 +75,39 @@ registerRoute({
             args: { bucket: args.bucket, key: fullKey },
           });
         }
+      },
+    },
+    {
+      key: "a",
+      name: "AWS Website",
+      when: (item) => item && item.Key !== PARENT_DIR_KEY,
+      fn: async (item, args) => {
+        const region = await awsRegion();
+        if (item.Size !== "<DIR>") {
+          openInBrowser(
+            `https://${region}.console.aws.amazon.com/s3/object/${args.bucket}?region=us-east-2&prefix=${encodeURIComponent(args.prefix + item.Key)}`,
+          );
+        } else {
+          openInBrowser(
+            `https://${region}.console.aws.amazon.com/s3/buckets/${args.bucket}?region=us-east-2&prefix=${encodeURIComponent(args.prefix + item.Key)}&showversions=false`,
+          );
+        }
+      },
+    },
+    {
+      key: "n",
+      name: "Open in neovim",
+      when: (item) => item && item.Key !== PARENT_DIR_KEY && item.Size !== "<DIR>",
+      fn: async (item, args) => {
+        setNotification({
+          level: "info",
+          message: "Openning in novim …",
+          timeout: 1500,
+        });
+        const fullKey = args.prefix + item.Key;
+        const content = await awsS3GetObject(args.bucket, fullKey);
+        setNotification(null as any);
+        await openInVim(content, item.Key);
       },
     },
   ],

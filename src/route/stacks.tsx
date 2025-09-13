@@ -1,5 +1,6 @@
-import { awsListStacks, awsRegion, awsUrls } from "../aws";
+import { awsListStacks, awsRegion, awsUrls, awsCfGetTemplate } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
+import { registerYamlRoute } from "./yaml";
 import { pushRoute, setNotification } from "../store";
 import { openInBrowser } from "../util/system";
 import { TextAttributes, type ParsedKey } from "@opentui/core";
@@ -74,9 +75,19 @@ registerRoute({
   ],
   keymaps: [
     {
+      key: "return",
+      name: "Open",
+      when: stack => stack && valiateStackStatus(stack),
+      fn: (stack) =>
+        pushRoute({
+          id: "resources",
+          args: { ...stack },
+        }),
+    },
+    {
       key: { name: "e", ctrl: false },
       name: "Events",
-      when: valiateStackStatus,
+      when: stack => stack && valiateStackStatus(stack),
       fn: (stack, _args) =>
         pushRoute({
           id: "stackevents",
@@ -86,7 +97,7 @@ registerRoute({
     {
       key: { name: "p", ctrl: false },
       name: "Parameters",
-      when: valiateStackStatus,
+      when: stack => stack && valiateStackStatus(stack),
       fn: (stack) =>
         pushRoute({
           id: "stackparameters",
@@ -94,23 +105,34 @@ registerRoute({
         }),
     },
     {
-      key: "return",
-      name: "Open",
-      when: valiateStackStatus,
-      fn: (stack) =>
-        pushRoute({
-          id: "resources",
-          args: { ...stack },
-        }),
-    },
-    {
       key: { name: "a" },
       name: "AWS website",
-      when: valiateStackStatus,
+      when: stack => stack && valiateStackStatus(stack),
       fn: async (stack) => {
         const url = await awsUrls.stacks!(stack.StackId);
         openInBrowser(url);
       },
     },
+    {
+      key: "y",
+      name: "YAML",
+      when: stack => stack && valiateStackStatus(stack),
+      fn: (stack) =>
+        pushRoute({
+          id: "stacktemplate",
+          args: { stackName: stack.StackName },
+        }),
+    },
   ],
+});
+
+registerYamlRoute({
+  id: "stacktemplate",
+  args: (args: { stackName: string }) => args,
+  aws: (args) => awsCfGetTemplate(args.stackName),
+  title: (args) => `template-${args.stackName}`,
+  url: async (args) => {
+    const region = await awsRegion();
+    return `https://console.aws.amazon.com/cloudformation/home?region=${region}#/stacks/templates?stackId=${encodeURIComponent(args.stackName)}&tabId=template`;
+  },
 });

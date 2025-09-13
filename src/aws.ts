@@ -675,6 +675,16 @@ export const awsIamListUsers = memo(async () => {
   }
 }, 30_000);
 
+export const awsCfGetTemplate = memo(async (stackName: string) => {
+  try {
+    const result = await $`aws cloudformation get-template --stack-name='${stackName}' --output json`.json();
+    return result.TemplateBody! as string;
+  } catch (e: any) {
+    e.command = `aws cloudformation get-template --stack-name='${stackName}' --output json`;
+    throw e;
+  }
+}, 30_000);
+
 export const awsCfDescribeStackEvents = memo(async (stackName: string) => {
   try {
     const result =
