@@ -36,3 +36,38 @@ export const awsListObjectsV2 = async (
     `aws s3api list-objects-v2 --bucket='${bucket}' --delimiter='${delimiter}' --prefix='${prefix}'`,
   );
 };
+
+export const awsListObjectsV2Search = async (
+  bucket: string,
+  search: string,
+  prefix: string = "",
+  continuationToken: string | undefined = undefined,
+  maxKeys: number = 1000,
+) => {
+  if (!search.trim()) {
+    return { Contents: [] };
+  }
+  const words = search.trim().split(/\s+/);
+  const queryFilter = words.map((w) => `contains(Key, '${w}')`).join(" || ");
+  type Result = {
+    Objects: {
+      Key: string;
+      LastModified: string;
+      Size: number;
+      StorageClass: string;
+    }[];
+    NextToken?: string;
+  };
+  try {
+    const command = continuationToken
+      ? `aws s3api list-objects-v2 --bucket='${bucket}' --prefix='${prefix}' --max-keys=${maxKeys} --query "{Objects: Contents[?${queryFilter}], NextToken: NextContinuationToken}" --continuation-token='${continuationToken}' --output=json`
+      : `aws s3api list-objects-v2 --bucket='${bucket}' --prefix='${prefix}' --max-keys=${maxKeys} --query "{Objects: Contents[?${queryFilter}], NextToken: NextContinuationToken}" --output=json`;
+    const result = await aws<Result>(command);
+    return { Contents: result.Objects, NextToken: result.NextToken };
+  } catch (e: any) {
+    e.command = continuationToken
+      ? `aws s3api list-objects-v2 --bucket='${bucket}' --prefix='${prefix}' --max-keys=${maxKeys} --query "{Objects: Contents[?${queryFilter}], NextToken: NextContinuationToken}" --continuation-token='${continuationToken}' --output=json`
+      : `aws s3api list-objects-v2 --bucket='${bucket}' --prefix='${prefix}' --max-keys=${maxKeys} --query "{Objects: Contents[?${queryFilter}], NextToken: NextContinuationToken}" --output=json`;
+    throw e;
+  }
+};

@@ -5,45 +5,6 @@ import { memo } from "./util/memo";
 export * from "./api/api";
 import { awsRegion } from "./api/cli";
 
-export const awsListObjectsV2Search = memo(
-  async (
-    bucket: string,
-    search: string,
-    prefix: string = "",
-    continuationToken: string | undefined = undefined,
-    maxKeys: number = 1000,
-  ) => {
-    if (!search.trim()) {
-      return { Contents: [] };
-    }
-    const words = search.trim().split(/\s+/);
-    const queryFilter = words
-      .map((w) => `contains(Key, \`${w}\`)`)
-      .join(" || ");
-
-    try {
-      const result = (await (continuationToken
-        ? $`aws s3api list-objects-v2 --bucket='${bucket}' --prefix='${prefix}' --max-keys=${maxKeys} --query "{Objects: Contents[?${queryFilter}], NextToken: NextContinuationToken}" --continuation-token='${continuationToken}' --output=json`.json()
-        : $`aws s3api list-objects-v2 --bucket='${bucket}' --prefix='${prefix}' --max-keys=${maxKeys} --query "{Objects: Contents[?${queryFilter}], NextToken: NextContinuationToken}" --output=json`.json())) as {
-        Objects: {
-          Key: string;
-          LastModified: string;
-          Size: number;
-          StorageClass: string;
-        }[];
-        NextToken?: string;
-      };
-      return { Contents: result.Objects, NextToken: result.NextToken };
-    } catch (e: any) {
-      e.command = continuationToken
-        ? `aws s3api list-objects-v2 --bucket='${bucket}' --prefix='${prefix}' --max-keys=${maxKeys} --query "{Objects: Contents[?${queryFilter}], NextToken: NextContinuationToken}" --continuation-token='${continuationToken}' --output=json`
-        : `aws s3api list-objects-v2 --bucket='${bucket}' --prefix='${prefix}' --max-keys=${maxKeys} --query "{Objects: Contents[?${queryFilter}], NextToken: NextContinuationToken}" --output=json`;
-      throw e;
-    }
-  },
-  30_000,
-);
-
 export const awsS3GetObject = memo(async (bucket: string, key: string) => {
   try {
     return await $`aws s3 cp 's3://${bucket}/${key}' -`.text();
