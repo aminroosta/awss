@@ -804,7 +804,8 @@ export const awsEcsDescribeClusters = memo(async () => {
 
 export const awsEcsListServices = memo(async (clusterArn: string) => {
   try {
-    const list = await $`aws ecs list-services --cluster '${clusterArn}' --output json`.json() as {
+    const list =
+      (await $`aws ecs list-services --cluster '${clusterArn}' --output json`.json()) as {
         serviceArns: string[];
       };
     const described =
@@ -835,3 +836,55 @@ export const awsEcsListServices = memo(async (clusterArn: string) => {
     throw e;
   }
 }, 30_000);
+
+export const awsEcsListTasks = memo(
+  async (clusterArn: string, serviceName?: string) => {
+    try {
+      let list: { taskArns: string[] };
+      if (serviceName) {
+        list =
+          await $`aws ecs list-tasks --cluster '${clusterArn}' --service-name '${serviceName}' --output json`.json();
+      } else {
+        list =
+          await $`aws ecs list-tasks --cluster '${clusterArn}' --output json`.json();
+      }
+
+      const described =
+        (await $`aws ecs describe-tasks --cluster '${clusterArn}' --tasks ${{ raw: list.taskArns.join(" ") }} --output json`.json()) as {
+          tasks: {
+            taskArn: string;
+            lastStatus: string;
+            desiredStatus: string;
+            group: string;
+            containers: {
+              containerArn: string;
+              lastStatus: string;
+              name: string;
+              exitCode?: number;
+              reason?: string;
+            }[];
+            startedAt?: string;
+            stoppedAt?: string;
+            stoppedReason?: string;
+            pullStartedAt?: string;
+            pullStoppedAt?: string;
+            connectivity?: string;
+            connectivityAt?: string;
+            tags?: { key: string; value: string }[];
+          }[];
+        };
+      return described.tasks.map((t) => ({
+        ...t,
+        id: t.taskArn.split("/").pop()!,
+        lastStatus: t.lastStatus,
+        desiredStatus: t.desiredStatus,
+      }));
+    } catch (e: any) {
+      e.command = serviceName
+        ? `aws ecs list-tasks --cluster '${clusterArn}' --service-name '${serviceName}' --output json`
+        : `aws ecs list-tasks --cluster '${clusterArn}' --output json`;
+      throw e;
+    }
+  },
+  30_000,
+);

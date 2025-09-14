@@ -23,6 +23,15 @@ registerRoute({
   ],
   keymaps: [
     {
+      key: "return",
+      name: "Open",
+      fn: (item) =>
+        pushRoute({
+          id: "cluster_services",
+          args: { clusterArn: item.clusterArn, clusterName: item.clusterName },
+        }),
+    },
+    {
       key: { name: "a", ctrl: false },
       name: "AWS Website",
       when: (item) => !!item,
@@ -32,11 +41,11 @@ registerRoute({
       },
     },
     {
-      key: "return",
-      name: "Open",
+      key: "t",
+      name: "Tasks",
       fn: (item) =>
         pushRoute({
-          id: "cluster_services",
+          id: "cluster_tasks",
           args: { clusterArn: item.clusterArn, clusterName: item.clusterName },
         }),
     },

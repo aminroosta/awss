@@ -7,7 +7,7 @@ registerRoute({
   alias: [],
   args: (args: { clusterArn: string; clusterName: string }) => args,
   aws: (args) => awsEcsListServices(args.clusterArn),
-  title: () => 'services',
+  title: () => "services",
   filter: (args) => args.clusterName,
   columns: [
     { title: "SERVICE", render: "serviceName" },
@@ -15,5 +15,19 @@ registerRoute({
     { title: "DESIRED", render: "desiredCount", justify: "center" },
     { title: "STATUS", render: "status" },
   ],
-  keymaps: [],
+  keymaps: [
+    {
+      key: "t",
+      name: "Tasks",
+      fn: (item, args) =>
+        pushRoute({
+          id: "cluster_tasks",
+          args: {
+            clusterArn: args.clusterArn,
+            clusterName: args.clusterName,
+            serviceName: item.serviceName,
+          },
+        }),
+    },
+  ],
 });
