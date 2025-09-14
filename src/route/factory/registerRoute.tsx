@@ -54,7 +54,11 @@ export const registerRoute = <R, A, T extends Record<string, string>>(r: {
   const handler =
     r.alias.length > 0
       ? async <R,>(cb: () => Promise<R>) => cb()
-      : async <R,>(cb: () => Promise<R>, fallback = [] as R) => {
+      : async <R,>(
+          cb: () => Promise<R>,
+          fallback = [] as R,
+          backtrack = false,
+        ) => {
           try {
             return await cb();
           } catch (e: any) {
@@ -68,9 +72,11 @@ export const registerRoute = <R, A, T extends Record<string, string>>(r: {
             setNotification({
               message: message,
               level: "error",
-              timeout: 6000,
+              timeout: 8000,
             });
-            popRoute();
+            if (backtrack) {
+              popRoute();
+            }
             return fallback;
           }
         };
@@ -86,7 +92,7 @@ export const registerRoute = <R, A, T extends Record<string, string>>(r: {
         revision: revision(),
         search: searchVisible() ? "" : searchText(),
       }),
-      async (a) => handler(() => r.aws(a)),
+      async (a) => handler(() => r.aws(a), [], true),
     );
 
     return (
