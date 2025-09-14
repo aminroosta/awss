@@ -49,6 +49,7 @@ export const registerRoute = <R, A, T extends Record<string, string>>(r: {
     render: keyof T;
     attrs?: (item: T) => number;
     syn?: (snippet: string) => Partial<{ fg: RGBA; bg: RGBA; attrs: number }>;
+    justify?: "center";
   }[];
 }) => {
   const handler =

@@ -16,6 +16,7 @@ import "./route/file";
 import "./route/images";
 import "./route/subnets.tsx";
 import "./route/subnet";
+import "./route/clusters";
 import { route } from "./store";
 import { RenderRoute, routes } from "./route/factory/registerRoute.tsx";
 

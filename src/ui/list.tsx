@@ -27,6 +27,7 @@ export const List = <T extends Record<string, string>>(p: {
     render: keyof T;
     attrs?: (item: T) => number;
     syn?: (snippet: string) => Partial<{ fg: RGBA; bg: RGBA; attrs: number }>;
+    justify?: "center";
   }[];
 }) => {
   const [idx, setIdx] = createSignal(
@@ -242,7 +243,7 @@ export const List = <T extends Record<string, string>>(p: {
                 <text fg={colors().fg}>{column().title}</text>
                 <Index each={visibleItems()}>
                   {(vitem) => (
-                    <box flexDirection="row" backgroundColor={vitem().props.bg}>
+                    <box flexDirection="row" justifyContent={column().justify} backgroundColor={vitem().props.bg}>
                       <Index each={vitem().values[colIndex]}>
                         {(v) => (
                           <text

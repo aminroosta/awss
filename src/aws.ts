@@ -42,6 +42,10 @@ export const awsUrls: Record<string, (id: string) => Promise<string>> = {
   },
   repositories: async (id) =>
     `https://console.aws.amazon.com/ecr/repositories/${id}`,
+  clusters: async (arn) => {
+    const region = await awsRegion();
+    return `https://console.aws.amazon.com/ecs/v2/clusters/${encodeURIComponent(arn.split("/").pop() || arn)}/services?region=${region}`;
+  },
 };
 
 export const awsRegion = memo(async () => {
@@ -759,3 +763,42 @@ export const awsCfDescribeStackEvents = memo(async (stackName: string) => {
     throw e;
   }
 }, 5_000);
+
+export const awsEcsDescribeClusters = memo(async () => {
+  try {
+    const list = (await $`aws ecs list-clusters --output json`.json()) as {
+      clusterArns: string[];
+    };
+    if (!list.clusterArns.length) return [] as any[];
+    let described =
+      (await $`aws ecs describe-clusters --clusters ${{ raw: list.clusterArns.join(" ") }} --include STATISTICS --include TAGS --output json`.json()) as {
+        clusters: {
+          clusterArn: string;
+          clusterName: string;
+          status: string;
+          registeredContainerInstancesCount: number;
+          runningTasksCount: number;
+          pendingTasksCount: number;
+          activeServicesCount: number;
+          statistics?: { name: string; value: string }[];
+          tags?: { key: string; value: string }[];
+          createdAt?: string;
+        }[];
+        failures?: any[];
+      };
+
+    return described.clusters.map((c) => ({
+      ...c,
+      registeredContainerInstancesCount: String(
+        c.registeredContainerInstancesCount,
+      ),
+      runningTasksCount: String(c.runningTasksCount),
+      pendingTasksCount: String(c.pendingTasksCount),
+      pendingRunning: `${c.pendingTasksCount}/${c.runningTasksCount}`,
+      activeServicesCount: String(c.activeServicesCount),
+    }));
+  } catch (e: any) {
+    e.command = "aws ecs describe-clusters";
+    throw e;
+  }
+}, 30_000);
