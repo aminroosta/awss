@@ -13,18 +13,38 @@ export async function openInVim(
   const tempFile = join(tempDir, basename(filename));
   writeFileSync(tempFile, content);
 
-  setVimVisible(true);
-  const vim = spawn("nvim", [tempFile], { stdio: "inherit" });
-  await new Promise<void>((resolve) => {
-    vim.on("exit", () => {
-      resolve();
+  const stdin: any = process.stdin;
+  const wasRaw = !!stdin.isRaw;
+  const wasPaused = stdin.isPaused();
+
+  try {
+    if (stdin.isTTY && typeof stdin.setRawMode === "function" && wasRaw) {
+      stdin.setRawMode(false);
+    }
+    if (!wasPaused) {
+      stdin.pause();
+    }
+
+    setVimVisible(true);
+    const vim = spawn("nvim", [tempFile], { stdio: "inherit" });
+    await new Promise<void>((resolve) => {
+      vim.once("exit", () => {
+        resolve();
+      });
+      vim.once("error", (err) => {
+        console.error("Failed to start vim:", err);
+        resolve();
+      });
     });
-    vim.on("error", (err) => {
-      console.error("Failed to start vim:", err);
-      resolve();
-    });
-  });
-  setVimVisible(false);
+  } finally {
+    if (!wasPaused) {
+      stdin.resume();
+    }
+    if (stdin.isTTY && typeof stdin.setRawMode === "function" && wasRaw) {
+      stdin.setRawMode(true);
+    }
+    setVimVisible(false);
+  }
 
   const updatedContent = readFileSync(tempFile, "utf-8");
   unlinkSync(tempFile);
