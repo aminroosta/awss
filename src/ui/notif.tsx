@@ -26,13 +26,11 @@ export const Notif = () => {
     }
   };
 
-  const maxWidth = () => Math.min(
-    Math.max(
-      (terminalDim().width * 0.6) | 0,
-      100
-    ),
-    terminalDim().width - 20
-  );
+  const maxWidth = () =>
+    Math.min(
+      Math.max((terminalDim().width * 0.6) | 0, 100),
+      terminalDim().width - 20,
+    );
 
   const lines = () => {
     const availableWidth = maxWidth() - 4;
@@ -48,7 +46,6 @@ export const Notif = () => {
     }
     return result;
   };
-
 
   return (
     <Show when={notification()}>

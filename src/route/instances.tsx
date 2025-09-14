@@ -19,26 +19,28 @@ registerRoute({
   args: () => ({}),
   aws: async () => {
     const data = await awsEc2DescribeInstances();
-    return data.map((i) => ({
-      Name: getTag(i, "Name") as string,
-      InstanceId: i.InstanceId,
-      State: i.State?.Name || "",
-      PublicIpAddress:
-        i.PublicIpAddress ||
-        i.NetworkInterfaces?.[0]?.Association?.PublicIp ||
-        "",
-      Age: (() => {
-        if (!i.LaunchTime) return "";
-        const diffMs = Date.now() - new Date(i.LaunchTime).getTime();
-        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-        const diffHours = Math.floor(
-          (diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-        );
-        return diffDays > 99 ? `${diffDays}d` : `${diffDays}d ${diffHours}h`;
-      })(),
-      InstanceType: i.InstanceType,
-      Zone: i.Placement?.AvailabilityZone || "",
-    })).sort((a, b) => a.State.localeCompare(b.State))
+    return data
+      .map((i) => ({
+        Name: getTag(i, "Name") as string,
+        InstanceId: i.InstanceId,
+        State: i.State?.Name || "",
+        PublicIpAddress:
+          i.PublicIpAddress ||
+          i.NetworkInterfaces?.[0]?.Association?.PublicIp ||
+          "",
+        Age: (() => {
+          if (!i.LaunchTime) return "";
+          const diffMs = Date.now() - new Date(i.LaunchTime).getTime();
+          const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+          const diffHours = Math.floor(
+            (diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+          );
+          return diffDays > 99 ? `${diffDays}d` : `${diffDays}d ${diffHours}h`;
+        })(),
+        InstanceType: i.InstanceType,
+        Zone: i.Placement?.AvailabilityZone || "",
+      }))
+      .sort((a, b) => a.State.localeCompare(b.State));
   },
   title: () => "instances",
   filter: () => "all",

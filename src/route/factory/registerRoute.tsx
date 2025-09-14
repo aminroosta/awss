@@ -1,6 +1,12 @@
 import type { ParsedKey, RGBA } from "@opentui/core";
 import { createResource, createSignal } from "solid-js";
-import { popRoute, revision, searchText, searchVisible, setNotification } from "../../store";
+import {
+  popRoute,
+  revision,
+  searchText,
+  searchVisible,
+  setNotification,
+} from "../../store";
 import { Title } from "../../ui/title";
 import { List } from "../../ui/list";
 import { log } from "../../util/log";
@@ -45,26 +51,29 @@ export const registerRoute = <R, A, T extends Record<string, string>>(r: {
     syn?: (snippet: string) => Partial<{ fg: RGBA; bg: RGBA; attrs: number }>;
   }[];
 }) => {
-  const handler = r.alias.length > 0 ?
-    (async <R,>(cb: () => Promise<R>) => cb()) :
-    (async <R,>(cb: () => Promise<R>, fallback = [] as R) => {
-      try {
-        return await cb();
-      } catch (e: any) {
-        const message = [
-          e.command ? "$ " + e.command : "",
-          e.stderr ? "> " + `${e.stderr}`.trim() : e.message,
-          // e.stack
-        ].filter(Boolean).join("\n");
-        setNotification({
-          message: message,
-          level: "error",
-          timeout: 6000,
-        });
-        popRoute();
-        return fallback;
-      }
-    });
+  const handler =
+    r.alias.length > 0
+      ? async <R,>(cb: () => Promise<R>) => cb()
+      : async <R,>(cb: () => Promise<R>, fallback = [] as R) => {
+          try {
+            return await cb();
+          } catch (e: any) {
+            const message = [
+              e.command ? "$ " + e.command : "",
+              e.stderr ? "> " + `${e.stderr}`.trim() : e.message,
+              // e.stack
+            ]
+              .filter(Boolean)
+              .join("\n");
+            setNotification({
+              message: message,
+              level: "error",
+              timeout: 6000,
+            });
+            popRoute();
+            return fallback;
+          }
+        };
   const Route = (p: { args: A }) => {
     const initialValue = [
       Object.fromEntries(
