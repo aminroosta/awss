@@ -2,33 +2,8 @@ import { $ } from "bun";
 import { log } from "./util/log";
 import { memo } from "./util/memo";
 // ------------
-export * from "./api";
-import { awsRegion } from "./api";
-
-export const awsListObjectsV2 = memo(
-  async (bucket: string, prefix: string, delimiter = "/") => {
-    try {
-      return (await $`aws s3api list-objects-v2 --bucket='${bucket}' --delimiter='${delimiter}' --prefix='${prefix}' --output=json`.json()) as {
-        Contents: {
-          Key: string;
-          LastModified: string;
-          Size: number;
-          StorageClass: string;
-          ETag: string;
-          ChecksumType: string;
-          ChecksumAlgorithm: string[];
-        }[];
-        CommonPrefixes?: { Prefix: string }[];
-        Prefix?: string;
-        // RequestCharged: string | null;
-      };
-    } catch (e: any) {
-      e.command = `aws s3api list-objects-v2 --bucket='${bucket}' --delimiter='${delimiter}' --prefix='${prefix}' --output=json`;
-      throw e;
-    }
-  },
-  30_000,
-);
+export * from "./api/api";
+import { awsRegion } from "./api/cli";
 
 export const awsListObjectsV2Search = memo(
   async (
