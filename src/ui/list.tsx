@@ -118,7 +118,7 @@ export const List = <T extends Record<string, string>>(p: {
       return {
         item,
         values: columns.map((c) => {
-          let remaining = item[c.render]! as string;
+          let remaining = item[c.render]! as string || ' ';
 
           const parts: {
             snippet: string;

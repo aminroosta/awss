@@ -38,7 +38,7 @@ registerRoute({
       })(),
       InstanceType: i.InstanceType,
       Zone: i.Placement?.AvailabilityZone || "",
-    }));
+    })).sort((a, b) => a.State.localeCompare(b.State))
   },
   title: () => "instances",
   filter: () => "all",
