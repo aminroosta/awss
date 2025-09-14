@@ -7,6 +7,7 @@ import {
 } from "../store";
 import { colors } from "../util/colors";
 import { log } from "../util/log";
+import { stripInvisible } from "../util/str";
 
 export const Search = () => {
   let ref: any;
@@ -30,8 +31,9 @@ export const Search = () => {
     };
     if (Object.entries(clipboard).every(([k, v]) => key[k] === v)) {
       if (key.sequence === key.raw) {
-        const stripped = key.raw.replace(/\x1b\[([0-?]*[ -/]*[@-~])/g, "");
+        const stripped = stripInvisible(key.raw);
         if (stripped) {
+          log({ stripped, len: stripped.length });
           const val = searchText() + stripped;
           onInput(val);
           try {
@@ -43,6 +45,7 @@ export const Search = () => {
     }
   };
   const onInput = (text: string) => {
+    log({ text });
     setSearchText(text);
   };
   const color = () => colors().accent.v700;

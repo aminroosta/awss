@@ -2,6 +2,7 @@ import { createSignal } from "solid-js";
 import { constants, pushRoute, routes, setCmdVisible } from "../store";
 import { colors } from "../util/colors";
 import { log } from "../util/log";
+import { stripInvisible } from "../util/str";
 
 export const CommandLine = () => {
   const [value, setValue] = createSignal("");
@@ -46,7 +47,7 @@ export const CommandLine = () => {
     };
     if (Object.entries(clipboard).every(([k, v]) => key[k] === v)) {
       if (key.sequence === key.raw) {
-        const stripped = key.raw.replace(/\x1b\[([0-?]*[ -/]*[@-~])/g, "");
+        const stripped = stripInvisible(key.raw);
         if (stripped) {
           const val = value() + stripped;
           onInput(val);

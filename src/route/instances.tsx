@@ -8,10 +8,12 @@ import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import { pushRoute } from "../store";
 import { registerYamlRoute } from "./yaml";
-import type { ParsedKey } from "@opentui/core";
+import { TextAttributes, type ParsedKey } from "@opentui/core";
 
 const getTag = (item: any, key: string) =>
   item?.Tags?.find((t: any) => t.Key === key)?.Value || "";
+const attrs = (i: any) =>
+  i.State === "stopped" ? TextAttributes.STRIKETHROUGH | TextAttributes.DIM : 0;
 
 registerRoute({
   id: "instances",
@@ -45,13 +47,13 @@ registerRoute({
   title: () => "instances",
   filter: () => "all",
   columns: [
-    { title: "NAME", render: "Name" },
-    { title: "INSTANCE ID", render: "InstanceId" },
-    { title: "STATE", render: "State" },
-    { title: "IPV4", render: "PublicIpAddress" },
-    { title: "AGE", render: "Age" },
-    { title: "TYPE", render: "InstanceType" },
-    { title: "A. ZONE", render: "Zone" },
+    { title: "NAME", render: "Name", attrs },
+    { title: "INSTANCE ID", render: "InstanceId", attrs },
+    { title: "STATE", render: "State", attrs },
+    { title: "IPV4", render: "PublicIpAddress", attrs },
+    { title: "AGE", render: "Age", attrs },
+    { title: "TYPE", render: "InstanceType", attrs },
+    { title: "A. ZONE", render: "Zone", attrs },
   ],
   keymaps: [
     {
