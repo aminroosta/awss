@@ -1,6 +1,9 @@
 import { $ } from "bun";
 import { log } from "./util/log";
 import { memo } from "./util/memo";
+// ------------
+export * from "./api";
+import { awsRegion } from "./api";
 
 export const awsUrls: Record<string, (id: string) => Promise<string>> = {
   vpc: async (id) => {
@@ -47,30 +50,6 @@ export const awsUrls: Record<string, (id: string) => Promise<string>> = {
     return `https://console.aws.amazon.com/ecs/v2/clusters/${encodeURIComponent(arn.split("/").pop() || arn)}/services?region=${region}`;
   },
 };
-
-export const awsRegion = memo(async () => {
-  let region = "";
-  try {
-    region = await $`aws configure get region`.text();
-  } catch (e: any) {
-    e.command = "aws configure get region";
-    throw e;
-  }
-  return region.trim();
-});
-
-export const awsCallerIdentity = memo(async () => {
-  try {
-    return (await $`aws sts get-caller-identity --output json`.json()) as {
-      UserId: string;
-      Account: string;
-      Arn: string;
-    };
-  } catch (e: any) {
-    e.command = "aws sts get-caller-identity";
-    throw e;
-  }
-});
 
 export const awsCliVersion = memo(async () => {
   let version = "";
