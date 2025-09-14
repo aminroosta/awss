@@ -26,7 +26,7 @@ export const awsCfListStackResources = (stackName: string) => {
     }[];
   };
   return aws<ListStackResources>(
-    `aws cloudformation list-stack-resources --stack-name='${stackName}'`
+    `aws cloudformation list-stack-resources --stack-name='${stackName}'`,
   );
 };
 
@@ -49,7 +49,7 @@ export const awsCfDescribeStack = async (stackName: string) => {
     }[];
   };
   const result = await aws<DescribeStack>(
-    `aws cloudformation describe-stacks --stack-name='${stackName}'`
+    `aws cloudformation describe-stacks --stack-name='${stackName}'`,
   );
   return result.Stacks[0]!;
 };

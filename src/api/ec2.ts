@@ -18,9 +18,7 @@ export const awsEc2DescribeVpcs = async () => {
       Tags?: { Key: string; Value: string }[];
     }[];
   };
-  let result = await aws<DescribeVpcs>(
-    `aws ec2 describe-vpcs`
-  );
+  let result = await aws<DescribeVpcs>(`aws ec2 describe-vpcs`);
   return result.Vpcs;
 };
 
@@ -46,20 +44,11 @@ export const awsEc2DescribeSubnets = async () => {
       Tags?: { Key: string; Value: string }[];
     }[];
   };
-  const result = await aws<DescribeSubnets>(
-    `aws ec2 describe-subnets`
-  );
+  const result = await aws<DescribeSubnets>(`aws ec2 describe-subnets`);
   return result.Subnets;
 };
 
-
-export const awsEc2DescribeSubnet = async (
-  subnetId: string,
-  format: "json" | "yaml" = "json"
-) => {
-  if (format === "yaml") {
-    return await aws(`aws ec2 describe-subnets --subnet-ids='${subnetId}'`, "yaml");
-  }
+export async function awsEc2DescribeSubnet(subnetId: string) {
   type DescribeSubnets = {
     Subnets: {
       SubnetId: string;
@@ -82,7 +71,11 @@ export const awsEc2DescribeSubnet = async (
     }[];
   };
   const result = await aws<DescribeSubnets>(
-    `aws ec2 describe-subnets --subnet-ids='${subnetId}'`
+    `aws ec2 describe-subnets --subnet-ids='${subnetId}'`,
   );
   return result.Subnets[0]!;
-};
+}
+
+export function awsEc2DescribeSubnetYaml(subnetId: string) {
+  return aws(`aws ec2 describe-subnets --subnet-ids='${subnetId}'`, "yaml");
+}

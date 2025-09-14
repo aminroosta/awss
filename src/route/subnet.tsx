@@ -1,4 +1,8 @@
-import { awsEc2DescribeSubnet, awsUrls } from "../aws";
+import {
+  awsEc2DescribeSubnet,
+  awsEc2DescribeSubnetYaml,
+  awsUrls,
+} from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import { pushRoute } from "../store";
@@ -48,7 +52,7 @@ registerRoute({
       name: "AWS Website",
       when: () => true,
       fn: async (_, args) => {
-        const url = await awsUrls.subnets(args.SubnetId);
+        const url = await awsUrls.subnets!(args.SubnetId);
         openInBrowser(url);
       },
     },
@@ -58,7 +62,7 @@ registerRoute({
 registerYamlRoute({
   id: "subnet_yaml",
   args: (a: { SubnetId: string }) => a,
-  aws: (args) => awsEc2DescribeSubnet(args.SubnetId, "yaml") as Promise<string>,
+  aws: (args) => awsEc2DescribeSubnetYaml(args.SubnetId),
   title: (args) => `Subnet: ${args.SubnetId}`,
-  url: (args) => awsUrls.subnets(args.SubnetId),
+  url: (args) => awsUrls.subnets!(args.SubnetId),
 });
