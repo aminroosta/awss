@@ -71,3 +71,7 @@ export const awsListObjectsV2Search = async (
     throw e;
   }
 };
+
+export const awsS3GetObject = (bucket: string, key: string) => (
+  aws(`aws s3 cp 's3://${bucket}/${key}' -`, "text")
+);
