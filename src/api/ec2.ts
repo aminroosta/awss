@@ -48,7 +48,7 @@ export const awsEc2DescribeSubnets = async () => {
   return result.Subnets;
 };
 
-export async function awsEc2DescribeSubnet(subnetId: string) {
+export const awsEc2DescribeSubnet = async (subnetId: string) => {
   type DescribeSubnets = {
     Subnets: {
       SubnetId: string;
@@ -74,8 +74,7 @@ export async function awsEc2DescribeSubnet(subnetId: string) {
     `aws ec2 describe-subnets --subnet-ids='${subnetId}'`,
   );
   return result.Subnets[0]!;
-}
+};
 
-export function awsEc2DescribeSubnetYaml(subnetId: string) {
-  return aws(`aws ec2 describe-subnets --subnet-ids='${subnetId}'`, "yaml");
-}
+export const awsEc2DescribeSubnetYaml = (subnetId: string) =>
+  aws(`aws ec2 describe-subnets --subnet-ids='${subnetId}'`, "yaml");
