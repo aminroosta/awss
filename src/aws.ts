@@ -769,7 +769,6 @@ export const awsEcsDescribeClusters = memo(async () => {
     const list = (await $`aws ecs list-clusters --output json`.json()) as {
       clusterArns: string[];
     };
-    if (!list.clusterArns.length) return [] as any[];
     let described =
       (await $`aws ecs describe-clusters --clusters ${{ raw: list.clusterArns.join(" ") }} --include STATISTICS --include TAGS --output json`.json()) as {
         clusters: {
@@ -799,6 +798,40 @@ export const awsEcsDescribeClusters = memo(async () => {
     }));
   } catch (e: any) {
     e.command = "aws ecs describe-clusters";
+    throw e;
+  }
+}, 30_000);
+
+export const awsEcsListServices = memo(async (clusterArn: string) => {
+  try {
+    const list = await $`aws ecs list-services --cluster '${clusterArn}' --output json`.json() as {
+        serviceArns: string[];
+      };
+    const described =
+      (await $`aws ecs describe-services --cluster '${clusterArn}' --services ${{ raw: list.serviceArns.join(" ") }} --output json`.json()) as {
+        services: {
+          serviceArn: string;
+          serviceName: string;
+          status: string;
+          desiredCount: number;
+          runningCount: number;
+          pendingCount: number;
+          launchType?: string;
+          platformVersion?: string;
+          tags?: { key: string; value: string }[];
+          createdAt?: string;
+          roleArn?: string;
+        }[];
+        failures?: any[];
+      };
+    return described.services.map((s) => ({
+      ...s,
+      desiredCount: String(s.desiredCount),
+      runningCount: String(s.runningCount),
+      pendingRunning: `${s.pendingCount}/${s.runningCount}`,
+    }));
+  } catch (e: any) {
+    e.command = `aws ecs list-services --cluster '${clusterArn}' --output json`;
     throw e;
   }
 }, 30_000);

@@ -30,7 +30,7 @@ export const routes = {} as Record<
   }
 >;
 
-export const registerRoute = <R, A, T extends Record<string, string>>(r: {
+export const registerRoute = <R, A, T extends Record<string, any>>(r: {
   id: string;
   alias: string[];
   keymaps: {

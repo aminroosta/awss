@@ -1,20 +1,25 @@
 import { awsEcsDescribeClusters, awsUrls } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
+import { pushRoute } from "../store";
 
 registerRoute({
   id: "clusters",
   alias: ["clusters"],
   args: () => ({}),
-  aws: async () => await awsEcsDescribeClusters(),
+  aws: () => awsEcsDescribeClusters(),
   title: () => "clusters",
   filter: () => "all",
   columns: [
     { title: "CLUSTER", render: "clusterName" },
     { title: "PENDING/RUNNING", render: "pendingRunning", justify: "center" },
     { title: "STATUS", render: "status" },
-    { title: "SERVICES", render: "activeServicesCount", justify: "center"  },
-    { title: "INSTANCES", render: "registeredContainerInstancesCount", justify: "center"  },
+    { title: "SERVICES", render: "activeServicesCount", justify: "center" },
+    {
+      title: "INSTANCES",
+      render: "registeredContainerInstancesCount",
+      justify: "center",
+    },
   ],
   keymaps: [
     {
@@ -25,6 +30,15 @@ registerRoute({
         const url = await awsUrls.clusters!(item.clusterArn);
         openInBrowser(url);
       },
+    },
+    {
+      key: "return",
+      name: "Open",
+      fn: (item) =>
+        pushRoute({
+          id: "cluster_services",
+          args: { clusterArn: item.clusterArn, clusterName: item.clusterName },
+        }),
     },
   ],
 });
