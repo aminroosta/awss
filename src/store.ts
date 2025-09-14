@@ -17,20 +17,23 @@ export const constants = {
 };
 
 /******** route management ********/
-const initialRoute = routes[loadSession().lastRouteId || "buckets"];
+const initialRoute = routes[loadSession().lastRouteId || "buckets"]!;
 let routeStack = [initialRoute];
 let [routeStackLen, setRouteStackLen] = createSignal(1);
 export const [route, setRoute] = createSignal(initialRoute);
 
 export function pushRoute(r: { id: string; args: { [key: string]: any } }) {
+  let currentRoute = route();
   const newRoute = {
     ...routes[r.id],
     args: r.args,
   };
 
-  if (JSON.stringify(route()) === JSON.stringify(newRoute)) {
+  if (JSON.stringify(currentRoute) === JSON.stringify(newRoute)) {
     return;
   }
+  currentRoute!.lastSearch = searchText();
+
   routeStack = [...routeStack.slice(0, routeStackLen()), newRoute];
   setRouteStackLen(routeStack.length);
   setRoute(newRoute);
@@ -64,8 +67,8 @@ export const [notification, setNotification] = createSignal<Notification>(null);
 export const [searchText, setSearchText] = createSignal("");
 export const [searchVisible, setSearchVisible] = createSignal(false);
 createEffect(() => {
-  const _ = route();
-  setSearchText("");
+  const r = route();
+  setSearchText(r.lastSearch || "");
 });
 
 /********* actions ********/

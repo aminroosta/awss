@@ -14,6 +14,7 @@ import {
   searchText,
   searchVisible,
   vimVisible,
+  route,
 } from "../store";
 import { useKeyHandler, useTerminalDimensions } from "@opentui/solid";
 import { log } from "../util/log";
@@ -28,8 +29,12 @@ export const List = <T extends Record<string, string>>(p: {
     syn?: (snippet: string) => Partial<{ fg: RGBA; bg: RGBA; attrs: number }>;
   }[];
 }) => {
-  const [idx, setIdx] = createSignal(-1);
-  const [visIdx, setVisIdx] = createSignal(0);
+  const [idx, setIdx] = createSignal(
+    typeof route().lastListIdx === "number" ? route().lastListIdx! : -1,
+  );
+  const [visIdx, setVisIdx] = createSignal(
+    typeof route().lastListVisIdx === "number" ? route().lastListVisIdx! : 0,
+  );
 
   const terminalDim = useTerminalDimensions();
   const top = () => {
@@ -78,6 +83,8 @@ export const List = <T extends Record<string, string>>(p: {
     } else if (i >= visIdx() + height()) {
       setVisIdx(i - height() + 1);
     }
+    route().lastListIdx = i;
+    route().lastListVisIdx = visIdx();
   };
 
   const [last_g, setLast_g] = createSignal(0);
@@ -118,7 +125,7 @@ export const List = <T extends Record<string, string>>(p: {
       return {
         item,
         values: columns.map((c) => {
-          let remaining = item[c.render]! as string || ' ';
+          let remaining = (item[c.render]! as string) || " ";
 
           const parts: {
             snippet: string;

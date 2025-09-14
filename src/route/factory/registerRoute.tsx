@@ -18,6 +18,9 @@ export const routes = {} as Record<
       fn: (item: any, args: any) => any;
     }[];
     searchPlaceholder?: string;
+    lastSearch?: string;
+    lastListIdx?: number;
+    lastListVisIdx?: number;
   }
 >;
 
