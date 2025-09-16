@@ -1,6 +1,7 @@
 import {
   awsEc2DescribeInstances,
   awsEc2DescribeInstance,
+  awsEc2DescribeInstanceYaml,
   awsRegion,
   awsUrls,
 } from "../aws";
@@ -90,8 +91,7 @@ registerRoute({
 registerYamlRoute({
   id: "instance_yaml",
   args: (a: { InstanceId: string }) => a,
-  aws: (args) =>
-    awsEc2DescribeInstance(args.InstanceId, "yaml") as Promise<string>,
+  aws: (args) => awsEc2DescribeInstanceYaml(args.InstanceId),
   title: (args) => `Instance: ${args.InstanceId}`,
   url: (args) => awsUrls.instances!(args.InstanceId),
 });
