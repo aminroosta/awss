@@ -5,47 +5,9 @@ import { memo } from "./util/memo";
 export * from "./api/api";
 import { awsRegion } from "./api/cli";
 
-export const awsEcrDescribeRepositories = memo(async () => {
-  try {
-    const result =
-      (await $`aws ecr describe-repositories --output json`.json()) as {
-        repositories: {
-          repositoryArn: string;
-          registryId: string;
-          repositoryName: string;
-          repositoryUri: string;
-          createdAt: string;
-          imageTagMutability: string;
-          imageScanningConfiguration?: {
-            scanOnPush: boolean;
-          };
-          encryptionConfiguration?: {
-            encryptionType: string;
-          };
-        }[];
-      };
-    return result.repositories;
-  } catch (e: any) {
-    e.command = "aws ecr describe-repositories --output json";
-    throw e;
-  }
-}, 30_000);
+// moved to src/api/ecr.ts: awsEcrDescribeRepositories
 
-export const awsEcrListImages = memo(async (repositoryName: string) => {
-  try {
-    const result =
-      (await $`aws ecr list-images --repository-name='${repositoryName}' --output json`.json()) as {
-        imageIds: {
-          imageDigest?: string;
-          imageTag?: string;
-        }[];
-      };
-    return result.imageIds;
-  } catch (e: any) {
-    e.command = `aws ecr list-images --repository-name='${repositoryName}' --output json`;
-    throw e;
-  }
-}, 30_000);
+// moved to src/api/ecr.ts: awsEcrListImages
 
 // moved to src/api/ec2.ts: awsEc2GetConsoleOutput
 
@@ -55,185 +17,17 @@ export const awsEcrListImages = memo(async (repositoryName: string) => {
 
 // moved to src/api/ec2.ts: awsEc2DescribeVpc
 
-export const awsIamListUsers = memo(async () => {
-  try {
-    const result = (await $`aws iam list-users --output json`.json()) as {
-      Users: {
-        Path: string;
-        UserName: string;
-        UserId: string;
-        Arn: string;
-        CreateDate: string;
-        Tags?: { Key: string; Value: string }[];
-      }[];
-    };
-    return result.Users;
-  } catch (e: any) {
-    e.command = "aws iam list-users --output json";
-    throw e;
-  }
-}, 30_000);
+// moved to src/api/iam.ts: awsIamListUsers
 
-export const awsCfGetTemplate = memo(async (stackName: string) => {
-  try {
-    const result =
-      await $`aws cloudformation get-template --stack-name='${stackName}' --output json`.json();
-    return result.TemplateBody! as string;
-  } catch (e: any) {
-    e.command = `aws cloudformation get-template --stack-name='${stackName}' --output json`;
-    throw e;
-  }
-}, 30_000);
+// moved to src/api/cf.ts: awsCfGetTemplate
 
-export const awsCfDescribeStackEvents = memo(async (stackName: string) => {
-  try {
-    const result =
-      (await $`aws cloudformation describe-stack-events --stack-name='${stackName}' --output json`.json()) as {
-        StackEvents: {
-          StackId: string;
-          EventId: string;
-          StackName: string;
-          LogicalResourceId: string;
-          PhysicalResourceId?: string;
-          ResourceType: string;
-          Timestamp: string;
-          ResourceStatus: string;
-          ResourceStatusReason?: string;
-          ResourceProperties?: string;
-          ClientRequestToken?: string;
-        }[];
-      };
-    return result.StackEvents || [];
-  } catch (e: any) {
-    e.command = `aws cloudformation describe-stack-events --stack-name='${stackName}' --output json`;
-    throw e;
-  }
-}, 5_000);
+// moved to src/api/cf.ts: awsCfDescribeStackEvents
 
-export const awsEcsDescribeClusters = memo(async () => {
-  try {
-    const list = (await $`aws ecs list-clusters --output json`.json()) as {
-      clusterArns: string[];
-    };
-    let described =
-      (await $`aws ecs describe-clusters --clusters ${{ raw: list.clusterArns.join(" ") }} --include STATISTICS --include TAGS --output json`.json()) as {
-        clusters: {
-          clusterArn: string;
-          clusterName: string;
-          status: string;
-          registeredContainerInstancesCount: number;
-          runningTasksCount: number;
-          pendingTasksCount: number;
-          activeServicesCount: number;
-          statistics?: { name: string; value: string }[];
-          tags?: { key: string; value: string }[];
-          createdAt?: string;
-        }[];
-        failures?: any[];
-      };
+// moved to src/api/ecs.ts: awsEcsDescribeClusters
 
-    return described.clusters.map((c) => ({
-      ...c,
-      registeredContainerInstancesCount: String(
-        c.registeredContainerInstancesCount,
-      ),
-      runningTasksCount: String(c.runningTasksCount),
-      pendingTasksCount: String(c.pendingTasksCount),
-      pendingRunning: `${c.pendingTasksCount}/${c.runningTasksCount}`,
-      activeServicesCount: String(c.activeServicesCount),
-    }));
-  } catch (e: any) {
-    e.command = "aws ecs describe-clusters";
-    throw e;
-  }
-}, 30_000);
+// moved to src/api/ecs.ts: awsEcsListServices
 
-export const awsEcsListServices = memo(async (clusterArn: string) => {
-  try {
-    const list =
-      (await $`aws ecs list-services --cluster '${clusterArn}' --output json`.json()) as {
-        serviceArns: string[];
-      };
-    const described =
-      (await $`aws ecs describe-services --cluster '${clusterArn}' --services ${{ raw: list.serviceArns.join(" ") }} --output json`.json()) as {
-        services: {
-          serviceArn: string;
-          serviceName: string;
-          status: string;
-          desiredCount: number;
-          runningCount: number;
-          pendingCount: number;
-          launchType?: string;
-          platformVersion?: string;
-          tags?: { key: string; value: string }[];
-          createdAt?: string;
-          roleArn?: string;
-        }[];
-        failures?: any[];
-      };
-    return described.services.map((s) => ({
-      ...s,
-      desiredCount: String(s.desiredCount),
-      runningCount: String(s.runningCount),
-      pendingRunning: `${s.pendingCount}/${s.runningCount}`,
-    }));
-  } catch (e: any) {
-    e.command = `aws ecs list-services --cluster '${clusterArn}' --output json`;
-    throw e;
-  }
-}, 30_000);
-
-export const awsEcsListTasks = memo(
-  async (clusterArn: string, serviceName?: string) => {
-    try {
-      let list: { taskArns: string[] };
-      if (serviceName) {
-        list =
-          await $`aws ecs list-tasks --cluster '${clusterArn}' --service-name '${serviceName}' --output json`.json();
-      } else {
-        list =
-          await $`aws ecs list-tasks --cluster '${clusterArn}' --output json`.json();
-      }
-
-      const described =
-        (await $`aws ecs describe-tasks --cluster '${clusterArn}' --tasks ${{ raw: list.taskArns.join(" ") }} --output json`.json()) as {
-          tasks: {
-            taskArn: string;
-            lastStatus: string;
-            desiredStatus: string;
-            group: string;
-            containers: {
-              containerArn: string;
-              lastStatus: string;
-              name: string;
-              exitCode?: number;
-              reason?: string;
-            }[];
-            startedAt?: string;
-            stoppedAt?: string;
-            stoppedReason?: string;
-            pullStartedAt?: string;
-            pullStoppedAt?: string;
-            connectivity?: string;
-            connectivityAt?: string;
-            tags?: { key: string; value: string }[];
-          }[];
-        };
-      return described.tasks.map((t) => ({
-        ...t,
-        id: t.taskArn.split("/").pop()!,
-        lastStatus: t.lastStatus,
-        desiredStatus: t.desiredStatus,
-      }));
-    } catch (e: any) {
-      e.command = serviceName
-        ? `aws ecs list-tasks --cluster '${clusterArn}' --service-name '${serviceName}' --output json`
-        : `aws ecs list-tasks --cluster '${clusterArn}' --output json`;
-      throw e;
-    }
-  },
-  30_000,
-);
+// moved to src/api/ecs.ts: awsEcsListTasks
 
 export const awsUrls: Record<string, (id: string) => Promise<string>> = {
   vpc: async (id) => {

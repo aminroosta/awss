@@ -53,3 +53,32 @@ export const awsCfDescribeStack = async (stackName: string) => {
   );
   return result.Stacks[0]!;
 };
+
+export const awsCfGetTemplate = async (stackName: string) => {
+  const result = await aws<{ TemplateBody?: string }>(
+    `aws cloudformation get-template --stack-name='${stackName}'`,
+  );
+  return result.TemplateBody || "";
+};
+
+export const awsCfDescribeStackEvents = async (stackName: string) => {
+  type DescribeStackEvents = {
+    StackEvents: {
+      StackId: string;
+      EventId: string;
+      StackName: string;
+      LogicalResourceId: string;
+      PhysicalResourceId?: string;
+      ResourceType: string;
+      Timestamp: string;
+      ResourceStatus: string;
+      ResourceStatusReason?: string;
+      ResourceProperties?: string;
+      ClientRequestToken?: string;
+    }[];
+  };
+  const result = await aws<DescribeStackEvents>(
+    `aws cloudformation describe-stack-events --stack-name='${stackName}'`,
+  );
+  return result.StackEvents || [];
+};
