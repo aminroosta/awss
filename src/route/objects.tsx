@@ -40,7 +40,7 @@ registerRoute({
                 : (c.Size / (1024 * 1024 * 1024)).toFixed(1) + " GB",
       }),
     );
-    const prefixes = (data.CommonPrefixes || []).map((cp) => ({
+    const prefixes = ((data as any).CommonPrefixes || []).map((cp: { Prefix: string }) => ({
       Key: cp.Prefix.replace(prefix, ""),
       LastModified: "",
       Size: "<DIR>",

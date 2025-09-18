@@ -22,7 +22,7 @@ registerRoute({
       key: { name: "a", ctrl: false },
       name: "AWS Website",
       fn: async (item, args) => {
-        const url = await awsUrls.stackparameters(args.StackId);
+        const url = await awsUrls.stackparameters!(args.StackId);
         openInBrowser(url);
       },
     },

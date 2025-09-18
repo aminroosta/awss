@@ -23,6 +23,7 @@ export const routes = {} as Record<
       when?: (item: any, props: any) => boolean;
       fn: (item: any, args: any) => any;
     }[];
+    args: Record<string, any>;
     searchPlaceholder?: string;
     lastSearch?: string;
     lastListIdx?: number;

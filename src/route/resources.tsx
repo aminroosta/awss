@@ -82,22 +82,22 @@ registerRoute({
 
         switch (item.ResourceType) {
           case "AWS::S3::Bucket":
-            url = await awsUrls.buckets(item.PhysicalResourceId);
+            url = await awsUrls.buckets!(item.PhysicalResourceId);
             break;
           case "AWS::EC2::Instance":
-            url = await awsUrls.instances(item.PhysicalResourceId);
+            url = await awsUrls.instances!(item.PhysicalResourceId);
             break;
           case "AWS::EC2::SecurityGroup":
             const group = await awsEc2DescribeSecurityGroup(
               item.PhysicalResourceId,
             );
-            url = await awsUrls.securitygroup(group.GroupId);
+            url = await awsUrls.securitygroup!(group.GroupId);
             break;
           case "AWS::EC2::Subnet":
-            url = await awsUrls.subnets(item.PhysicalResourceId);
+            url = await awsUrls.subnets!(item.PhysicalResourceId);
             break;
           case "AWS::EC2::VPC":
-            url = await awsUrls.vpc(item.PhysicalResourceId);
+            url = await awsUrls.vpc!(item.PhysicalResourceId);
             break;
           case "AWS::AutoScaling::AutoScalingGroup":
             // Note: AutoScalingGroup URL not in awsUrls, keeping original
@@ -111,7 +111,7 @@ registerRoute({
             break;
           default:
             // Fallback to CloudFormation resources tab
-            url = await awsUrls.resources(args.StackId);
+            url = await awsUrls.resources!(args.StackId);
             break;
         }
 

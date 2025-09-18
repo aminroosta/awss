@@ -7,7 +7,7 @@ import { stripInvisible } from "../util/str";
 export const CommandLine = () => {
   const [value, setValue] = createSignal("");
   const [rest, setRest] = createSignal("");
-  let ref;
+  let ref: any;
 
   const aliases = Object.values(routes)
     .map((s) => s.alias)

@@ -8,6 +8,7 @@
     "format": "bun run prettier --write src/"
   },
   "devDependencies": {
+    "@types/babel__core": "^7.20.5",
     "@types/bun": "latest"
   },
   "peerDependencies": {

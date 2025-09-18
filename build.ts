@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import solidPlugin from "./node_modules/@opentui/solid/scripts/solid-plugin";
 
 const args = new Map(

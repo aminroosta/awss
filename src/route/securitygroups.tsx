@@ -26,12 +26,6 @@ registerRoute({
     { title: "DESCRIPTION", render: "Description" },
     { title: "VPC ID", render: "VpcId" },
   ],
-  onEnter: (item) => {
-    pushRoute({
-      id: "securitygroup",
-      args: { GroupId: item.GroupId },
-    });
-  },
   keymaps: [
     {
       key: "return",
@@ -57,7 +51,7 @@ registerRoute({
       key: "a",
       name: "AWS Website",
       fn: async (item) => {
-        const url = await awsUrls.securitygroup(item.GroupId);
+        const url = await awsUrls.securitygroup!(item.GroupId);
         openInBrowser(url);
       },
     },

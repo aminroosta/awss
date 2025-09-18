@@ -27,7 +27,7 @@ registerRoute({
       key: "a",
       name: "AWS Website",
       fn: async (item, _args) => {
-        const url = await awsUrls.users(item.UserName);
+        const url = await awsUrls.users!(item.UserName);
         openInBrowser(url);
       },
     },

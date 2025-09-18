@@ -35,7 +35,7 @@ function App() {
       renderer.pause();
     } else {
       renderer.start();
-      renderer.lib.render(renderer.rendererPtr, true);
+      (renderer as any).lib.render(renderer.rendererPtr, true);
     }
   });
 

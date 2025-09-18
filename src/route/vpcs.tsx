@@ -55,7 +55,7 @@ registerRoute({
       key: "a",
       name: "AWS Website",
       fn: async (item, _args) => {
-        const url = await awsUrls.vpc(item.VpcId);
+        const url = await awsUrls.vpc!(item.VpcId);
         openInBrowser(url);
       },
     },

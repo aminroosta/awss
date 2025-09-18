@@ -38,7 +38,7 @@ registerRoute({
       key: { name: "a", ctrl: false },
       name: "AWS Website",
       fn: async (item, args) => {
-        const url = await awsUrls.stackevents(args.StackId);
+        const url = await awsUrls.stackevents!(args.StackId);
         openInBrowser(url);
       },
     },

@@ -185,7 +185,7 @@ export const awsEc2DescribeSecurityGroup = async (
   const result = await aws<DescribeSecurityGroup>(
     `aws ec2 describe-security-groups ${flag}='${groupIdOrGroupName}'`,
   );
-  return result.SecurityGroups[0];
+  return result.SecurityGroups[0]!;
 };
 
 export const awsEc2DescribeVpcYaml = async (vpcId: string) =>
@@ -389,5 +389,5 @@ export const awsEc2DescribeInstance = async (instanceId: string) => {
   const result = await aws<DescribeInstance>(
     `aws ec2 describe-instances --instance-ids='${instanceId}'`,
   );
-  return result.Reservations[0].Instances[0];
+  return result.Reservations[0]!.Instances[0];
 };

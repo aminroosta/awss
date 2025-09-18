@@ -24,10 +24,7 @@ export const [route, setRoute] = createSignal(initialRoute);
 
 export function pushRoute(r: { id: string; args: { [key: string]: any } }) {
   let currentRoute = route();
-  const newRoute = {
-    ...routes[r.id],
-    args: r.args,
-  };
+  const newRoute = Object.assign({}, routes[r.id], { args: r.args });
 
   if (JSON.stringify(currentRoute) === JSON.stringify(newRoute)) {
     return;
