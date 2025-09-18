@@ -5,3 +5,4 @@ export * from "./ec2";
 export * from "./ecr";
 export * from "./ecs";
 export * from "./iam";
+export * from "./urls";

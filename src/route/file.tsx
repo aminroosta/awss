@@ -1,4 +1,4 @@
-import { awsS3GetObject } from "../aws";
+import { awsS3GetObject } from "../api";
 import { registerRoute } from "./factory/registerRoute";
 
 registerRoute({

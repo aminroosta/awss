@@ -2,7 +2,7 @@ import { $ } from "bun";
 import os from "os";
 import process from "process";
 import { createResource } from "solid-js";
-import { awsRegion, awsUrls } from "../aws";
+import { awsRegion, awsUrls } from "../api";
 import { setNotification, vimVisible } from "../store";
 
 export async function getSystemUsage() {

@@ -1,33 +1,4 @@
-import { $ } from "bun";
-import { log } from "./util/log";
-import { memo } from "./util/memo";
-// ------------
-export * from "./api/api";
-import { awsRegion } from "./api/cli";
-
-// moved to src/api/ecr.ts: awsEcrDescribeRepositories
-
-// moved to src/api/ecr.ts: awsEcrListImages
-
-// moved to src/api/ec2.ts: awsEc2GetConsoleOutput
-
-// moved to src/api/ec2.ts: awsEc2DescribeSecurityGroups
-
-// moved to src/api/ec2.ts: awsEc2DescribeSecurityGroup
-
-// moved to src/api/ec2.ts: awsEc2DescribeVpc
-
-// moved to src/api/iam.ts: awsIamListUsers
-
-// moved to src/api/cf.ts: awsCfGetTemplate
-
-// moved to src/api/cf.ts: awsCfDescribeStackEvents
-
-// moved to src/api/ecs.ts: awsEcsDescribeClusters
-
-// moved to src/api/ecs.ts: awsEcsListServices
-
-// moved to src/api/ecs.ts: awsEcsListTasks
+import { awsRegion } from "./cli";
 
 export const awsUrls: Record<string, (id: string) => Promise<string>> = {
   vpc: async (id) => {
@@ -71,6 +42,9 @@ export const awsUrls: Record<string, (id: string) => Promise<string>> = {
     `https://console.aws.amazon.com/ecr/repositories/${id}`,
   clusters: async (arn) => {
     const region = await awsRegion();
-    return `https://console.aws.amazon.com/ecs/v2/clusters/${encodeURIComponent(arn.split("/").pop() || arn)}/services?region=${region}`;
+    return `https://console.aws.amazon.com/ecs/v2/clusters/${encodeURIComponent(
+      arn.split("/").pop() || arn,
+    )}/services?region=${region}`;
   },
 };
+

@@ -3,7 +3,7 @@ import {
   awsEc2DescribeSecurityGroup,
   awsRegion,
   awsUrls,
-} from "../aws";
+} from "../api";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import type { ParsedKey } from "@opentui/core";

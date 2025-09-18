@@ -1,4 +1,4 @@
-import { awsEcrDescribeRepositories } from "../aws";
+import { awsEcrDescribeRepositories } from "../api";
 import { pushRoute } from "../store";
 import { log } from "../util/log";
 import { registerRoute } from "./factory/registerRoute";

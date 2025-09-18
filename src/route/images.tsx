@@ -1,4 +1,4 @@
-import { awsEcrListImages } from "../aws";
+import { awsEcrListImages } from "../api";
 import { registerRoute } from "./factory/registerRoute";
 
 registerRoute({

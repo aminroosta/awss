@@ -3,7 +3,7 @@ import {
   awsListObjectsV2Search,
   awsRegion,
   awsS3GetObject,
-} from "../aws";
+} from "../api";
 import { registerRoute } from "./factory/registerRoute";
 import {
   popRoute,

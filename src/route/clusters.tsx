@@ -1,4 +1,4 @@
-import { awsEcsDescribeClusters, awsUrls } from "../aws";
+import { awsEcsDescribeClusters, awsUrls } from "../api";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import { pushRoute } from "../store";

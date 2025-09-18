@@ -2,7 +2,7 @@ import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser, copyToClipboard } from "../util/system";
 import { colors } from "../util/colors";
 import { TextAttributes } from "@opentui/core";
-import { awsRegion } from "../aws";
+import { awsRegion } from "../api";
 import { setNotification } from "../store";
 import { openInVim } from "../util/vim";
 

@@ -3,7 +3,7 @@ import {
   awsCfDescribeStack,
   awsRegion,
   awsUrls,
-} from "../aws";
+} from "../api";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 

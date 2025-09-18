@@ -1,4 +1,4 @@
-import { awsEcsListServices } from "../aws";
+import { awsEcsListServices } from "../api";
 import { registerRoute } from "./factory/registerRoute";
 import { pushRoute } from "../store";
 

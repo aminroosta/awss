@@ -1,4 +1,4 @@
-import { awsIamListUsers, awsRegion, awsUrls } from "../aws";
+import { awsIamListUsers, awsRegion, awsUrls } from "../api";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import type { ParsedKey } from "@opentui/core";

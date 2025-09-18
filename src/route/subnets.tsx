@@ -1,4 +1,4 @@
-import { awsEc2DescribeSubnets, awsRegion, awsUrls } from "../aws";
+import { awsEc2DescribeSubnets, awsRegion, awsUrls } from "../api";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import { pushRoute } from "../store";

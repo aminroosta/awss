@@ -2,7 +2,7 @@ import {
   awsEc2DescribeSubnet,
   awsEc2DescribeSubnetYaml,
   awsUrls,
-} from "../aws";
+} from "../api";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import { pushRoute } from "../store";

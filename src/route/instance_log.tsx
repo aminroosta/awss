@@ -1,4 +1,4 @@
-import { awsEc2GetConsoleOutput, awsUrls } from "../aws";
+import { awsEc2GetConsoleOutput, awsUrls } from "../api";
 import { openInVim } from "../util/vim";
 import { setNotification } from "../store";
 import { log } from "../util/log";

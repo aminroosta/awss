@@ -1,4 +1,4 @@
-import { awsListStacks, awsRegion, awsUrls, awsCfGetTemplate } from "../aws";
+import { awsListStacks, awsRegion, awsUrls, awsCfGetTemplate } from "../api";
 import { registerRoute } from "./factory/registerRoute";
 import { registerYamlRoute } from "./yaml";
 import { pushRoute, setNotification } from "../store";

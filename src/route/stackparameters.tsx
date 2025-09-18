@@ -1,4 +1,4 @@
-import { awsCfDescribeStack, awsRegion, awsUrls } from "../aws";
+import { awsCfDescribeStack, awsRegion, awsUrls } from "../api";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import { log } from "../util/log";

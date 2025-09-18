@@ -4,7 +4,7 @@ import {
   awsEc2DescribeVpc,
   awsEc2DescribeVpcYaml,
   awsUrls,
-} from "../aws";
+} from "../api";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import { pushRoute } from "../store";

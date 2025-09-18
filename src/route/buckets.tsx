@@ -1,4 +1,4 @@
-import { awsListBuckets } from "../aws";
+import { awsListBuckets } from "../api";
 import { registerRoute } from "./factory/registerRoute";
 import { pushRoute } from "../store";
 

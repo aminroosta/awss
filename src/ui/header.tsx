@@ -1,4 +1,4 @@
-import { awsRegion, awsCallerIdentity, awsCliVersion } from "../aws";
+import { awsRegion, awsCallerIdentity, awsCliVersion } from "../api";
 import { getSystemUsage, usage } from "../util/system";
 import { bold, TextAttributes } from "@opentui/core";
 import { colors } from "../util/colors";
