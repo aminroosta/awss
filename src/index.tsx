@@ -63,10 +63,10 @@ function App() {
       setSearchVisible(true);
       setCmdVisible(false);
     }
-    if (key.name === "p" && key.ctrl) {
+    if (key.name === "o" && key.ctrl) {
       popRoute();
     }
-    if (key.name === "n" && key.ctrl) {
+    if ((key.name === "i" && key.ctrl) || (key.name === "tab" && !key.ctrl)) {
       undoPopRoute();
     }
     if (key.name === "r") {

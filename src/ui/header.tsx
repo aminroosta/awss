@@ -85,9 +85,9 @@ const Actions = () => {
     if (k === "return") {
       return "⏎";
     }
-    if (k.startsWith("ctrl+")) {
-      return "⌃" + k.slice(5);
-    }
+    // if (k.startsWith("ctrl+")) {
+    //   return "C-" + k.slice(5);
+    // }
     return `${k}`;
   };
 

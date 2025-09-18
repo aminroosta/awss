@@ -87,10 +87,10 @@ export const actions = () => {
     all.push({ key: "r", name: "Refresh" });
   }
   if (routeStackLen() >= 2) {
-    all.push({ key: "ctrl+p", name: "Go Back" });
+    all.push({ key: "ctrl+o", name: "Go Back" });
   }
   if (routeStackLen() < routeStack.length) {
-    all.push({ key: "ctrl+n", name: "Go Forward" });
+    all.push({ key: "ctrl+i", name: "Go Forward" });
   }
   while (all.length < constants.HEADER_HEIGHT) {
     all.push({ key: "", name: "" });
