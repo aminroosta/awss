@@ -2,6 +2,7 @@ import {
   awsEc2DescribeVpcs,
   awsRegion,
   awsEc2DescribeVpc,
+  awsEc2DescribeVpcYaml,
   awsUrls,
 } from "../aws";
 import { registerRoute } from "./factory/registerRoute";
@@ -64,7 +65,7 @@ registerRoute({
 registerYamlRoute({
   id: "vpc_yaml",
   args: (a: { VpcId: string }) => a,
-  aws: (args) => awsEc2DescribeVpc(args.VpcId, "yaml") as Promise<string>,
+  aws: (args) => awsEc2DescribeVpcYaml(args.VpcId),
   title: (args) => `VPC: ${args.VpcId}`,
   url: (args) => awsUrls.vpc!(args.VpcId),
 });

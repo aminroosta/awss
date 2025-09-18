@@ -1,4 +1,8 @@
-import { awsEc2DescribeSecurityGroup, awsUrls } from "../aws";
+import {
+  awsEc2DescribeSecurityGroup,
+  awsEc2DescribeSecurityGroupYaml,
+  awsUrls,
+} from "../aws";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import { pushRoute } from "../store";
@@ -93,7 +97,7 @@ registerYamlRoute({
   id: "securitygroup_yaml",
   args: (a: { GroupId: string }) => a,
   aws: (args) =>
-    awsEc2DescribeSecurityGroup(args.GroupId, "yaml") as Promise<string>,
+    awsEc2DescribeSecurityGroupYaml(args.GroupId),
   title: (args) => `Security Group: ${args.GroupId}`,
   url: (args) => awsUrls.securitygroup!(args.GroupId),
 });
