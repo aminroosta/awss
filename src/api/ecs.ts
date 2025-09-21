@@ -91,6 +91,7 @@ export const awsEcsListTasks = async (
   type DescribeTasks = {
     tasks: {
       taskArn: string;
+      taskDefinitionArn: string;
       lastStatus: string;
       desiredStatus: string;
       group: string;
@@ -119,8 +120,10 @@ export const awsEcsListTasks = async (
   return described.tasks.map((t) => ({
     ...t,
     id: t.taskArn.split("/").pop()!,
+    name: t.taskDefinitionArn.split('/').pop()!,
     lastStatus: t.lastStatus,
     desiredStatus: t.desiredStatus,
+    stoppedAtReason: [t.stoppedAt, t.stoppedReason].filter(Boolean).join(" / "),
   }));
 };
 
@@ -130,5 +133,11 @@ export const awsEcsDescribeClusterYaml = async (clusterArn: string) =>
 export const awsEcsTaskYaml = async (clusterArn: string, taskArn: string) =>
   aws(
     `aws ecs describe-tasks --cluster='${clusterArn}' --tasks='${taskArn}' --query "tasks[0]"`,
+    "yaml",
+  );
+
+export const awsEcsTaskDefinitionYaml = async (taskDefinitionArn: string) =>
+  aws(
+    `aws ecs describe-task-definition --task-definition='${taskDefinitionArn}'`,
     "yaml",
   );

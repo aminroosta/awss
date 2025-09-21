@@ -1,4 +1,4 @@
-import { awsEcsListTasks, awsEcsTaskYaml, awsUrls } from "../api";
+import { awsEcsListTasks, awsEcsTaskDefinitionYaml, awsEcsTaskYaml, awsUrls } from "../api";
 import { registerRoute } from "./factory/registerRoute";
 import { pushRoute } from "../store";
 import { registerYamlRoute } from "./yaml";
@@ -17,12 +17,12 @@ registerRoute({
   filter: (args) =>
     args.clusterName + (args.serviceName ? "/" + args.serviceName : ""),
   columns: [
-    { title: "TASK", render: "id" },
+    { title: "TASK:REVISION", render: "name" },
+    { title: "ID", render: "id" },
     { title: "LAST STATUS", render: "lastStatus" },
     { title: "DESIRED STATUS", render: "desiredStatus" },
     { title: "STARTED AT", render: "startedAt" },
-    { title: "STOPPED AT", render: "stoppedAt" },
-    { title: "STOPPED REASON", render: "stoppedReason" },
+    { title: "STOPPED AT / REASON", render: "stoppedAtReason" },
   ],
   keymaps: [
     {
@@ -44,7 +44,7 @@ registerRoute({
       name: "YAML",
       fn: async (item, args) => {
         pushRoute({
-          id: "cluster_task_yaml",
+          id: "cluster_task_definition_yaml",
           args: { ...item, ...args },
         });
       },
@@ -58,6 +58,16 @@ registerRoute({
         openInBrowser(url);
       },
     },
+    {
+      key: "s",
+      name: "YAML status",
+      fn: async (item, args) => {
+        pushRoute({
+          id: "cluster_task_yaml",
+          args: { ...item, ...args },
+        });
+      },
+    },
   ],
 });
 
@@ -66,5 +76,13 @@ registerYamlRoute({
   args: (a: { clusterArn: string, clusterName: string, id: string, taskArn: string }) => a,
   aws: (a) => awsEcsTaskYaml(a.clusterArn, a.taskArn),
   title: (a) => `Task: ${a.taskArn}`,
+  url: (a) => awsUrls.cluster_task!(a.id, a.clusterName)
+});
+
+registerYamlRoute({
+  id: "cluster_task_definition_yaml",
+  args: (a: { taskDefinitionArn: string, clusterName: string, id: string, }) => a,
+  aws: (a) => awsEcsTaskDefinitionYaml(a.taskDefinitionArn),
+  title: (a) => a.taskDefinitionArn,
   url: (a) => awsUrls.cluster_task!(a.id, a.clusterName)
 });
