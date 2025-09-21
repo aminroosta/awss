@@ -1,14 +1,11 @@
 import {
   awsEc2DescribeVpcs,
-  awsRegion,
-  awsEc2DescribeVpc,
   awsEc2DescribeVpcYaml,
   awsUrls,
 } from "../api";
 import { registerRoute } from "./factory/registerRoute";
 import { openInBrowser } from "../util/system";
 import { pushRoute } from "../store";
-import type { ParsedKey } from "@opentui/core";
 import { registerYamlRoute } from "./yaml";
 
 registerRoute({

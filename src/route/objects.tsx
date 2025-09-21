@@ -98,7 +98,7 @@ registerRoute({
     },
     {
       key: "n",
-      name: "Open in neovim",
+      name: "Open in nvim",
       when: (item) =>
         item && item.Key !== PARENT_DIR_KEY && item.Size !== "<DIR>",
       fn: async (item, args) => {

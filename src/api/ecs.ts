@@ -126,3 +126,9 @@ export const awsEcsListTasks = async (
 
 export const awsEcsDescribeClusterYaml = async (clusterArn: string) =>
   aws(`aws ecs describe-clusters --clusters='${clusterArn}' --query "clusters[0]"`, "yaml");
+
+export const awsEcsTaskYaml = async (clusterArn: string, taskArn: string) =>
+  aws(
+    `aws ecs describe-tasks --cluster='${clusterArn}' --tasks='${taskArn}' --query "tasks[0]"`,
+    "yaml",
+  );

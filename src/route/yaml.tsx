@@ -61,7 +61,7 @@ export function registerYamlRoute<A extends Record<string, string>>({
       },
       {
         key: "n",
-        name: "Open in neovim",
+        name: "Open in nvim",
         when: () => true,
         fn: async (_, args: A) => {
           setNotification({

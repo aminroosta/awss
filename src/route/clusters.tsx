@@ -69,5 +69,5 @@ registerYamlRoute({
   args: (a: { clusterArn: string }) => a,
   aws: (args) => awsEcsDescribeClusterYaml(args.clusterArn),
   title: (args) => `Cluster: ${args.clusterArn}`,
-  url: (args) => awsUrls.vpc!(args.clusterArn)
+  url: (args) => awsUrls.clusters!(args.clusterArn)
 });

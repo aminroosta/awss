@@ -15,7 +15,7 @@ The script installs the binary to `~/.local/bin/awss`. Ensure `~/.local/bin` is 
 - macOS or Linux terminal with truecolor support
   - Recommended terminals: Ghostty, iTerm2.
 - Optional for extras:
-  - tmux (v3+) and neovim for “open in neovim” popups
+  - tmux (v3+) and neovim for “open in nvim” popups
   - Clipboard tool: `pbcopy` (macOS) or `xclip` (Linux)
 
 ## Usage
