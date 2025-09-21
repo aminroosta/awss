@@ -19,6 +19,7 @@ import "./route/subnet";
 import "./route/clusters";
 import "./route/cluster_services";
 import "./route/cluster_tasks";
+import "./route/cluster_task_containers";
 import { route } from "./store";
 import { RenderRoute, routes } from "./route/factory/registerRoute.tsx";
 

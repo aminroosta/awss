@@ -14,4 +14,3 @@ export const awsIamListUsers = async () => {
   const result = await aws<ListUsers>(`aws iam list-users`);
   return result.Users;
 };
-

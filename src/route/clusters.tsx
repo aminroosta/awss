@@ -24,10 +24,10 @@ registerRoute({
   keymaps: [
     {
       key: "return",
-      name: "Open",
+      name: "Tasks",
       fn: (item) =>
         pushRoute({
-          id: "cluster_services",
+          id: "cluster_tasks",
           args: { clusterArn: item.clusterArn, clusterName: item.clusterName },
         }),
     },
@@ -41,13 +41,13 @@ registerRoute({
       },
     },
     {
-      key: "t",
-      name: "Tasks",
+      key: "s",
+      name: "Services",
       fn: (item) =>
         pushRoute({
-          id: "cluster_tasks",
+          id: "cluster_services",
           args: { clusterArn: item.clusterArn, clusterName: item.clusterName },
         }),
-    },
+    }
   ],
 });

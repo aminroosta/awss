@@ -84,9 +84,7 @@ export const awsEcsListTasks = async (
       `aws ecs list-tasks --cluster '${clusterArn}' --service-name '${serviceName}'`,
     );
   } else {
-    list = await aws<ListTasks>(
-      `aws ecs list-tasks --cluster '${clusterArn}'`,
-    );
+    list = await aws<ListTasks>(`aws ecs list-tasks --cluster '${clusterArn}'`);
   }
   if (!list.taskArns.length) return [];
 

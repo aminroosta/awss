@@ -40,11 +40,13 @@ registerRoute({
                 : (c.Size / (1024 * 1024 * 1024)).toFixed(1) + " GB",
       }),
     );
-    const prefixes = ((data as any).CommonPrefixes || []).map((cp: { Prefix: string }) => ({
-      Key: cp.Prefix.replace(prefix, ""),
-      LastModified: "",
-      Size: "<DIR>",
-    }));
+    const prefixes = ((data as any).CommonPrefixes || []).map(
+      (cp: { Prefix: string }) => ({
+        Key: cp.Prefix.replace(prefix, ""),
+        LastModified: "",
+        Size: "<DIR>",
+      }),
+    );
     const parentDir = { Key: PARENT_DIR_KEY, LastModified: "", Size: "" };
     return [parentDir, ...prefixes, ...contents];
   },

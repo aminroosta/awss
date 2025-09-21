@@ -22,5 +22,20 @@ registerRoute({
     { title: "STOPPED AT", render: "stoppedAt" },
     { title: "STOPPED REASON", render: "stoppedReason" },
   ],
-  keymaps: [],
+  keymaps: [
+    {
+      key: "return",
+      name: "Containers",
+      fn: (item, args) =>
+        pushRoute({
+          id: "cluster_task_containers",
+          args: {
+            clusterArn: args.clusterArn,
+            clusterName: args.clusterName,
+            taskId: item.id,
+            serviceName: args.serviceName,
+          },
+        }),
+    },
+  ],
 });

@@ -96,8 +96,7 @@ registerRoute({
 registerYamlRoute({
   id: "securitygroup_yaml",
   args: (a: { GroupId: string }) => a,
-  aws: (args) =>
-    awsEc2DescribeSecurityGroupYaml(args.GroupId),
+  aws: (args) => awsEc2DescribeSecurityGroupYaml(args.GroupId),
   title: (args) => `Security Group: ${args.GroupId}`,
   url: (args) => awsUrls.securitygroup!(args.GroupId),
 });

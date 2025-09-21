@@ -47,4 +47,3 @@ export const awsUrls: Record<string, (id: string) => Promise<string>> = {
     )}/services?region=${region}`;
   },
 };
-

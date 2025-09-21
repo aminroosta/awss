@@ -35,4 +35,3 @@ export const awsEcrListImages = async (repositoryName: string) => {
   );
   return result.imageIds;
 };
-
