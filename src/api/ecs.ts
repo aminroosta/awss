@@ -120,7 +120,7 @@ export const awsEcsListTasks = async (
   return described.tasks.map((t) => ({
     ...t,
     id: t.taskArn.split("/").pop()!,
-    name: t.taskDefinitionArn.split('/').pop()!,
+    name: t.taskDefinitionArn.split("/").pop()!,
     lastStatus: t.lastStatus,
     desiredStatus: t.desiredStatus,
     stoppedAtReason: [t.stoppedAt, t.stoppedReason].filter(Boolean).join(" / "),
@@ -128,7 +128,10 @@ export const awsEcsListTasks = async (
 };
 
 export const awsEcsDescribeClusterYaml = async (clusterArn: string) =>
-  aws(`aws ecs describe-clusters --clusters='${clusterArn}' --query "clusters[0]"`, "yaml");
+  aws(
+    `aws ecs describe-clusters --clusters='${clusterArn}' --query "clusters[0]"`,
+    "yaml",
+  );
 
 export const awsEcsTaskYaml = async (clusterArn: string, taskArn: string) =>
   aws(
@@ -139,5 +142,14 @@ export const awsEcsTaskYaml = async (clusterArn: string, taskArn: string) =>
 export const awsEcsTaskDefinitionYaml = async (taskDefinitionArn: string) =>
   aws(
     `aws ecs describe-task-definition --task-definition='${taskDefinitionArn}'`,
+    "yaml",
+  );
+
+export const awsEcsServiceYaml = async (
+  clusterArn: string,
+  serviceArn: string,
+) =>
+  aws(
+    `aws ecs describe-services --cluster='${clusterArn}' --services='${serviceArn}' --query "services[0]"`,
     "yaml",
   );

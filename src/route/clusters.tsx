@@ -60,7 +60,7 @@ registerRoute({
           id: "cluster_services",
           args: { clusterArn: item.clusterArn, clusterName: item.clusterName },
         }),
-    }
+    },
   ],
 });
 
@@ -69,5 +69,5 @@ registerYamlRoute({
   args: (a: { clusterArn: string }) => a,
   aws: (args) => awsEcsDescribeClusterYaml(args.clusterArn),
   title: (args) => `Cluster: ${args.clusterArn}`,
-  url: (args) => awsUrls.clusters!(args.clusterArn)
+  url: (args) => awsUrls.clusters!(args.clusterArn),
 });

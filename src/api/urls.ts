@@ -1,6 +1,9 @@
 import { awsRegion } from "./cli";
 
-export const awsUrls: Record<string, (id: string, name?: string) => Promise<string>> = {
+export const awsUrls: Record<
+  string,
+  (id: string, name?: string) => Promise<string>
+> = {
   vpc: async (id) => {
     const region = await awsRegion();
     return `https://console.aws.amazon.com/vpcconsole/home?region=${region}#VpcDetails:VpcId=${id}`;
@@ -48,6 +51,10 @@ export const awsUrls: Record<string, (id: string, name?: string) => Promise<stri
   },
   cluster_task: async (id, clusterName) => {
     const region = await awsRegion();
-    return `https://${region}.console.aws.amazon.com/ecs/v2/clusters/${clusterName}/tasks/${id}/configuration`
+    return `https://${region}.console.aws.amazon.com/ecs/v2/clusters/${clusterName}/tasks/${id}/configuration`;
+  },
+  cluster_service: async (id, clusterName) => {
+    const region = await awsRegion();
+    return `https://${region}.console.aws.amazon.com/ecs/v2/clusters/${clusterName}/services/${id}/health`;
   },
 };

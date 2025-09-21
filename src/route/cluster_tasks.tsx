@@ -1,4 +1,9 @@
-import { awsEcsListTasks, awsEcsTaskDefinitionYaml, awsEcsTaskYaml, awsUrls } from "../api";
+import {
+  awsEcsListTasks,
+  awsEcsTaskDefinitionYaml,
+  awsEcsTaskYaml,
+  awsUrls,
+} from "../api";
 import { registerRoute } from "./factory/registerRoute";
 import { pushRoute } from "../store";
 import { registerYamlRoute } from "./yaml";
@@ -73,16 +78,22 @@ registerRoute({
 
 registerYamlRoute({
   id: "cluster_task_yaml",
-  args: (a: { clusterArn: string, clusterName: string, id: string, taskArn: string }) => a,
+  args: (a: {
+    clusterArn: string;
+    clusterName: string;
+    id: string;
+    taskArn: string;
+  }) => a,
   aws: (a) => awsEcsTaskYaml(a.clusterArn, a.taskArn),
   title: (a) => `Task: ${a.taskArn}`,
-  url: (a) => awsUrls.cluster_task!(a.id, a.clusterName)
+  url: (a) => awsUrls.cluster_task!(a.id, a.clusterName),
 });
 
 registerYamlRoute({
   id: "cluster_task_definition_yaml",
-  args: (a: { taskDefinitionArn: string, clusterName: string, id: string, }) => a,
+  args: (a: { taskDefinitionArn: string; clusterName: string; id: string }) =>
+    a,
   aws: (a) => awsEcsTaskDefinitionYaml(a.taskDefinitionArn),
   title: (a) => a.taskDefinitionArn,
-  url: (a) => awsUrls.cluster_task!(a.id, a.clusterName)
+  url: (a) => awsUrls.cluster_task!(a.id, a.clusterName),
 });
