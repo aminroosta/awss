@@ -3,7 +3,7 @@ import { aws } from "./aws";
 export const awsEcsDescribeClusters = async () => {
   type ListClusters = { clusterArns: string[] };
   const list = await aws<ListClusters>(`aws ecs list-clusters`);
-  if (!list.clusterArns.length) return [] as any[];
+  if (!list.clusterArns.length) return [];
 
   type DescribeClusters = {
     clusters: {
@@ -123,3 +123,6 @@ export const awsEcsListTasks = async (
     desiredStatus: t.desiredStatus,
   }));
 };
+
+export const awsEcsDescribeClusterYaml = async (clusterArn: string) =>
+  aws(`aws ecs describe-clusters --clusters='${clusterArn}' --query "clusters[0]"`, "yaml");
