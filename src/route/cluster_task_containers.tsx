@@ -1,4 +1,5 @@
 import { awsEcsListTasks } from "../api";
+import { ecsExecPopup } from "../util/tmux";
 import { registerRoute } from "./factory/registerRoute";
 
 registerRoute({
@@ -13,7 +14,7 @@ registerRoute({
   aws: async (args) => {
     const tasks = await awsEcsListTasks(args.clusterArn, args.serviceName);
     const task = tasks.find((t) => t.id === args.taskId);
-    if (!task) return [] as any[];
+    if (!task) return [];
     return task.containers.map((c) => ({
       name: c.name || "",
       lastStatus: c.lastStatus || "",
@@ -29,5 +30,17 @@ registerRoute({
     { title: "EXIT", render: "exitCode", justify: "center" },
     { title: "REASON", render: "reason" },
   ],
-  keymaps: [],
+  keymaps: [
+    {
+      key: "t",
+      name: "terminal",
+      fn: async (item, args) => {
+        ecsExecPopup(
+          args.clusterName,
+          args.taskId,
+          item.name
+        )
+      },
+    },
+  ],
 });

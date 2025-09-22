@@ -40,3 +40,32 @@ export async function openInVim(content: string, filename: string) {
     setTmuxPopupVisible(false);
   }
 }
+
+
+export async function ecsExecPopup(
+  cluster: string,
+  task: string,
+  container: string,
+  command: string = "/bin/bash",
+) {
+  try {
+    setTmuxPopupVisible(true);
+    const args = [
+      "aws",
+      "ecs",
+      "execute-command",
+      "--cluster",
+      cluster,
+      "--task",
+      task,
+      "--container",
+      container,
+      "--interactive",
+      "--command",
+      command,
+    ];
+    await runInTmuxPopup(args);
+  } finally {
+    setTmuxPopupVisible(false);
+  }
+}
