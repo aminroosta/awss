@@ -13,8 +13,10 @@ The script installs the binary to `~/.local/bin/awss`. Ensure `~/.local/bin` is 
 
 - AWS CLI v2 installed and on PATH; configured credentials/profile
 - macOS or Linux terminal with truecolor support
-  - Recommended terminals: Ghostty, iTerm2.
+  - Highly recommended terminal: [Ghostty](https://ghostty.org/)
+  - The TUI has not been tested on any other terminal.
 - Optional for extras:
+  - tmux (v3+) for `aws ecs exec-command` popups
   - tmux (v3+) and neovim for “open in nvim” popups
   - Clipboard tool: `pbcopy` (macOS) or `xclip` (Linux)
 
