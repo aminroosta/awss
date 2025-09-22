@@ -65,7 +65,7 @@ export const [searchText, setSearchText] = createSignal("");
 export const [searchVisible, setSearchVisible] = createSignal(false);
 createEffect(() => {
   const r = route();
-  setSearchText(r.lastSearch || "");
+  setSearchText(r?.lastSearch || "");
 });
 
 /********* actions ********/

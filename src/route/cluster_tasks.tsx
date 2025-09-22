@@ -49,7 +49,7 @@ registerRoute({
       name: "YAML",
       fn: async (item, args) => {
         pushRoute({
-          id: "cluster_task_definition_yaml",
+          id: "cluster_task_yaml",
           args: { ...item, ...args },
         });
       },
@@ -64,11 +64,11 @@ registerRoute({
       },
     },
     {
-      key: "s",
-      name: "YAML status",
+      key: "d",
+      name: "Definition",
       fn: async (item, args) => {
         pushRoute({
-          id: "cluster_task_yaml",
+          id: "cluster_task_definition_yaml",
           args: { ...item, ...args },
         });
       },

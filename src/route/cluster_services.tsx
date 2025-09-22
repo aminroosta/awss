@@ -46,7 +46,10 @@ registerRoute({
       name: "AWS Website",
       when: (item) => !!item,
       fn: async (item, args) => {
-        const url = await awsUrls.cluster_service!(item.serviceName, args.clusterArn.split('/').pop()!);
+        const url = await awsUrls.cluster_service!(
+          item.serviceName,
+          args.clusterArn.split("/").pop()!,
+        );
         openInBrowser(url);
       },
     },
@@ -55,8 +58,13 @@ registerRoute({
 
 registerYamlRoute({
   id: "cluster_service_yaml",
-  args: (a: { clusterArn: string; serviceArn: string; serviceName: string }) => a,
+  args: (a: { clusterArn: string; serviceArn: string; serviceName: string }) =>
+    a,
   aws: (args) => awsEcsServiceYaml(args.clusterArn, args.serviceArn),
   title: (args) => `Cluster: ${args.clusterArn}`,
-  url: (args) => awsUrls.cluster_service!(args.serviceName, args.clusterArn.split('/').pop()!),
+  url: (args) =>
+    awsUrls.cluster_service!(
+      args.serviceName,
+      args.clusterArn.split("/").pop()!,
+    ),
 });
