@@ -1,5 +1,5 @@
 import { awsEc2GetConsoleOutput, awsUrls } from "../api";
-import { openInVim } from "../util/vim";
+import { openInVim } from "../util/tmux";
 import { setNotification } from "../store";
 import { log } from "../util/log";
 import { registerRoute } from "./factory/registerRoute";

@@ -13,7 +13,7 @@ import {
   setSearchText,
 } from "../store";
 import { openInBrowser } from "../util/system";
-import { openInVim } from "../util/vim";
+import { openInVim } from "../util/tmux";
 
 const PARENT_DIR_KEY = ".. (up a dir)";
 

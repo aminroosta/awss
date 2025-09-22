@@ -13,7 +13,7 @@ import {
   setSearchVisible,
   setSearchText,
   searchText,
-  vimVisible,
+  tmuxPopupVisible,
 } from "./store";
 import { Header } from "./ui/header";
 import { CommandLine } from "./ui/commandline";
@@ -31,7 +31,7 @@ function App() {
     renderer.setCursorStyle("line");
   });
   createEffect(() => {
-    if (vimVisible()) {
+    if (tmuxPopupVisible()) {
       renderer.pause();
     } else {
       renderer.start();
@@ -40,7 +40,7 @@ function App() {
   });
 
   keyHandler.on("keypress", (key: any) => {
-    if (vimVisible()) {
+    if (tmuxPopupVisible()) {
       return;
     }
     if (key.name === "escape") {

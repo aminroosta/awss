@@ -1,7 +1,7 @@
 import { hexToRgb } from "@opentui/core";
 import { getSystemTheme } from "./system";
 import { createResource } from "solid-js";
-import { vimVisible } from "../store";
+import { tmuxPopupVisible } from "../store";
 
 const accent = {
   v200: hexToRgb("#e0dcf8"),
@@ -71,7 +71,7 @@ const [colors, colorsActions] = createResource(
 );
 
 setInterval(() => {
-  if (!vimVisible()) {
+  if (!tmuxPopupVisible()) {
     colorsActions.refetch();
   }
 }, 1000);

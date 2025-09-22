@@ -8,7 +8,7 @@ import { log } from "./util/log";
 export { routes } from "./route/factory/registerRoute";
 
 export const [cmdVisible, setCmdVisible] = createSignal(false);
-export const [vimVisible, setVimVisible] = createSignal(false);
+export const [tmuxPopupVisible, setTmuxPopupVisible] = createSignal(false);
 export const [revision, setRevision] = createSignal(1);
 
 export const constants = {

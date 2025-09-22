@@ -2,7 +2,7 @@ import { $ } from "bun";
 import * as os from "os";
 import * as process from "process";
 import { createResource } from "solid-js";
-import { setNotification, vimVisible } from "../store";
+import { setNotification, tmuxPopupVisible } from "../store";
 
 export async function getSystemUsage() {
   const totalMem = os.totalmem();
@@ -35,7 +35,7 @@ const [usage, usageActions] = createResource(getSystemUsage, {
 });
 
 setInterval(() => {
-  if (!vimVisible()) {
+  if (!tmuxPopupVisible()) {
     usageActions.refetch();
   }
 }, 1000);

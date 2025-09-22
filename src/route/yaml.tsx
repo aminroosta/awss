@@ -4,7 +4,7 @@ import { colors } from "../util/colors";
 import { TextAttributes } from "@opentui/core";
 import { awsRegion } from "../api";
 import { setNotification } from "../store";
-import { openInVim } from "../util/vim";
+import { openInVim } from "../util/tmux";
 
 export function registerYamlRoute<A extends Record<string, string>>({
   id,

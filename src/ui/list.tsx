@@ -13,7 +13,7 @@ import {
   constants,
   searchText,
   searchVisible,
-  vimVisible,
+  tmuxPopupVisible,
   route,
 } from "../store";
 import { useKeyHandler, useTerminalDimensions } from "@opentui/solid";
@@ -90,7 +90,7 @@ export const List = <T extends Record<string, string>>(p: {
 
   const [last_g, setLast_g] = createSignal(0);
   useKeyHandler((key) => {
-    if (cmdVisible() || searchVisible() || vimVisible()) return;
+    if (cmdVisible() || searchVisible() || tmuxPopupVisible()) return;
 
     batch(() => {
       const i = idx();
