@@ -20,7 +20,9 @@ export async function runInTmuxPopup(command: string[]) {
     throw new Error("tmux not available");
   });
 
-  await tmux(["display-popup", "-E", "-w95%", "-h95%", ...command]);
+  // await tmux(["display-popup", "-E", "-w95%", "-h95%", ...command]);
+  await tmux(["split-window", "-h", "-P", "-F", "#{pane_id}", ...command]);
+  
 }
 
 async function tmux(args: string[]) {
@@ -41,7 +43,6 @@ export async function openInVim(content: string, filename: string) {
   }
 }
 
-
 export async function ecsExecPopup(
   cluster: string,
   task: string,
@@ -61,6 +62,10 @@ export async function ecsExecPopup(
       "--container",
       container,
       "--interactive",
+      "--cli-read-timeout",
+      "5",
+      "--cli-connect-timeout",
+      "5",
       "--command",
       command,
     ];
