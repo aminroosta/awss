@@ -57,4 +57,10 @@ export const awsUrls: Record<
     const region = await awsRegion();
     return `https://${region}.console.aws.amazon.com/ecs/v2/clusters/${clusterName}/services/${id}/health`;
   },
+  queue: async (url) => {
+    const region = await awsRegion();
+    return `https://console.aws.amazon.com/sqs/v2/home?region=${region}#/queues/${encodeURIComponent(
+      url,
+    )}`;
+  },
 };

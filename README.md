@@ -35,7 +35,7 @@ Command palette
 
 - Type an alias and press Enter. Aliases include:
   - `s3|buckets`, `ec2|instances`, `stacks`, `users`, `clusters`, `repos|repositories`,
-  - `vpcs`, `subnets`, `sgs|securitygroups`
+  - `vpcs`, `subnets`, `sgs|securitygroups`, `sqs|queues`
 
 Common per‑route keys
 
@@ -54,4 +54,3 @@ Common per‑route keys
 bun install
 bun run src/index.tsx
 ```
-

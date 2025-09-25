@@ -4,5 +4,6 @@ export * from "./s3";
 export * from "./ec2";
 export * from "./ecr";
 export * from "./ecs";
+export * from "./sqs";
 export * from "./iam";
 export * from "./urls";

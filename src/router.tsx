@@ -2,6 +2,7 @@ import { For, Match, Switch } from "solid-js";
 import "./route/stacks";
 import "./route/buckets";
 import "./route/objects";
+import "./route/queues";
 import "./route/resources";
 import "./route/vpcs";
 import "./route/instances";

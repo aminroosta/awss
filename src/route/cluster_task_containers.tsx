@@ -35,11 +35,7 @@ registerRoute({
       key: "t",
       name: "terminal",
       fn: async (item, args) => {
-        ecsExecPopup(
-          args.clusterName,
-          args.taskId,
-          item.name
-        )
+        ecsExecPopup(args.clusterName, args.taskId, item.name);
       },
     },
   ],

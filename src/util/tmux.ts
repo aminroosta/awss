@@ -22,7 +22,6 @@ export async function runInTmuxPopup(command: string[]) {
 
   // await tmux(["display-popup", "-E", "-w95%", "-h95%", ...command]);
   await tmux(["split-window", "-h", "-P", "-F", "#{pane_id}", ...command]);
-  
 }
 
 async function tmux(args: string[]) {
