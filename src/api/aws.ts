@@ -36,12 +36,7 @@ export async function aws<T>(
   ttl: number = 30_000,
 ): Promise<T | string> {
   try {
-    let fullCmd: string;
-    if (format === "text") {
-      fullCmd = cmd;
-    } else {
-      fullCmd = `${cmd} --output ${format}`;
-    }
+    const fullCmd = `${cmd} --output ${format}`;
     const { stdout } = await execute(ttl, fullCmd, { timeout: 30_000 });
     if (format === "json") {
       return JSON.parse(stdout as string) as T;

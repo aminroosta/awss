@@ -24,7 +24,7 @@ registerRoute({
     const data = await awsEc2DescribeInstances();
     return data
       .map((i) => ({
-        Name: getTag(i, "Name") as string,
+        Name: (getTag(i, "Name") || getTag(i, "aws:cloudformation:stack-name")) as string,
         InstanceId: i.InstanceId,
         State: i.State?.Name || "",
         PublicIpAddress:
