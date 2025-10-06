@@ -10,6 +10,7 @@ import { openInBrowser } from "../util/system";
 import { pushRoute } from "../store";
 import { registerYamlRoute } from "./yaml";
 import { TextAttributes, type ParsedKey } from "@opentui/core";
+import { ec2Ssh } from "../util/tmux";
 
 const getTag = (item: any, key: string) =>
   item?.Tags?.find((t: any) => t.Key === key)?.Value || "";
@@ -42,6 +43,8 @@ registerRoute({
         })(),
         InstanceType: i.InstanceType,
         Zone: i.Placement?.AvailabilityZone || "",
+        PrivateDnsName: i.PrivateDnsName!,
+        PrivateIpAddress: i.PrivateIpAddress!,
       }))
       .sort((a, b) => a.State.localeCompare(b.State));
   },
@@ -57,6 +60,14 @@ registerRoute({
     { title: "A. ZONE", render: "Zone", attrs },
   ],
   keymaps: [
+    {
+      key: "a",
+      name: "AWS Website",
+      fn: async (item) => {
+        const url = await awsUrls.instances!(item.InstanceId);
+        openInBrowser(url);
+      },
+    },
     {
       key: "y",
       name: "YAML",
@@ -78,11 +89,10 @@ registerRoute({
       },
     },
     {
-      key: "a",
-      name: "AWS Website",
+      key: "t",
+      name: "Terminal",
       fn: async (item) => {
-        const url = await awsUrls.instances!(item.InstanceId);
-        openInBrowser(url);
+        ec2Ssh(item);
       },
     },
   ],

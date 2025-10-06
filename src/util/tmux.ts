@@ -3,7 +3,8 @@ import { promisify } from "node:util";
 import { mkdirSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { join, basename } from "path";
-import { setTmuxPopupVisible } from "../store";
+import { setNotification, setTmuxPopupVisible } from "../store";
+import { loadConfig } from "./config";
 
 const execFileP = promisify(execFile);
 
@@ -72,4 +73,19 @@ export async function ecsExecPopup(
   } finally {
     setTmuxPopupVisible(false);
   }
+}
+
+export async function ec2Ssh(a: { PrivateDnsName: string }) {
+  const config = loadConfig();
+  if (!config.ssh) {
+    setNotification({
+      level: "error",
+      message:
+        "Missing SSH command. Create ~/.config/awss/config.json with { \"ssh\": \"ssh $PrivateDnsName\" }",
+      timeout: 4000,
+    });
+    return;
+  }
+  const sshCmd = config.ssh!.replace(/\$PrivateDnsName/g, a.PrivateDnsName);
+  await runInTmuxPopup(sshCmd.split(" ").filter((s) => s));
 }
